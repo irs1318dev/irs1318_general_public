@@ -47,7 +47,7 @@ public class OneMotorController implements IController
         // decrease the desired velocity based on the configured max power level
         velocityGoal = velocityGoal * TuningConstants.DRIVETRAIN_MAX_POWER_LEVEL;
 
-        DashboardLogger.putDouble("VelocityGoal", velocityGoal);
+        DashboardLogger.putDouble("Velocity Goal", velocityGoal);
 
         // convert velocity goal to power level...
         double power;

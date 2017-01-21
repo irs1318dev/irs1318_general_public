@@ -23,14 +23,14 @@ public class OneMotorComponent
 
     public void setPower(double power)
     {
-        DashboardLogger.putDouble("Power", power);
+        DashboardLogger.putDouble("Current Motor Power", power);
         this.talon.set(power);
     }
 
     public int getEncoderTicks()
     {
         int ticks = this.encoder.get();
-        DashboardLogger.putDouble("Ticks", ticks);
+        DashboardLogger.putInteger("Encoder Ticks", ticks);
         return ticks;
     }
 

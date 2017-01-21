@@ -6,15 +6,18 @@ import org.usfirst.frc.team1318.robot.Common.Helpers;
 import org.usfirst.frc.team1318.robot.Common.IController;
 import org.usfirst.frc.team1318.robot.Common.PIDHandler;
 import org.usfirst.frc.team1318.robot.Driver.Driver;
+import org.usfirst.frc.team1318.robot.Driver.Operation;
 
 public class OneMotorController implements IController
 {
     private PIDHandler PID;
     private static final double POWERLEVEL_MIN = -1.0;
     private static final double POWERLEVEL_MAX = 1.0;
+
+    private Driver driver;
     private OneMotorComponent component;
 
-    OneMotorController(OneMotorComponent component)
+    public OneMotorController(OneMotorComponent component)
     {
         this.component = component;
         this.createPIDHandler();
@@ -28,11 +31,6 @@ public class OneMotorController implements IController
         double power;
         power = this.calculateVelocityModePowerSetting();
 
-        if (power > 0)
-        {
-            power /= TuningConstants.DRIVETRAIN_REVERSE_LEFT_SCALE_FACTOR;
-        }
-
         power = this.applyPowerLevelRange(power);
 
         // apply the power settings to the drivetrain component
@@ -42,7 +40,7 @@ public class OneMotorController implements IController
     private double calculateVelocityModePowerSetting()
     {
         // velocity goals represent the desired percentage of the max velocity
-        double velocityGoal = 0.0;
+        double velocityGoal = driver.getAnalog(Operation.OneMotorPower);
 
         int currentTicks = this.component.getEncoderTicks();
 
@@ -76,9 +74,9 @@ public class OneMotorController implements IController
     private void createPIDHandler()
     {
         this.PID = new PIDHandler(
-            TuningConstants.VELOCITY_PID_KP,
-            TuningConstants.VELOCITY_PID_KI,
-            TuningConstants.VELOCITY_PID_KD,
+            TuningConstants.ONEMOTOR_VELOCITY_PID_KP,
+            TuningConstants.ONEMOTOR_VELOCITY_PID_KI,
+            TuningConstants.ONEMOTOR_VELOCITY_PID_KD,
             TuningConstants.DRIVETRAIN_VELOCITY_PID_LEFT_KF_DEFAULT,
             TuningConstants.DRIVETRAIN_VELOCITY_PID_LEFT_KS_DEFAULT,
             -TuningConstants.DRIVETRAIN_VELOCITY_MAX_POWER_LEVEL,
@@ -88,14 +86,12 @@ public class OneMotorController implements IController
     @Override
     public void stop()
     {
-        // TODO Auto-generated method stub
-
+        this.component.setPower(0);
     }
 
     @Override
     public void setDriver(Driver driver)
     {
-        // TODO Auto-generated method stub
-
+        this.driver = driver;
     }
 }

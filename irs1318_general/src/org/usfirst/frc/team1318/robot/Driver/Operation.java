@@ -10,7 +10,8 @@ public enum Operation
     DriveTrainLeftPosition,
     DriveTrainRightPosition,
     DriveTrainSwapFrontOrientation,
-
+    // OneMotor
+    OneMotorPower,
     // Other general operations:
     EnablePID,
     DisablePID,

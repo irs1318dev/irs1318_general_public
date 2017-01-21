@@ -52,6 +52,11 @@ public class ButtonMap
                     UserInputDevice.None,
                     AnalogAxis.None));
             put(
+                Operation.OneMotorPower,
+                new AnalogOperationDescription(
+                    UserInputDevice.Driver,
+                    AnalogAxis.Throttle));
+            put(
                 Operation.DriveTrainSwapFrontOrientation,
                 new DigitalOperationDescription(
                     UserInputDevice.None,

@@ -42,9 +42,9 @@ public class TuningConstants
     public static final double DRIVETRAIN_POSITION_PID_LEFT_KF_DEFAULT = 0.0;
 
     // Velocity PID (OneMotor)
-    public static final double VELOCITY_PID_KP = 0.75;
-    public static final double VELOCITY_PID_KI = 0.08;
-    public static final double VELOCITY_PID_KD = 0;
+    public static final double ONEMOTOR_VELOCITY_PID_KP = 0.75;
+    public static final double ONEMOTOR_VELOCITY_PID_KI = 0.08;
+    public static final double ONEMOTOR_VELOCITY_PID_KD = 0;
 
     // Drivetrain choices for one-stick drive
     public static final double DRIVETRAIN_K1 = 1.4;

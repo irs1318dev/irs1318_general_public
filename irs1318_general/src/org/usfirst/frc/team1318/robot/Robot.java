@@ -80,7 +80,7 @@ public class Robot extends IterativeRobot
     public void autonomousInit()
     {
         // reset the position manager so that we consider ourself at the origin (0,0) and facing the 0 direction.
-        this.components.getPositionManager().reset();
+        //        this.components.getPositionManager().reset();
 
         // Create an autonomous driver
         this.driver = new AutonomousDriver(this.components);

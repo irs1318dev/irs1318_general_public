@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.usfirst.frc.team1318.robot.Common.IController;
 import org.usfirst.frc.team1318.robot.Compressor.CompressorController;
-import org.usfirst.frc.team1318.robot.DriveTrain.DriveTrainController;
 import org.usfirst.frc.team1318.robot.Driver.Driver;
 import org.usfirst.frc.team1318.robot.OneMotor.OneMotorController;
 
@@ -20,7 +19,7 @@ public class ControllerManager implements IController
         this.controllerList.add(this.components.getPowerManager());
         this.controllerList.add(this.components.getPositionManager());
         this.controllerList.add(new CompressorController(this.components.getCompressor()));
-        this.controllerList.add(new DriveTrainController(this.components.getDriveTrain(), TuningConstants.DRIVETRAIN_USE_PID_DEFAULT));
+        //        this.controllerList.add(new DriveTrainController(this.components.getDriveTrain(), TuningConstants.DRIVETRAIN_USE_PID_DEFAULT));
         this.controllerList.add(new OneMotorController(this.components.getOneMotor()));
     }
 

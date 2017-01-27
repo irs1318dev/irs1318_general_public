@@ -35,6 +35,6 @@ public class ElectronicsConstants
     public static final int ONEMOTOR_ENCODER_CHANNEL_A = 0;
     public static final int ONEMOTOR_ENCODER_CHANNEL_B = 1;
 
-    public static final int ONEMOTOR_TALON_CHANNEL = 0;
+    public static final int ONEMOTOR_MOTOR_CHANNEL = 1;
 
 }

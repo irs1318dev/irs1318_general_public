@@ -19,7 +19,7 @@ public class ComponentManager
     public ComponentManager()
     {
         this.compressorComponent = new CompressorComponent();
-        this.driveTrainComponent = new DriveTrainComponent();
+        //        this.driveTrainComponent = new DriveTrainComponent();
         this.oneMotorComponent = new OneMotorComponent();
         this.powerManager = new PowerManager();
         this.positionManager = new PositionManager(this.driveTrainComponent);

@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1318.robot.Driver;
+package org.usfirst.frc.team1318.robot.driver;
 
 /**
  * All constants that describe how the name of each button on the joystick maps to its button number.

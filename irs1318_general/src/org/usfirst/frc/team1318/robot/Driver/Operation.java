@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1318.robot.Driver;
+package org.usfirst.frc.team1318.robot.driver;
 
 public enum Operation
 {
@@ -10,8 +10,10 @@ public enum Operation
     DriveTrainLeftPosition,
     DriveTrainRightPosition,
     DriveTrainSwapFrontOrientation,
-    // OneMotor
+
+    // OneMotor operations
     OneMotorPower,
+
     // Other general operations:
     EnablePID,
     DisablePID,

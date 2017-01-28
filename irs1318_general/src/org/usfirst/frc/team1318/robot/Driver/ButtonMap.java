@@ -1,16 +1,17 @@
-package org.usfirst.frc.team1318.robot.Driver;
+package org.usfirst.frc.team1318.robot.driver;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.usfirst.frc.team1318.robot.Driver.Buttons.AnalogAxis;
-import org.usfirst.frc.team1318.robot.Driver.Buttons.ButtonType;
-import org.usfirst.frc.team1318.robot.Driver.ControlTasks.PIDBrakeTask;
-import org.usfirst.frc.team1318.robot.Driver.Descriptions.AnalogOperationDescription;
-import org.usfirst.frc.team1318.robot.Driver.Descriptions.DigitalOperationDescription;
-import org.usfirst.frc.team1318.robot.Driver.Descriptions.MacroOperationDescription;
-import org.usfirst.frc.team1318.robot.Driver.Descriptions.OperationDescription;
-import org.usfirst.frc.team1318.robot.Driver.Descriptions.UserInputDevice;
+import org.usfirst.frc.team1318.robot.driver.buttons.AnalogAxis;
+import org.usfirst.frc.team1318.robot.driver.buttons.ButtonType;
+import org.usfirst.frc.team1318.robot.driver.controltasks.PIDBrakeTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.VisionCenteringTask;
+import org.usfirst.frc.team1318.robot.driver.descriptions.AnalogOperationDescription;
+import org.usfirst.frc.team1318.robot.driver.descriptions.DigitalOperationDescription;
+import org.usfirst.frc.team1318.robot.driver.descriptions.MacroOperationDescription;
+import org.usfirst.frc.team1318.robot.driver.descriptions.OperationDescription;
+import org.usfirst.frc.team1318.robot.driver.descriptions.UserInputDevice;
 
 public class ButtonMap
 {
@@ -68,13 +69,13 @@ public class ButtonMap
             put(
                 Operation.DisablePID,
                 new DigitalOperationDescription(
-                    UserInputDevice.CoDriver,
+                    UserInputDevice.None,
                     UserInputDeviceButton.BUTTON_PAD_BUTTON_11,
                     ButtonType.Click));
             put(
                 Operation.EnablePID,
                 new DigitalOperationDescription(
-                    UserInputDevice.CoDriver,
+                    UserInputDevice.None,
                     UserInputDeviceButton.BUTTON_PAD_BUTTON_12,
                     ButtonType.Click));
         }
@@ -89,9 +90,24 @@ public class ButtonMap
                 MacroOperation.PIDBrake,
                 new MacroOperationDescription(
                     UserInputDevice.Driver,
-                    UserInputDeviceButton.JOYSTICK_STICK_THUMB_BUTTON,
+                    UserInputDeviceButton.NONE,
                     ButtonType.Simple,
                     () -> new PIDBrakeTask(),
+                    new Operation[]
+                    {
+                        Operation.DriveTrainUsePositionalMode,
+                        Operation.DriveTrainLeftPosition,
+                        Operation.DriveTrainRightPosition,
+                    }));
+
+            // Centering macro
+            put(
+                MacroOperation.Center,
+                new MacroOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_THUMB_BUTTON,
+                    ButtonType.Simple,
+                    () -> new VisionCenteringTask(),
                     new Operation[]
                     {
                         Operation.DriveTrainUsePositionalMode,

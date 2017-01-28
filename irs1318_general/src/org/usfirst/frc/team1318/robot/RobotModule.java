@@ -19,6 +19,7 @@ import org.usfirst.frc.team1318.robot.common.wpilibmocks.PowerDistributionPanelW
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.VictorWrapper;
 import org.usfirst.frc.team1318.robot.general.PowerManager;
 
+import com.ctre.CANTalon;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
@@ -117,5 +118,13 @@ public class RobotModule extends AbstractModule
         encoder.setDistancePerPulse(HardwareConstants.DRIVETRAIN_RIGHT_PULSE_DISTANCE);
 
         return encoder;
+    }
+
+    @Singleton
+    @Provides
+    @Named("ONEMOTOR_MOTOR")
+    public CANTalon getOneMotorMotor()
+    {
+        return new CANTalon(ElectronicsConstants.ONEMOTOR_MOTOR_CHANNEL);
     }
 }

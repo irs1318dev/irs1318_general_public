@@ -7,8 +7,10 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.usfirst.frc.team1318.robot.common.IController;
+import org.usfirst.frc.team1318.robot.common.wpilibmocks.CANTalonWrapper;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.CompressorWrapper;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.EncoderWrapper;
+import org.usfirst.frc.team1318.robot.common.wpilibmocks.ICANTalon;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.ICompressor;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.IEncoder;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.IJoystick;
@@ -19,7 +21,6 @@ import org.usfirst.frc.team1318.robot.common.wpilibmocks.PowerDistributionPanelW
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.VictorWrapper;
 import org.usfirst.frc.team1318.robot.general.PowerManager;
 
-import com.ctre.CANTalon;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
@@ -123,8 +124,8 @@ public class RobotModule extends AbstractModule
     @Singleton
     @Provides
     @Named("ONEMOTOR_MOTOR")
-    public CANTalon getOneMotorMotor()
+    public ICANTalon getOneMotorMotor()
     {
-        return new CANTalon(ElectronicsConstants.ONEMOTOR_MOTOR_CHANNEL);
+        return new CANTalonWrapper(ElectronicsConstants.ONEMOTOR_MOTOR_CHANNEL);
     }
 }

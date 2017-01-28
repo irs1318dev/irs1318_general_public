@@ -1,8 +1,8 @@
 package org.usfirst.frc.team1318.robot.onemotor;
 
 import org.usfirst.frc.team1318.robot.common.DashboardLogger;
+import org.usfirst.frc.team1318.robot.common.wpilibmocks.ICANTalon;
 
-import com.ctre.CANTalon;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -12,10 +12,10 @@ public class OneMotorComponent
 {
     private static final String LogName = "om";
 
-    private final CANTalon motor;
+    private final ICANTalon motor;
 
     @Inject
-    public OneMotorComponent(@Named("ONEMOTOR_MOTOR") CANTalon motor)
+    public OneMotorComponent(@Named("ONEMOTOR_MOTOR") ICANTalon motor)
     {
         this.motor = motor;
     }

@@ -22,7 +22,7 @@ public class OneMotorComponent
 
     public void setPower(double power)
     {
-        DashboardLogger.logNumber(OneMotorComponent.LogName, "Current Motor Power", power);
+        DashboardLogger.logNumber(OneMotorComponent.LogName, "setting", power);
         this.motor.set(power);
     }
 }

@@ -62,6 +62,13 @@ public class TuningConstants
 
     public static final double DRIVETRAIN_ENCODER_ODOMETRY_ANGLE_CORRECTION = 0.979858464888405; // account for turning weirdness (7 degree offset in the angle)
 
+    //================================================== One-Motor ==============================================================
+
+    public static final double ONEMOTOR_PID_KP = 0.1;
+    public static final double ONEMOTOR_PID_KI = 0.0;
+    public static final double ONEMOTOR_PID_KD = 0.0;
+    public static final double ONEMOTOR_PID_KF = 1.0;
+
     //================================================== Autonomous ==============================================================
 
     public static final double MACRO_CANCEL_DEAD_ZONE = 0.1;

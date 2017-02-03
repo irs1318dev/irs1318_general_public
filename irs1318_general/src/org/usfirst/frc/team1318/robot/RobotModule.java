@@ -7,6 +7,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.usfirst.frc.team1318.robot.common.IController;
+import org.usfirst.frc.team1318.robot.common.wpilibmocks.CANTalonControlMode;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.CANTalonWrapper;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.CompressorWrapper;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.EncoderWrapper;
@@ -127,6 +128,20 @@ public class RobotModule extends AbstractModule
     @Named("ONEMOTOR_MOTOR")
     public ICANTalon getOneMotorMotor()
     {
-        return new CANTalonWrapper(ElectronicsConstants.ONEMOTOR_MOTOR_CHANNEL);
+        CANTalonWrapper master = new CANTalonWrapper(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);
+        master.enableBrakeMode(false);
+
+        CANTalonWrapper follower = new CANTalonWrapper(ElectronicsConstants.ONEMOTOR_FOLLOWER_MOTOR_CHANNEL);
+        follower.enableBrakeMode(false);
+        follower.changeControlMode(CANTalonControlMode.Follower);
+        follower.set(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);
+
+        master.setPIDF(
+            TuningConstants.ONEMOTOR_PID_KP,
+            TuningConstants.ONEMOTOR_PID_KI,
+            TuningConstants.ONEMOTOR_PID_KD,
+            TuningConstants.ONEMOTOR_PID_KF);
+
+        return master;
     }
 }

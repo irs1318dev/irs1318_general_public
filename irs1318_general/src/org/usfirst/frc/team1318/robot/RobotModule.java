@@ -130,17 +130,23 @@ public class RobotModule extends AbstractModule
     {
         CANTalonWrapper master = new CANTalonWrapper(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);
         master.enableBrakeMode(false);
+        master.reverseSensor(true);
 
         CANTalonWrapper follower = new CANTalonWrapper(ElectronicsConstants.ONEMOTOR_FOLLOWER_MOTOR_CHANNEL);
         follower.enableBrakeMode(false);
+        follower.reverseOutput(true);
         follower.changeControlMode(CANTalonControlMode.Follower);
         follower.set(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);
 
-        master.setPIDF(
-            TuningConstants.ONEMOTOR_PID_KP,
-            TuningConstants.ONEMOTOR_PID_KI,
-            TuningConstants.ONEMOTOR_PID_KD,
-            TuningConstants.ONEMOTOR_PID_KF);
+        if (TuningConstants.ONEMOTOR_USE_PID)
+        {
+            master.changeControlMode(CANTalonControlMode.Speed);
+            master.setPIDF(
+                TuningConstants.ONEMOTOR_PID_KP,
+                TuningConstants.ONEMOTOR_PID_KI,
+                TuningConstants.ONEMOTOR_PID_KD,
+                TuningConstants.ONEMOTOR_PID_KF);
+        }
 
         return master;
     }

@@ -69,6 +69,14 @@ public class ButtonMap
                     UserInputDeviceButton.NONE,
                     ButtonType.Toggle));
 
+            put(
+                Operation.OneMotorPower,
+                new AnalogOperationDescription(
+                    UserInputDevice.Driver,
+                    AnalogAxis.Throttle,
+                    true,
+                    0.25));
+
             // Operations for general stuff
             put(
                 Operation.DisablePID,

@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1318.robot.onemotor;
 
 import org.usfirst.frc.team1318.robot.TuningConstants;
+import org.usfirst.frc.team1318.robot.common.DashboardLogger;
 import org.usfirst.frc.team1318.robot.common.IController;
 import org.usfirst.frc.team1318.robot.driver.Driver;
 import org.usfirst.frc.team1318.robot.driver.Operation;
@@ -27,6 +28,8 @@ public class OneMotorController implements IController
         {
             power *= TuningConstants.ONEMOTOR_PID_MAX_VELOCITY;
         }
+
+        DashboardLogger.logNumber("om", "power/setpoint", power);
 
         // apply the power settings to the drivetrain component
         this.component.setPower(power);

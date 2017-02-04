@@ -9,4 +9,5 @@ public interface ICANTalon
     void reverseOutput(boolean flip);
     void reverseSensor(boolean flip);
     void enableBrakeMode(boolean brake);
+    double getEncVelocity();
 }

@@ -25,4 +25,9 @@ public class OneMotorComponent
         DashboardLogger.logNumber(OneMotorComponent.LogName, "setting", power);
         this.motor.set(power);
     }
+
+    public double getEncVelocity()
+    {
+        return this.motor.getEncVelocity();
+    }
 }

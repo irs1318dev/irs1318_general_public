@@ -75,4 +75,9 @@ public class CANTalonWrapper implements ICANTalon
     {
         this.wrappedObject.enableBrakeMode(brake);
     }
+
+    public double getEncVelocity()
+    {
+        return this.wrappedObject.getEncVelocity();
+    }
 }

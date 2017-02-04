@@ -35,8 +35,19 @@ public class OneMotorController implements IController
         // apply the power settings to the drivetrain component
         this.component.setPower(power);
 
-        double ICANTalonVelocity = this.component.getEncVelocity();
-        DashboardLogger.logNumber("om", "encoderVelocity", ICANTalonVelocity);
+        double velocity = this.component.getSpeed();
+        DashboardLogger.logNumber("om", "speed", velocity);
+
+        double error = this.component.getError();
+        DashboardLogger.logNumber("om", "error", error);
+
+        double errorPercentage = 0.0;
+        if (power != 0.0)
+        {
+            errorPercentage = 100.0 * (error / power);
+        }
+
+        DashboardLogger.logNumber("om", "error%", errorPercentage);
     }
 
     @Override

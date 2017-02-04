@@ -130,7 +130,7 @@ public class RobotModule extends AbstractModule
     {
         CANTalonWrapper master = new CANTalonWrapper(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);
         master.enableBrakeMode(false);
-        master.reverseSensor(true);
+        master.reverseSensor(false);
 
         CANTalonWrapper follower = new CANTalonWrapper(ElectronicsConstants.ONEMOTOR_FOLLOWER_MOTOR_CHANNEL);
         follower.enableBrakeMode(false);

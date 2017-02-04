@@ -64,14 +64,14 @@ public class TuningConstants
 
     //================================================== One-Motor ==============================================================
 
-    public static final boolean ONEMOTOR_USE_PID = false;
+    public static final boolean ONEMOTOR_USE_PID = true;
 
-    public static final double ONEMOTOR_PID_KP = 0.095;
+    public static final double ONEMOTOR_PID_KP = 0.024;
     public static final double ONEMOTOR_PID_KI = 0.0;
     public static final double ONEMOTOR_PID_KD = 0.0;
     public static final double ONEMOTOR_PID_KF = 0.0095;
 
-    public static final double ONEMOTOR_PID_MAX_VELOCITY = 10800.0;
+    public static final double ONEMOTOR_PID_MAX_VELOCITY = 108000.0;
 
     //================================================== Autonomous ==============================================================
 

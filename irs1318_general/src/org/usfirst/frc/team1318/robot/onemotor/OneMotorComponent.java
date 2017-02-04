@@ -26,8 +26,13 @@ public class OneMotorComponent
         this.motor.set(power);
     }
 
-    public double getEncVelocity()
+    public double getSpeed()
     {
-        return this.motor.getEncVelocity();
+        return this.motor.getSpeed();
+    }
+
+    public double getError()
+    {
+        return this.motor.getError();
     }
 }

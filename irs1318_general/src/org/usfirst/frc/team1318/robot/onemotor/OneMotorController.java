@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 public class OneMotorController implements IController
 {
     private Driver driver;
+
     private OneMotorComponent component;
 
     @Inject

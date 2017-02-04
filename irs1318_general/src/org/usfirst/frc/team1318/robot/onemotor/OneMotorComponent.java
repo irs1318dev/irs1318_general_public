@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1318.robot.onemotor;
 
 import org.usfirst.frc.team1318.robot.common.DashboardLogger;
+import org.usfirst.frc.team1318.robot.common.wpilibmocks.CANTalonControlMode;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.ICANTalon;
 
 import com.google.inject.Inject;
@@ -23,6 +24,15 @@ public class OneMotorComponent
     public void setPower(double power)
     {
         DashboardLogger.logNumber(OneMotorComponent.LogName, "setting", power);
+        if (power == 0.0)
+        {
+            this.motor.changeControlMode(CANTalonControlMode.Voltage);
+        }
+        else
+        {
+            this.motor.changeControlMode(CANTalonControlMode.Speed);
+        }
+
         this.motor.set(power);
     }
 

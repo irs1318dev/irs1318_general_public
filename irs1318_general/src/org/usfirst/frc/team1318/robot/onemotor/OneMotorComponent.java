@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1318.robot.onemotor;
 
-import org.usfirst.frc.team1318.robot.common.DashboardLogger;
+import org.usfirst.frc.team1318.robot.common.IDashboardLogger;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.CANTalonControlMode;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.ICANTalon;
 
@@ -13,17 +13,21 @@ public class OneMotorComponent
 {
     private static final String LogName = "om";
 
+    private final IDashboardLogger logger;
     private final ICANTalon motor;
 
     @Inject
-    public OneMotorComponent(@Named("ONEMOTOR_MOTOR") ICANTalon motor)
+    public OneMotorComponent(
+        IDashboardLogger logger,
+        @Named("ONEMOTOR_MOTOR") ICANTalon motor)
     {
+        this.logger = logger;
         this.motor = motor;
     }
 
     public void setPower(double power)
     {
-        DashboardLogger.logNumber(OneMotorComponent.LogName, "setting", power);
+        this.logger.logNumber(OneMotorComponent.LogName, "setting", power);
         if (power == 0.0)
         {
             this.motor.changeControlMode(CANTalonControlMode.Voltage);

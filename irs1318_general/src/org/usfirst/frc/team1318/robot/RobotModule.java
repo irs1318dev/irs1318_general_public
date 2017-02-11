@@ -7,6 +7,8 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import org.usfirst.frc.team1318.robot.common.IController;
+import org.usfirst.frc.team1318.robot.common.IDashboardLogger;
+import org.usfirst.frc.team1318.robot.common.SmartDashboardLogger;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.CANTalonControlMode;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.CANTalonWrapper;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.CompressorWrapper;
@@ -20,6 +22,7 @@ import org.usfirst.frc.team1318.robot.common.wpilibmocks.IPowerDistributionPanel
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.JoystickWrapper;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.PowerDistributionPanelWrapper;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.VictorWrapper;
+import org.usfirst.frc.team1318.robot.general.PowerManager;
 import org.usfirst.frc.team1318.robot.onemotor.OneMotorController;
 
 import com.google.inject.AbstractModule;
@@ -35,13 +38,20 @@ public class RobotModule extends AbstractModule
 
     @Singleton
     @Provides
+    public IDashboardLogger getLogger()
+    {
+        return new SmartDashboardLogger();
+    }
+
+    @Singleton
+    @Provides
     public ControllerManager getControllerManager(Injector injector)
     {
         List<IController> controllerList = new ArrayList<>();
-        //controllerList.add(injector.getInstance(PowerManager.class));
+        controllerList.add(injector.getInstance(PowerManager.class));
+        //controllerList.add(injector.getInstance(PositionManager.class));
         //controllerList.add(injector.getInstance(VisionManager.class));
         //controllerList.add(injector.getInstance(CompressorController.class));
-        //controllerList.add(injector.getInstance(PositionManager.class));
         //controllerList.add(injector.getInstance(DriveTrainController.class));
         controllerList.add(injector.getInstance(OneMotorController.class));
         return new ControllerManager(controllerList);
@@ -65,7 +75,6 @@ public class RobotModule extends AbstractModule
 
     @Singleton
     @Provides
-    @Named("COMPRESSOR")
     public ICompressor getCompressor()
     {
         return new CompressorWrapper(ElectronicsConstants.PCM_B_MODULE);
@@ -73,7 +82,6 @@ public class RobotModule extends AbstractModule
 
     @Singleton
     @Provides
-    @Named("POWERMANAGER_PDP")
     public IPowerDistributionPanel getPowerManagerPdp()
     {
         return new PowerDistributionPanelWrapper();

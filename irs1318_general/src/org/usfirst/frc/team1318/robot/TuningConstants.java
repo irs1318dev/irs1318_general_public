@@ -86,5 +86,5 @@ public class TuningConstants
     public static final double ONEMOTOR_PID_KD = 0.0;
     public static final double ONEMOTOR_PID_KF = 0.0095;
 
-    public static final double ONEMOTOR_PID_MAX_VELOCITY = 108000.0;
+    public static final double ONEMOTOR_PID_MAX_VELOCITY = 36000.0;
 }

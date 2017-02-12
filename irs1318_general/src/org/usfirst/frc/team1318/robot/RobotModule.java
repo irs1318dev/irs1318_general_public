@@ -22,6 +22,8 @@ import org.usfirst.frc.team1318.robot.common.wpilibmocks.IPowerDistributionPanel
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.JoystickWrapper;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.PowerDistributionPanelWrapper;
 import org.usfirst.frc.team1318.robot.common.wpilibmocks.VictorWrapper;
+import org.usfirst.frc.team1318.robot.driver.ButtonMap;
+import org.usfirst.frc.team1318.robot.driver.IButtonMap;
 import org.usfirst.frc.team1318.robot.general.PowerManager;
 import org.usfirst.frc.team1318.robot.onemotor.OneMotorController;
 
@@ -41,6 +43,13 @@ public class RobotModule extends AbstractModule
     public IDashboardLogger getLogger()
     {
         return new SmartDashboardLogger();
+    }
+
+    @Singleton
+    @Provides
+    public IButtonMap getButtonMap()
+    {
+        return new ButtonMap();
     }
 
     @Singleton

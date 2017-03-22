@@ -2,14 +2,16 @@ package org.usfirst.frc.team1318.robot.common;
 
 import org.opencv.core.Point;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-/**
- * Logger that logs current values to a dashboard.
- *
- */
-public class SmartDashboardLogger implements IDashboardLogger
+public abstract class StringLogger implements IDashboardLogger
 {
+    /**
+     * Write a string to the smart dashboard
+     * @param component to log for
+     * @param key to write to
+     * @param value to write
+     */
+    public abstract void logString(String component, String key, String value);
+
     /**
      * Write a boolean to the smart dashboard
      * @param component to log for
@@ -19,11 +21,7 @@ public class SmartDashboardLogger implements IDashboardLogger
     @Override
     public void logBoolean(String component, String key, boolean value)
     {
-        String logKey = String.format("%s.%s", component, key);
-        if (SmartDashboard.getBoolean(logKey, !value) != value)
-        {
-            SmartDashboard.putBoolean(logKey, value);
-        }
+        this.logString(component, key, String.valueOf(value));
     }
 
     /**
@@ -35,11 +33,7 @@ public class SmartDashboardLogger implements IDashboardLogger
     @Override
     public void logNumber(String component, String key, double value)
     {
-        String logKey = String.format("%s.%s", component, key);
-        if (SmartDashboard.getNumber(logKey, value + 0.5) != value)
-        {
-            SmartDashboard.putNumber(logKey, value);
-        }
+        this.logString(component, key, String.valueOf(value));
     }
 
     /**
@@ -51,14 +45,7 @@ public class SmartDashboardLogger implements IDashboardLogger
     @Override
     public void logNumber(String component, String key, Double value)
     {
-        String logKey = String.format("%s.%s", component, key);
-        String valueString = "N/A";
-        if (value != null)
-        {
-            valueString = "" + value;
-        }
-
-        SmartDashboard.putString(logKey, valueString);
+        this.logString(component, key, String.valueOf(value));
     }
 
     /**
@@ -70,7 +57,7 @@ public class SmartDashboardLogger implements IDashboardLogger
     @Override
     public void logInteger(String component, String key, int value)
     {
-        this.logInteger(component, key, value, null);
+        this.logString(component, key, String.valueOf(value));
     }
 
     /**
@@ -83,11 +70,7 @@ public class SmartDashboardLogger implements IDashboardLogger
     @Override
     public void logInteger(String component, String key, int value, String formatString)
     {
-        String logKey = String.format("%s.%s", component, key);
-        if (SmartDashboard.getNumber(logKey, value + 0.5) != value)
-        {
-            SmartDashboard.putNumber(logKey, value);
-        }
+        this.logString(component, key, String.format(formatString, value));
     }
 
     /**
@@ -106,22 +89,6 @@ public class SmartDashboardLogger implements IDashboardLogger
         }
 
         this.logString(component, key, valueString);
-    }
-
-    /**
-     * Write a string to the smart dashboard
-     * @param component to log for
-     * @param key to write to
-     * @param value to write
-     */
-    @Override
-    public void logString(String component, String key, String value)
-    {
-        String logKey = String.format("%s.%s", component, key);
-        if (SmartDashboard.getString(logKey, null) != value)
-        {
-            SmartDashboard.putString(logKey, value);
-        }
     }
 
     /**

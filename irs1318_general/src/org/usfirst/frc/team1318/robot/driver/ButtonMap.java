@@ -7,7 +7,10 @@ import org.usfirst.frc.team1318.robot.ElectronicsConstants;
 import org.usfirst.frc.team1318.robot.TuningConstants;
 import org.usfirst.frc.team1318.robot.driver.buttons.AnalogAxis;
 import org.usfirst.frc.team1318.robot.driver.buttons.ButtonType;
+import org.usfirst.frc.team1318.robot.driver.controltasks.DriveDistanceTimedTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.PIDBrakeTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.SequentialTask;
+import org.usfirst.frc.team1318.robot.driver.controltasks.VisionAdvanceAndCenterTask;
 import org.usfirst.frc.team1318.robot.driver.controltasks.VisionCenteringTask;
 import org.usfirst.frc.team1318.robot.driver.descriptions.AnalogOperationDescription;
 import org.usfirst.frc.team1318.robot.driver.descriptions.DigitalOperationDescription;
@@ -21,21 +24,27 @@ public class ButtonMap implements IButtonMap
     public static Map<Operation, OperationDescription> OperationSchema = new HashMap<Operation, OperationDescription>()
     {
         {
-            // Operations for general stuff
+            // Operations for vision
             put(
-                Operation.DisablePID,
+                Operation.EnableVision,
+                new DigitalOperationDescription(
+                    UserInputDevice.None,
+                    UserInputDeviceButton.JOYSTICK_STICK_TOP_RIGHT_BUTTON,
+                    ButtonType.Toggle));
+
+            // Operations for the drive train
+            put(
+                Operation.DriveTrainDisablePID,
                 new DigitalOperationDescription(
                     UserInputDevice.None,
                     UserInputDeviceButton.BUTTON_PAD_BUTTON_11,
                     ButtonType.Click));
             put(
-                Operation.EnablePID,
+                Operation.DriveTrainEnablePID,
                 new DigitalOperationDescription(
                     UserInputDevice.None,
                     UserInputDeviceButton.BUTTON_PAD_BUTTON_12,
                     ButtonType.Click));
-
-            // Operations for the drive train
             put(
                 Operation.DriveTrainMoveForward,
                 new AnalogOperationDescription(
@@ -118,11 +127,30 @@ public class ButtonMap implements IButtonMap
                 MacroOperation.Center,
                 new MacroOperationDescription(
                     UserInputDevice.Driver,
-                    UserInputDeviceButton.JOYSTICK_BASE_TOP_LEFT_BUTTON,
+                    UserInputDeviceButton.JOYSTICK_BASE_MIDDLE_LEFT_BUTTON,
                     ButtonType.Toggle,
                     () -> new VisionCenteringTask(),
                     new Operation[]
                     {
+                        Operation.EnableVision,
+                        Operation.DriveTrainUsePositionalMode,
+                        Operation.DriveTrainLeftPosition,
+                        Operation.DriveTrainRightPosition,
+                        Operation.DriveTrainTurn,
+                        Operation.DriveTrainMoveForward,
+                    }));
+            put(
+                MacroOperation.CenterAndAdvance,
+                new MacroOperationDescription(
+                    UserInputDevice.Driver,
+                    UserInputDeviceButton.JOYSTICK_STICK_TOP_RIGHT_BUTTON,
+                    ButtonType.Toggle,
+                    () -> SequentialTask.Sequence(
+                        new VisionAdvanceAndCenterTask(),
+                        new DriveDistanceTimedTask(24.0, 1.5)),
+                    new Operation[]
+                    {
+                        Operation.EnableVision,
                         Operation.DriveTrainUsePositionalMode,
                         Operation.DriveTrainLeftPosition,
                         Operation.DriveTrainRightPosition,

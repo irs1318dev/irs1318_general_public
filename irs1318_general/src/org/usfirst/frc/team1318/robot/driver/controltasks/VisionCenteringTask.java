@@ -2,11 +2,10 @@ package org.usfirst.frc.team1318.robot.driver.controltasks;
 
 import org.usfirst.frc.team1318.robot.TuningConstants;
 import org.usfirst.frc.team1318.robot.common.PIDHandler;
+import org.usfirst.frc.team1318.robot.common.wpilibmocks.ITimer;
 import org.usfirst.frc.team1318.robot.driver.IControlTask;
 import org.usfirst.frc.team1318.robot.driver.Operation;
 import org.usfirst.frc.team1318.robot.vision.VisionManager;
-
-import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Task that turns the robot a certain amount clockwise or counterclockwise in-place based on vision center
@@ -15,18 +14,23 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class VisionCenteringTask extends ControlTaskBase implements IControlTask
 {
-    private final PIDHandler turnPidHandler;
+    private static final int NO_CENTER_THRESHOLD = 10;
 
+    private PIDHandler turnPidHandler;
+    private Double centeredTime;
     protected VisionManager visionManager;
-    private Timer centeredTimer;
+
+    private int noCenterCount;
 
     /**
     * Initializes a new VisionCenteringTask
     */
     public VisionCenteringTask()
     {
-        this.turnPidHandler = new PIDHandler(0.065, 0.0, 0.0, 0.0, -0.3, 0.3);
-        this.centeredTimer = null;
+        this.turnPidHandler = null;
+        this.centeredTime = null;
+
+        this.noCenterCount = 0;
     }
 
     /**
@@ -36,6 +40,8 @@ public class VisionCenteringTask extends ControlTaskBase implements IControlTask
     public void begin()
     {
         this.visionManager = this.getInjector().getInstance(VisionManager.class);
+        this.turnPidHandler = this.createTurnHandler();
+        this.setDigitalOperationState(Operation.EnableVision, true);
     }
 
     /**
@@ -64,6 +70,8 @@ public class VisionCenteringTask extends ControlTaskBase implements IControlTask
     {
         this.setDigitalOperationState(Operation.DriveTrainUsePositionalMode, false);
         this.setAnalogOperationState(Operation.DriveTrainTurn, 0.0);
+
+        this.setDigitalOperationState(Operation.EnableVision, false);
     }
 
     /**
@@ -74,6 +82,8 @@ public class VisionCenteringTask extends ControlTaskBase implements IControlTask
     {
         this.setDigitalOperationState(Operation.DriveTrainUsePositionalMode, false);
         this.setAnalogOperationState(Operation.DriveTrainTurn, 0.0);
+
+        this.setDigitalOperationState(Operation.EnableVision, false);
     }
 
     /**
@@ -91,25 +101,23 @@ public class VisionCenteringTask extends ControlTaskBase implements IControlTask
         }
 
         double centerAngleDifference = Math.abs(currentMeasuredAngle - currentDesiredAngle);
-
         if (centerAngleDifference > TuningConstants.MAX_VISION_CENTERING_RANGE_DEGREES)
         {
             return false;
         }
 
-        if (this.centeredTimer == null)
+        ITimer timer = this.getInjector().getInstance(ITimer.class);
+        if (this.centeredTime == null)
         {
-            this.centeredTimer = new Timer();
-            this.centeredTimer.start();
+            this.centeredTime = timer.get();
             return false;
         }
-        else if (this.centeredTimer.get() < 1.0)
+        else if (timer.get() - this.centeredTime < 1.0)
         {
             return false;
         }
         else
         {
-            this.centeredTimer.stop();
             return true;
         }
     }
@@ -117,6 +125,28 @@ public class VisionCenteringTask extends ControlTaskBase implements IControlTask
     @Override
     public boolean shouldCancel()
     {
-        return this.visionManager.getCenter() == null;
+        if (this.visionManager.getCenter() == null)
+        {
+            this.noCenterCount++;
+        }
+        else
+        {
+            this.noCenterCount = 0;
+        }
+
+        return this.noCenterCount >= VisionCenteringTask.NO_CENTER_THRESHOLD;
+    }
+
+    protected PIDHandler createTurnHandler()
+    {
+        return new PIDHandler(
+            TuningConstants.VISION_STATIONARY_CENTERING_PID_KP,
+            TuningConstants.VISION_STATIONARY_CENTERING_PID_KI,
+            TuningConstants.VISION_STATIONARY_CENTERING_PID_KD,
+            TuningConstants.VISION_STATIONARY_CENTERING_PID_KF,
+            TuningConstants.VISION_STATIONARY_CENTERING_PID_KS,
+            TuningConstants.VISION_STATIONARY_CENTERING_PID_MIN,
+            TuningConstants.VISION_STATIONARY_CENTERING_PID_MAX,
+            this.getInjector().getInstance(ITimer.class));
     }
 }

@@ -3,12 +3,16 @@ package org.usfirst.frc.team1318.robot.vision;
 import org.opencv.core.Point;
 import org.usfirst.frc.team1318.robot.common.IController;
 import org.usfirst.frc.team1318.robot.common.IDashboardLogger;
+import org.usfirst.frc.team1318.robot.common.wpilibmocks.ISolenoid;
+import org.usfirst.frc.team1318.robot.common.wpilibmocks.ITimer;
 import org.usfirst.frc.team1318.robot.driver.Driver;
-import org.usfirst.frc.team1318.robot.vision.pipelines.HSVGearCenterPipeline;
+import org.usfirst.frc.team1318.robot.driver.Operation;
+import org.usfirst.frc.team1318.robot.vision.pipelines.HSVCenterPipeline;
 import org.usfirst.frc.team1318.robot.vision.pipelines.ICentroidVisionPipeline;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.vision.VisionRunner;
@@ -26,10 +30,15 @@ public class VisionManager implements IController, VisionRunner.Listener<ICentro
     private final static String LogName = "vision";
 
     private final IDashboardLogger logger;
+    private final ITimer timer;
+    private final ISolenoid ringLight;
 
     private final Object visionLock;
-    private final VisionThread gearVisionThread;
-    private final HSVGearCenterPipeline gearVisionPipeline;
+
+    private final VisionThread visionThread;
+    private final HSVCenterPipeline visionPipeline;
+
+    private Driver driver;
 
     private Point center;
 
@@ -43,24 +52,28 @@ public class VisionManager implements IController, VisionRunner.Listener<ICentro
      * Initializes a new VisionManager
      */
     @Inject
-    public VisionManager(IDashboardLogger logger)
+    public VisionManager(
+        IDashboardLogger logger,
+        ITimer timer,
+        @Named("VISION_LIGHT") ISolenoid ringLight)
     {
         this.logger = logger;
+        this.timer = timer;
+        this.ringLight = ringLight;
+
+        this.driver = null;
 
         this.visionLock = new Object();
 
-        UsbCamera gearCamera = new UsbCamera("usb0", 0);
-        gearCamera.setResolution(VisionConstants.LIFECAM_CAMERA_RESOLUTION_X, VisionConstants.LIFECAM_CAMERA_RESOLUTION_Y);
-        gearCamera.setExposureManual(VisionConstants.LIFECAM_CAMERA_EXPOSURE);
-        gearCamera.setBrightness(VisionConstants.LIFECAM_CAMERA_BRIGHTNESS);
-        gearCamera.setFPS(VisionConstants.LIFECAM_CAMERA_FPS);
+        UsbCamera camera = new UsbCamera("usb1", 0);
+        camera.setResolution(VisionConstants.LIFECAM_CAMERA_RESOLUTION_X, VisionConstants.LIFECAM_CAMERA_RESOLUTION_Y);
+        camera.setExposureManual(VisionConstants.LIFECAM_CAMERA_EXPOSURE);
+        camera.setBrightness(VisionConstants.LIFECAM_CAMERA_BRIGHTNESS);
+        camera.setFPS(VisionConstants.LIFECAM_CAMERA_FPS);
 
-        //CameraServer.getInstance().addCamera(camera);
-
-        //AxisCamera camera = CameraServer.getInstance().addAxisCamera(VisionConstants.AXIS_CAMERA_IP_ADDRESS);
-        this.gearVisionPipeline = new HSVGearCenterPipeline(VisionConstants.SHOULD_UNDISTORT);
-        this.gearVisionThread = new VisionThread(gearCamera, this.gearVisionPipeline, this);
-        this.gearVisionThread.start();
+        this.visionPipeline = new HSVCenterPipeline(this.timer, VisionConstants.SHOULD_UNDISTORT);
+        this.visionThread = new VisionThread(camera, this.visionPipeline, this);
+        this.visionThread.start();
 
         this.center = null;
         this.desiredAngleX = null;
@@ -113,14 +126,21 @@ public class VisionManager implements IController, VisionRunner.Listener<ICentro
     @Override
     public void update()
     {
-        String centerString = "n/a";
-        Point center = this.getCenter();
-        if (center != null)
+        boolean cameraActive;
+        if (this.driver.getDigital(Operation.EnableVision))
         {
-            centerString = String.format("%f,%f", center.x, center.y);
+            cameraActive = true;
+        }
+        else
+        {
+            cameraActive = false;
         }
 
-        this.logger.logString(VisionManager.LogName, "center", centerString);
+        this.ringLight.set(cameraActive);
+        this.visionPipeline.setActivation(cameraActive);
+
+        Point center = this.getCenter();
+        this.logger.logPoint(VisionManager.LogName, "center", center);
 
         Double fps = this.getLastMeasuredFps();
         this.logger.logNumber(VisionManager.LogName, "fps", fps);
@@ -138,12 +158,22 @@ public class VisionManager implements IController, VisionRunner.Listener<ICentro
     @Override
     public void stop()
     {
+        this.ringLight.set(false);
+        this.visionPipeline.setActivation(false);
+
+        this.center = null;
+
+        this.desiredAngleX = null;
+        this.measuredAngleX = null;
+        this.distanceFromRobot = null;
+
+        this.lastMeasuredFps = 0.0;
     }
 
     @Override
     public void setDriver(Driver driver)
     {
-        // no-op
+        this.driver = driver;
     }
 
     @Override
@@ -151,13 +181,16 @@ public class VisionManager implements IController, VisionRunner.Listener<ICentro
     {
         synchronized (this.visionLock)
         {
-            this.center = pipeline.getCenter();
+            if (pipeline.isActive())
+            {
+                this.center = pipeline.getCenter();
 
-            this.desiredAngleX = pipeline.getDesiredAngleX();
-            this.measuredAngleX = pipeline.getMeasuredAngleX();
-            this.distanceFromRobot = pipeline.getRobotDistance();
+                this.desiredAngleX = pipeline.getDesiredAngleX();
+                this.measuredAngleX = pipeline.getMeasuredAngleX();
+                this.distanceFromRobot = pipeline.getRobotDistance();
 
-            this.lastMeasuredFps = pipeline.getFps();
+                this.lastMeasuredFps = pipeline.getFps();
+            }
         }
     }
 }

@@ -80,9 +80,19 @@ public class CANTalonWrapper implements ICANTalon
         this.wrappedObject.enableBrakeMode(brake);
     }
 
+    public void reset()
+    {
+        this.wrappedObject.reset();
+    }
+
+    public int getTicks()
+    {
+        return this.wrappedObject.getEncPosition();
+    }
+
     public double getSpeed()
     {
-        return this.wrappedObject.getSpeed();
+        return this.wrappedObject.getEncVelocity();
     }
 
     public double getError()

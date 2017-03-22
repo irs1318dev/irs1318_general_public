@@ -19,7 +19,8 @@ public class OneMotorComponent
     @Inject
     public OneMotorComponent(
         IDashboardLogger logger,
-        @Named("ONEMOTOR_MOTOR") ICANTalon motor)
+        @Named("ONEMOTOR_MOTOR") ICANTalon motor
+    )
     {
         this.logger = logger;
         this.motor = motor;
@@ -30,7 +31,7 @@ public class OneMotorComponent
         this.logger.logNumber(OneMotorComponent.LogName, "setting", power);
         if (power == 0.0)
         {
-            this.motor.changeControlMode(CANTalonControlMode.Voltage);
+            this.motor.changeControlMode(CANTalonControlMode.PercentVbus);
         }
         else
         {

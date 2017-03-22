@@ -164,6 +164,10 @@ public class RobotModule extends AbstractModule
                 TuningConstants.ONEMOTOR_PID_KD,
                 TuningConstants.ONEMOTOR_PID_KF);
         }
+        else
+        {
+            master.changeControlMode(CANTalonControlMode.PercentVbus);
+        }
 
         return master;
     }

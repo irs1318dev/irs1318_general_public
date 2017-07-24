@@ -2,7 +2,7 @@ package org.usfirst.frc.team1318.robot.driver.controltasks;
 
 import org.usfirst.frc.team1318.robot.TuningConstants;
 import org.usfirst.frc.team1318.robot.common.PIDHandler;
-import org.usfirst.frc.team1318.robot.common.wpilibmocks.ITimer;
+import org.usfirst.frc.team1318.robot.common.wpilib.ITimer;
 import org.usfirst.frc.team1318.robot.driver.IControlTask;
 import org.usfirst.frc.team1318.robot.driver.Operation;
 
@@ -15,7 +15,7 @@ public class VisionAdvanceAndCenterTask extends VisionCenteringTask implements I
     */
     public VisionAdvanceAndCenterTask()
     {
-        super();
+        super(false);
 
         this.forwardPIDHandler = null;
     }
@@ -72,7 +72,7 @@ public class VisionAdvanceAndCenterTask extends VisionCenteringTask implements I
             return false;
         }
 
-        return super.hasCompleted() && currentDistance <= TuningConstants.MAX_VISION_ACCEPTABLE_FORWARD_DISTANCE;
+        return currentDistance <= TuningConstants.MAX_VISION_ACCEPTABLE_FORWARD_DISTANCE;
     }
 
     @Override

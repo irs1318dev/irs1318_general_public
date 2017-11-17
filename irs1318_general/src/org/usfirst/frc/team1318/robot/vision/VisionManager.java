@@ -7,8 +7,9 @@ import org.usfirst.frc.team1318.robot.common.IMechanism;
 import org.usfirst.frc.team1318.robot.common.wpilib.ISolenoid;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITimer;
 import org.usfirst.frc.team1318.robot.common.wpilib.IWpilibProvider;
-import org.usfirst.frc.team1318.robot.driver.Driver;
 import org.usfirst.frc.team1318.robot.driver.Operation;
+import org.usfirst.frc.team1318.robot.driver.common.Driver;
+import org.usfirst.frc.team1318.robot.vision.common.VisionProcessingState;
 import org.usfirst.frc.team1318.robot.vision.pipelines.HSVCenterPipeline;
 import org.usfirst.frc.team1318.robot.vision.pipelines.ICentroidVisionPipeline;
 
@@ -71,7 +72,7 @@ public class VisionManager implements IMechanism, VisionRunner.Listener<ICentroi
 
         this.camera = new UsbCamera("usb0", 0);
         this.camera.setResolution(VisionConstants.LIFECAM_CAMERA_RESOLUTION_X, VisionConstants.LIFECAM_CAMERA_RESOLUTION_Y);
-        ;
+
         this.camera.setExposureAuto();
         this.camera.setBrightness(VisionConstants.LIFECAM_CAMERA_OPERATOR_BRIGHTNESS);
         this.camera.setFPS(VisionConstants.LIFECAM_CAMERA_FPS);

@@ -12,8 +12,8 @@ import org.usfirst.frc.team1318.robot.common.wpilib.IEncoder;
 import org.usfirst.frc.team1318.robot.common.wpilib.IMotor;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITimer;
 import org.usfirst.frc.team1318.robot.common.wpilib.IWpilibProvider;
-import org.usfirst.frc.team1318.robot.driver.Driver;
 import org.usfirst.frc.team1318.robot.driver.Operation;
+import org.usfirst.frc.team1318.robot.driver.common.Driver;
 
 import com.google.inject.Inject;
 
@@ -214,7 +214,7 @@ public class DriveTrainMechanism implements IMechanism
 
         // apply the power settings to the motors
         this.leftMotor.set(leftPower);
-        this.rightMotor.set(rightPower);
+        this.rightMotor.set(-rightPower); // note: the right motor is oriented "backwards"
     }
 
     /**

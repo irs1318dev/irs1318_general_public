@@ -66,10 +66,15 @@ public class OneMotorMechanism implements IMechanism
         this.logger.logNumber("om", "power/setpoint", power);
 
         // apply the power settings to the motor
-        this.setPower(power);
+        this.logger.logNumber(OneMotorMechanism.LogName, "setting", power);
+        this.motor.changeControlMode(CANTalonControlMode.Speed);
+        this.motor.set(power);
 
         double velocity = this.getSpeed();
         this.logger.logNumber("om", "speed", velocity);
+
+        double ticks = this.motor.getTicks();
+        this.logger.logNumber("om", "ticks", ticks);
 
         double error = this.getError();
         this.logger.logNumber("om", "error", error);
@@ -86,7 +91,8 @@ public class OneMotorMechanism implements IMechanism
     @Override
     public void stop()
     {
-        this.setPower(0.0);
+        this.motor.changeControlMode(CANTalonControlMode.PercentVbus);
+        this.motor.set(0.0);
     }
 
     @Override
@@ -103,20 +109,5 @@ public class OneMotorMechanism implements IMechanism
     public double getError()
     {
         return this.motor.getError();
-    }
-
-    private void setPower(double power)
-    {
-        this.logger.logNumber(OneMotorMechanism.LogName, "setting", power);
-        if (power == 0.0)
-        {
-            this.motor.changeControlMode(CANTalonControlMode.PercentVbus);
-        }
-        else
-        {
-            this.motor.changeControlMode(CANTalonControlMode.Speed);
-        }
-
-        this.motor.set(power);
     }
 }

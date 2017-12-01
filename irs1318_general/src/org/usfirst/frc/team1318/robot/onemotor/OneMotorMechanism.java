@@ -32,11 +32,11 @@ public class OneMotorMechanism implements IMechanism
         this.motor.enableBrakeMode(false);
         this.motor.reverseSensor(false);
 
-        ICANTalon follower = provider.getCANTalon(ElectronicsConstants.ONEMOTOR_FOLLOWER_MOTOR_CHANNEL);
-        follower.enableBrakeMode(false);
-        follower.reverseOutput(true);
-        follower.changeControlMode(CANTalonControlMode.Follower);
-        follower.set(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);
+        //        ICANTalon follower = provider.getCANTalon(ElectronicsConstants.ONEMOTOR_FOLLOWER_MOTOR_CHANNEL);
+        //        follower.enableBrakeMode(false);
+        //        follower.reverseOutput(true);
+        //        follower.changeControlMode(CANTalonControlMode.Follower);
+        //        follower.set(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);
 
         if (TuningConstants.ONEMOTOR_USE_PID)
         {

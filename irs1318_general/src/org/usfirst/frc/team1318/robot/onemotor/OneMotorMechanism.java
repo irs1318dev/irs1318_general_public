@@ -21,6 +21,10 @@ public class OneMotorMechanism implements IMechanism
 
     private Driver driver;
 
+    private double velocity;
+    private double error;
+    private int ticks;
+
     @Inject
     public OneMotorMechanism(
         IDashboardLogger logger,
@@ -53,6 +57,28 @@ public class OneMotorMechanism implements IMechanism
         }
     }
 
+    public double getSpeed()
+    {
+        return this.velocity;
+    }
+
+    public double getError()
+    {
+        return this.error;
+    }
+
+    @Override
+    public void readSensors()
+    {
+        this.velocity = this.motor.getSpeed();
+        this.error = this.getError();
+        this.ticks = this.motor.getTicks();
+
+        this.logger.logNumber("om", "speed", this.velocity);
+        this.logger.logNumber("om", "error", this.error);
+        this.logger.logNumber("om", "ticks", this.ticks);
+    }
+
     @Override
     public void update()
     {
@@ -70,19 +96,10 @@ public class OneMotorMechanism implements IMechanism
         this.motor.changeControlMode(CANTalonControlMode.Speed);
         this.motor.set(power);
 
-        double velocity = this.getSpeed();
-        this.logger.logNumber("om", "speed", velocity);
-
-        double ticks = this.motor.getTicks();
-        this.logger.logNumber("om", "ticks", ticks);
-
-        double error = this.getError();
-        this.logger.logNumber("om", "error", error);
-
         double errorPercentage = 0.0;
         if (power != 0.0)
         {
-            errorPercentage = 100.0 * (error / power);
+            errorPercentage = 100.0 * (this.error / power);
         }
 
         this.logger.logNumber("om", "error%", errorPercentage);
@@ -99,15 +116,5 @@ public class OneMotorMechanism implements IMechanism
     public void setDriver(Driver driver)
     {
         this.driver = driver;
-    }
-
-    public double getSpeed()
-    {
-        return this.motor.getSpeed();
-    }
-
-    public double getError()
-    {
-        return this.motor.getError();
     }
 }

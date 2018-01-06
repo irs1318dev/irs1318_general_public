@@ -4,9 +4,9 @@ import org.usfirst.frc.team1318.robot.ElectronicsConstants;
 import org.usfirst.frc.team1318.robot.TuningConstants;
 import org.usfirst.frc.team1318.robot.common.IDashboardLogger;
 import org.usfirst.frc.team1318.robot.common.IMechanism;
-import org.usfirst.frc.team1318.robot.common.wpilib.CANTalonControlMode;
-import org.usfirst.frc.team1318.robot.common.wpilib.ICANTalon;
+import org.usfirst.frc.team1318.robot.common.wpilib.ITalonSRX;
 import org.usfirst.frc.team1318.robot.common.wpilib.IWpilibProvider;
+import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXControlMode;
 import org.usfirst.frc.team1318.robot.driver.Operation;
 import org.usfirst.frc.team1318.robot.driver.common.Driver;
 
@@ -17,7 +17,7 @@ public class OneMotorMechanism implements IMechanism
     private static final String LogName = "om";
 
     private final IDashboardLogger logger;
-    private final ICANTalon motor;
+    private final ITalonSRX motor;
 
     private Driver driver;
 
@@ -33,18 +33,18 @@ public class OneMotorMechanism implements IMechanism
         this.logger = logger;
         this.motor = provider.getCANTalon(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);
 
-        this.motor.enableBrakeMode(false);
-        this.motor.reverseSensor(false);
+        this.motor.setNeutralMode(false);
+        this.motor.invertSensor(false);
 
-        //        ICANTalon follower = provider.getCANTalon(ElectronicsConstants.ONEMOTOR_FOLLOWER_MOTOR_CHANNEL);
+        //        ITalonSRX follower = provider.getTalonSRX(ElectronicsConstants.ONEMOTOR_FOLLOWER_MOTOR_CHANNEL);
         //        follower.enableBrakeMode(false);
         //        follower.reverseOutput(true);
-        //        follower.changeControlMode(CANTalonControlMode.Follower);
+        //        follower.changeControlMode(TalonSRXControlMode.Follower);
         //        follower.set(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);
 
         if (TuningConstants.ONEMOTOR_USE_PID)
         {
-            this.motor.changeControlMode(CANTalonControlMode.Speed);
+            this.motor.changeControlMode(TalonSRXControlMode.Speed);
             this.motor.setPIDF(
                 TuningConstants.ONEMOTOR_PID_KP,
                 TuningConstants.ONEMOTOR_PID_KI,
@@ -53,7 +53,7 @@ public class OneMotorMechanism implements IMechanism
         }
         else
         {
-            this.motor.changeControlMode(CANTalonControlMode.PercentVbus);
+            this.motor.changeControlMode(TalonSRXControlMode.Current);
         }
     }
 
@@ -70,13 +70,13 @@ public class OneMotorMechanism implements IMechanism
     @Override
     public void readSensors()
     {
-        this.velocity = this.motor.getSpeed();
+        this.velocity = this.motor.getVelocity();
         this.error = this.getError();
-        this.ticks = this.motor.getTicks();
+        this.ticks = this.motor.getPosition();
 
-        this.logger.logNumber("om", "speed", this.velocity);
+        this.logger.logNumber("om", "velocity", this.velocity);
         this.logger.logNumber("om", "error", this.error);
-        this.logger.logNumber("om", "ticks", this.ticks);
+        this.logger.logNumber("om", "position", this.ticks);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class OneMotorMechanism implements IMechanism
 
         // apply the power settings to the motor
         this.logger.logNumber(OneMotorMechanism.LogName, "setting", power);
-        this.motor.changeControlMode(CANTalonControlMode.Speed);
+        this.motor.changeControlMode(TalonSRXControlMode.Speed);
         this.motor.set(power);
 
         double errorPercentage = 0.0;
@@ -108,7 +108,7 @@ public class OneMotorMechanism implements IMechanism
     @Override
     public void stop()
     {
-        this.motor.changeControlMode(CANTalonControlMode.PercentVbus);
+        this.motor.changeControlMode(TalonSRXControlMode.Disabled);
         this.motor.set(0.0);
     }
 

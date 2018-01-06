@@ -31,7 +31,7 @@ public class OneMotorMechanism implements IMechanism
         IWpilibProvider provider)
     {
         this.logger = logger;
-        this.motor = provider.getCANTalon(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);
+        this.motor = provider.getTalonSRX(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);
 
         this.motor.setNeutralMode(false);
         this.motor.invertSensor(false);
@@ -44,7 +44,7 @@ public class OneMotorMechanism implements IMechanism
 
         if (TuningConstants.ONEMOTOR_USE_PID)
         {
-            this.motor.changeControlMode(TalonSRXControlMode.Speed);
+            this.motor.changeControlMode(TalonSRXControlMode.Velocity);
             this.motor.setPIDF(
                 TuningConstants.ONEMOTOR_PID_KP,
                 TuningConstants.ONEMOTOR_PID_KI,
@@ -93,7 +93,7 @@ public class OneMotorMechanism implements IMechanism
 
         // apply the power settings to the motor
         this.logger.logNumber(OneMotorMechanism.LogName, "setting", power);
-        this.motor.changeControlMode(TalonSRXControlMode.Speed);
+        this.motor.changeControlMode(TalonSRXControlMode.Velocity);
         this.motor.set(power);
 
         double errorPercentage = 0.0;

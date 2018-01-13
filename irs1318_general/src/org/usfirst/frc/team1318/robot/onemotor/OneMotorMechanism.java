@@ -16,6 +16,7 @@ import com.google.inject.Inject;
 public class OneMotorMechanism implements IMechanism
 {
     private static final String LogName = "om";
+    private static final int slotId = 0;
 
     private final IDashboardLogger logger;
     private final ITalonSRX motor;
@@ -50,11 +51,12 @@ public class OneMotorMechanism implements IMechanism
                 TuningConstants.ONEMOTOR_PID_KP,
                 TuningConstants.ONEMOTOR_PID_KI,
                 TuningConstants.ONEMOTOR_PID_KD,
-                TuningConstants.ONEMOTOR_PID_KF);
+                TuningConstants.ONEMOTOR_PID_KF,
+                OneMotorMechanism.slotId);
         }
         else
         {
-            this.motor.changeControlMode(TalonSRXControlMode.Current);
+            this.motor.changeControlMode(TalonSRXControlMode.PercentOutput);
         }
     }
 

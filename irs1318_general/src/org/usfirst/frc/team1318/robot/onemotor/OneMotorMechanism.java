@@ -38,7 +38,7 @@ public class OneMotorMechanism implements IMechanism
         this.motor.invertSensor(false);
 
         //        ITalonSRX follower = provider.getTalonSRX(ElectronicsConstants.ONEMOTOR_FOLLOWER_MOTOR_CHANNEL);
-        //        follower.enableBrakeMode(false);
+        //        follower.setNeutralMode(TalonSRXNeutralMode.Coast);
         //        follower.reverseOutput(true);
         //        follower.changeControlMode(TalonSRXControlMode.Follower);
         //        follower.set(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);

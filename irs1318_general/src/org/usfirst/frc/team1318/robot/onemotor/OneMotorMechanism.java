@@ -7,6 +7,7 @@ import org.usfirst.frc.team1318.robot.common.IMechanism;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITalonSRX;
 import org.usfirst.frc.team1318.robot.common.wpilib.IWpilibProvider;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXControlMode;
+import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXNeutralMode;
 import org.usfirst.frc.team1318.robot.driver.Operation;
 import org.usfirst.frc.team1318.robot.driver.common.Driver;
 
@@ -33,7 +34,7 @@ public class OneMotorMechanism implements IMechanism
         this.logger = logger;
         this.motor = provider.getTalonSRX(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);
 
-        this.motor.setNeutralMode(false);
+        this.motor.setNeutralMode(TalonSRXNeutralMode.Coast);
         this.motor.invertSensor(false);
 
         //        ITalonSRX follower = provider.getTalonSRX(ElectronicsConstants.ONEMOTOR_FOLLOWER_MOTOR_CHANNEL);

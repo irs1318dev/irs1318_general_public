@@ -36,7 +36,7 @@ public class OneMotorMechanism implements IMechanism
         this.motor = provider.getTalonSRX(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);
 
         this.motor.setNeutralMode(TalonSRXNeutralMode.Coast);
-        this.motor.invertSensor(false);
+        this.motor.setInvertSensor(false);
 
         //        ITalonSRX follower = provider.getTalonSRX(ElectronicsConstants.ONEMOTOR_FOLLOWER_MOTOR_CHANNEL);
         //        follower.setNeutralMode(TalonSRXNeutralMode.Coast);
@@ -46,7 +46,7 @@ public class OneMotorMechanism implements IMechanism
 
         if (TuningConstants.ONEMOTOR_USE_PID)
         {
-            this.motor.changeControlMode(TalonSRXControlMode.Velocity);
+            this.motor.setControlMode(TalonSRXControlMode.Velocity);
             this.motor.setPIDF(
                 TuningConstants.ONEMOTOR_PID_KP,
                 TuningConstants.ONEMOTOR_PID_KI,
@@ -56,7 +56,7 @@ public class OneMotorMechanism implements IMechanism
         }
         else
         {
-            this.motor.changeControlMode(TalonSRXControlMode.PercentOutput);
+            this.motor.setControlMode(TalonSRXControlMode.PercentOutput);
         }
     }
 
@@ -96,7 +96,7 @@ public class OneMotorMechanism implements IMechanism
 
         // apply the power settings to the motor
         this.logger.logNumber(OneMotorMechanism.LogName, "setting", power);
-        this.motor.changeControlMode(TalonSRXControlMode.Velocity);
+        this.motor.setControlMode(TalonSRXControlMode.Velocity);
         this.motor.set(power);
 
         double errorPercentage = 0.0;
@@ -111,8 +111,7 @@ public class OneMotorMechanism implements IMechanism
     @Override
     public void stop()
     {
-        this.motor.changeControlMode(TalonSRXControlMode.Disabled);
-        this.motor.set(0.0);
+        this.motor.reset();
     }
 
     @Override

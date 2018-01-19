@@ -102,7 +102,7 @@ public class TuningConstants
 
     //================================================== One-Motor ==============================================================
 
-    public static final boolean ONEMOTOR_USE_PID = true;
+    public static final boolean ONEMOTOR_USE_PID = false;
 
     public static final double ONEMOTOR_PID_KP = 0.25;
     public static final double ONEMOTOR_PID_KI = 0.0;

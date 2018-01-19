@@ -112,6 +112,7 @@ public class OneMotorMechanism implements IMechanism
     public void stop()
     {
         this.motor.reset();
+        this.motor.stop();
     }
 
     @Override

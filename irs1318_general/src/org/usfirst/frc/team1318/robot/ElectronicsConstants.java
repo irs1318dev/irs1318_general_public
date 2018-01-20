@@ -37,6 +37,6 @@ public class ElectronicsConstants
 
     //================================================== OneMotor ================================================================
 
-    public static final int ONEMOTOR_MASTER_MOTOR_CHANNEL = 1;
-    public static final int ONEMOTOR_FOLLOWER_MOTOR_CHANNEL = 2;
+    public static final int ONEMOTOR_MASTER_MOTOR_CHANNEL = 5;
+    public static final int ONEMOTOR_FOLLOWER_MOTOR_CHANNEL = 6;
 }

@@ -109,4 +109,11 @@ public class TuningConstants
     public static final double ONEMOTOR_PID_KF = 0.1;
 
     public static final double ONEMOTOR_PID_MAX_VELOCITY = 3600.0;
+
+    public static final boolean ONEMOTOR_INVERT_OUTPUT = false;
+    public static final boolean ONEMOTOR_INVERT_SENSOR = false;
+    public static final boolean ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED = true;
+    public static final boolean ONEMOTOR_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN = true;
+    public static final boolean ONEMOTOR_REVERSE_LIMIT_SWITCH_ENABLED = true;
+    public static final boolean ONEMOTOR_REVERSE_LIMIT_SWITCH_NORMALLY_OPEN = true;
 }

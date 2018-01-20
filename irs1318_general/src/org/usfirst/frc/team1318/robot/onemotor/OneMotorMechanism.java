@@ -38,18 +38,32 @@ public class OneMotorMechanism implements IMechanism
         this.motor.setNeutralMode(TalonSRXNeutralMode.Coast);
         this.motor.setInvertOutput(TuningConstants.ONEMOTOR_INVERT_OUTPUT);
         this.motor.setInvertSensor(TuningConstants.ONEMOTOR_INVERT_SENSOR);
-        this.motor.setForwardLimitSwitch(TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED, TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN);
-        this.motor.setReverseLimitSwitch(TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_ENABLED, TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_NORMALLY_OPEN);
+        this.motor.setForwardLimitSwitch(
+            TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED,
+            TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN);
+        this.motor.setReverseLimitSwitch(
+            TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_ENABLED,
+            TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_NORMALLY_OPEN);
 
         if (TuningConstants.ONEMOTOR_USE_PID)
         {
-            this.motor.setControlMode(TalonSRXControlMode.Velocity);
+            if (TuningConstants.ONEMOTOR_PID_POSITIONAL)
+            {
+                this.motor.setControlMode(TalonSRXControlMode.Position);
+            }
+            else
+            {
+                this.motor.setControlMode(TalonSRXControlMode.Velocity);
+            }
+
             this.motor.setPIDF(
                 TuningConstants.ONEMOTOR_PID_KP,
                 TuningConstants.ONEMOTOR_PID_KI,
                 TuningConstants.ONEMOTOR_PID_KD,
                 TuningConstants.ONEMOTOR_PID_KF,
                 OneMotorMechanism.slotId);
+
+            this.motor.setSelectedSlot(OneMotorMechanism.slotId);
         }
         else
         {
@@ -57,7 +71,7 @@ public class OneMotorMechanism implements IMechanism
         }
     }
 
-    public double getSpeed()
+    public double getVelocity()
     {
         return this.velocity;
     }
@@ -82,27 +96,36 @@ public class OneMotorMechanism implements IMechanism
     @Override
     public void update()
     {
-        double power = this.driver.getAnalog(Operation.OneMotorPower);
+        double setpoint = this.driver.getAnalog(Operation.OneMotorPower);
+
+        double maxSetpointValue = 1.0;
+        if (TuningConstants.ONEMOTOR_USE_PID)
+        {
+            if (TuningConstants.ONEMOTOR_PID_POSITIONAL)
+            {
+                maxSetpointValue = TuningConstants.ONEMOTOR_PID_MAX_POSITION;
+            }
+            else
+            {
+                maxSetpointValue = TuningConstants.ONEMOTOR_PID_MAX_VELOCITY;
+            }
+        }
+
+        setpoint *= maxSetpointValue;
+
+        this.logger.logNumber("om", "setpoint", setpoint);
+        this.motor.set(setpoint);
 
         if (TuningConstants.ONEMOTOR_USE_PID)
         {
-            power *= TuningConstants.ONEMOTOR_PID_MAX_VELOCITY;
+            double errorPercentage = 0.0;
+            if (setpoint != 0.0)
+            {
+                errorPercentage = 100.0 * (this.error / maxSetpointValue);
+            }
+
+            this.logger.logNumber("om", "error%", errorPercentage);
         }
-
-        this.logger.logNumber("om", "power/setpoint", power);
-
-        // apply the power settings to the motor
-        this.logger.logNumber(OneMotorMechanism.LogName, "setting", power);
-        this.motor.setControlMode(TalonSRXControlMode.Velocity);
-        this.motor.set(power);
-
-        double errorPercentage = 0.0;
-        if (power != 0.0)
-        {
-            errorPercentage = 100.0 * (this.error / power);
-        }
-
-        this.logger.logNumber("om", "error%", errorPercentage);
     }
 
     @Override

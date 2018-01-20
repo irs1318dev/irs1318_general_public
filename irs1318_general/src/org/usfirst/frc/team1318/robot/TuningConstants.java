@@ -102,12 +102,14 @@ public class TuningConstants
     //================================================== One-Motor ==============================================================
 
     public static final boolean ONEMOTOR_USE_PID = false;
+    public static final boolean ONEMOTOR_PID_POSITIONAL = true;
 
     public static final double ONEMOTOR_PID_KP = 0.25;
     public static final double ONEMOTOR_PID_KI = 0.0;
     public static final double ONEMOTOR_PID_KD = 0.0;
     public static final double ONEMOTOR_PID_KF = 0.1;
 
+    public static final double ONEMOTOR_PID_MAX_POSITION = (36.0 / 4.2) * 4096; // in ticks. 36 inches / (4.2 inches/rotation) * (4096 ticks/rotation)
     public static final double ONEMOTOR_PID_MAX_VELOCITY = 3600.0;
 
     public static final boolean ONEMOTOR_INVERT_OUTPUT = false;

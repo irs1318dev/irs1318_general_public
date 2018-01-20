@@ -7,6 +7,7 @@ import org.usfirst.frc.team1318.robot.common.IMechanism;
 import org.usfirst.frc.team1318.robot.common.wpilib.ITalonSRX;
 import org.usfirst.frc.team1318.robot.common.wpilib.IWpilibProvider;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXControlMode;
+import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXFeedbackDevice;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXNeutralMode;
 import org.usfirst.frc.team1318.robot.driver.Operation;
 import org.usfirst.frc.team1318.robot.driver.common.Driver;
@@ -35,7 +36,8 @@ public class OneMotorMechanism implements IMechanism
         this.logger = logger;
         this.motor = provider.getTalonSRX(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);
 
-        this.motor.setNeutralMode(TalonSRXNeutralMode.Coast);
+        this.motor.setSensorType(TalonSRXFeedbackDevice.QuadEncoder);
+        this.motor.setNeutralMode(TalonSRXNeutralMode.Brake);
         this.motor.setInvertOutput(TuningConstants.ONEMOTOR_INVERT_OUTPUT);
         this.motor.setInvertSensor(TuningConstants.ONEMOTOR_INVERT_SENSOR);
         this.motor.setForwardLimitSwitch(

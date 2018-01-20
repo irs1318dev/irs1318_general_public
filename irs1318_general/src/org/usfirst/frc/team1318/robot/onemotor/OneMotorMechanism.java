@@ -8,6 +8,7 @@ import org.usfirst.frc.team1318.robot.common.wpilib.ITalonSRX;
 import org.usfirst.frc.team1318.robot.common.wpilib.IWpilibProvider;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXControlMode;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXFeedbackDevice;
+import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXLimitSwitchStatus;
 import org.usfirst.frc.team1318.robot.common.wpilib.TalonSRXNeutralMode;
 import org.usfirst.frc.team1318.robot.driver.Operation;
 import org.usfirst.frc.team1318.robot.driver.common.Driver;
@@ -27,6 +28,8 @@ public class OneMotorMechanism implements IMechanism
     private double velocity;
     private double error;
     private int ticks;
+    public boolean reverseLimitSwtichStatus;
+    public boolean forwardLimitSwitchStatus;
 
     @Inject
     public OneMotorMechanism(
@@ -71,28 +74,33 @@ public class OneMotorMechanism implements IMechanism
         {
             this.motor.setControlMode(TalonSRXControlMode.PercentOutput);
         }
-    }
 
-    public double getVelocity()
-    {
-        return this.velocity;
-    }
-
-    public double getError()
-    {
-        return this.error;
+        this.velocity = 0.0;
+        this.error = 0.0;
+        this.ticks = 0;
+        this.reverseLimitSwtichStatus = false;
+        this.forwardLimitSwitchStatus = false;
     }
 
     @Override
     public void readSensors()
     {
         this.velocity = this.motor.getVelocity();
-        this.error = this.getError();
+        this.error = this.motor.getError();
         this.ticks = this.motor.getPosition();
+
+        if (TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED || TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_ENABLED)
+        {
+            TalonSRXLimitSwitchStatus limitSwitchStatus = this.motor.getLimitSwitchStatus();
+            this.reverseLimitSwtichStatus = limitSwitchStatus.isReverseClosed;
+            this.forwardLimitSwitchStatus = limitSwitchStatus.isForwardClosed;
+        }
 
         this.logger.logNumber("om", "velocity", this.velocity);
         this.logger.logNumber("om", "error", this.error);
         this.logger.logNumber("om", "position", this.ticks);
+        this.logger.logBoolean("om", "reverseLimitSwtich", this.reverseLimitSwtichStatus);
+        this.logger.logBoolean("om", "forwardLimitSwtich", this.forwardLimitSwitchStatus);
     }
 
     @Override

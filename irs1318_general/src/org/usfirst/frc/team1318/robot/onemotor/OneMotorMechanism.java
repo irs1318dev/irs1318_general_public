@@ -43,12 +43,12 @@ public class OneMotorMechanism implements IMechanism
         this.motor.setNeutralMode(TalonSRXNeutralMode.Brake);
         this.motor.setInvertOutput(TuningConstants.ONEMOTOR_INVERT_OUTPUT);
         this.motor.setInvertSensor(TuningConstants.ONEMOTOR_INVERT_SENSOR);
-        //        this.motor.setForwardLimitSwitch(
-        //            TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED,
-        //            TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN);
-        //        this.motor.setReverseLimitSwitch(
-        //            TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_ENABLED,
-        //            TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_NORMALLY_OPEN);
+        this.motor.setForwardLimitSwitch(
+            TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED,
+            TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN);
+        this.motor.setReverseLimitSwitch(
+            TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_ENABLED,
+            TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_NORMALLY_OPEN);
 
         if (TuningConstants.ONEMOTOR_USE_PID)
         {

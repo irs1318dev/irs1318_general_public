@@ -54,19 +54,42 @@ public class OneMotorMechanism implements IMechanism
         {
             if (TuningConstants.ONEMOTOR_PID_POSITIONAL)
             {
-                this.motor.setControlMode(TalonSRXControlMode.Position);
+                if (TuningConstants.ONEMOTOR_PID_POSITIONAL_MM)
+                {
+                    this.motor.setControlMode(TalonSRXControlMode.MotionMagicPosition);
+
+                    this.motor.setMotionMagicPIDF(
+                        TuningConstants.ONEMOTOR_PID_KP,
+                        TuningConstants.ONEMOTOR_PID_KI,
+                        TuningConstants.ONEMOTOR_PID_KD,
+                        TuningConstants.ONEMOTOR_PID_KF,
+                        TuningConstants.ONEMOTOR_PID_MM_CRUISE_VELOC,
+                        TuningConstants.ONEMOTOR_PID_MM_ACCEL,
+                        OneMotorMechanism.slotId);
+                }
+                else
+                {
+                    this.motor.setControlMode(TalonSRXControlMode.Position);
+
+                    this.motor.setPIDF(
+                        TuningConstants.ONEMOTOR_PID_KP,
+                        TuningConstants.ONEMOTOR_PID_KI,
+                        TuningConstants.ONEMOTOR_PID_KD,
+                        TuningConstants.ONEMOTOR_PID_KF,
+                        OneMotorMechanism.slotId);
+                }
             }
             else
             {
                 this.motor.setControlMode(TalonSRXControlMode.Velocity);
-            }
 
-            this.motor.setPIDF(
-                TuningConstants.ONEMOTOR_PID_KP,
-                TuningConstants.ONEMOTOR_PID_KI,
-                TuningConstants.ONEMOTOR_PID_KD,
-                TuningConstants.ONEMOTOR_PID_KF,
-                OneMotorMechanism.slotId);
+                this.motor.setPIDF(
+                    TuningConstants.ONEMOTOR_PID_KP,
+                    TuningConstants.ONEMOTOR_PID_KI,
+                    TuningConstants.ONEMOTOR_PID_KD,
+                    TuningConstants.ONEMOTOR_PID_KF,
+                    OneMotorMechanism.slotId);
+            }
 
             this.motor.setSelectedSlot(OneMotorMechanism.slotId);
         }

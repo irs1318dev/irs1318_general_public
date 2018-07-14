@@ -15,8 +15,8 @@ import org.usfirst.frc.team1318.robot.common.wpilib.TimerWrapper;
 import org.usfirst.frc.team1318.robot.common.wpilib.WpilibProvider;
 import org.usfirst.frc.team1318.robot.driver.ButtonMap;
 import org.usfirst.frc.team1318.robot.driver.common.IButtonMap;
-import org.usfirst.frc.team1318.robot.drivetrain.DriveTrainMechanism;
-import org.usfirst.frc.team1318.robot.onemotor.OneMotorMechanism;
+import org.usfirst.frc.team1318.robot.mechanisms.DriveTrainMechanism;
+import org.usfirst.frc.team1318.robot.mechanisms.OneMotorMechanism;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;

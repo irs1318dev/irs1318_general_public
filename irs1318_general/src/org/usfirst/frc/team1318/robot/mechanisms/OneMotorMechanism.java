@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1318.robot.onemotor;
+package org.usfirst.frc.team1318.robot.mechanisms;
 
 import org.usfirst.frc.team1318.robot.ElectronicsConstants;
 import org.usfirst.frc.team1318.robot.TuningConstants;

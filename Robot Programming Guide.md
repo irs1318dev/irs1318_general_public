@@ -45,15 +45,17 @@
       6. [Mockito](#mockito)
 4. [Instructions](#instructions)
    1. [Setting up your Environment](#setting-up-your-environment)
-   2. [Making Simple Operation changes](#making-simple-operation-changes)
-   3. [Writing a new Mechanism](#writing-a-new-mechanism)
+   2. [Simple CMD operations and Git usage](#simple-cmd-operations-and-git-usage)
+   3. [Making Simple Operation changes](#making-simple-operation-changes)
+   4. [Writing a new Mechanism](#writing-a-new-mechanism)
       1. [Define mechanism class and member variables](#define-mechanism-class-and-member-variables)
       2. [Write mechanism constructor](#write-mechanism-constructor)
       3. [Write mechanism readSensors function](#write-mechanism-readsensors-function)
       4. [Write mechanism update function](#write-mechanism-update-function)
       5. [Write mechanism stop function](#write-mechanism-stop-function)
       6. [Write mechanism setDriver function](#write-mechanism-setdriver-function)
-   4. [Writing Macros and Autonomous Routines](#writing-macros-and-autonomous-routines)
+      7. [Write any getter functions](#write-any-getter-functions)
+   5. [Writing Macros and Autonomous Routines](#writing-macros-and-autonomous-routines)
       1. [Writing Tasks](#writing-tasks)
          1. [Define task class, member variables, and constructor](#define-task-class-member-variables-and-constructor)
          2. [Define task begin function](#define-task-begin-function)
@@ -61,7 +63,7 @@
          4. [Define task end function](#define-task-end-function)
          5. [Define task hasCompleted function](#define-task-hascompleted-function)
       2. [Adding Macros](#adding-macros)
-      3. [Composing Tasks into Routines](#composing-tasks-into-routines)
+      3. [Composing Tasks together](#composing-tasks-together)
          1. [SequentialTask.Sequence()](#sequentialtasksequence)
          2. [ConcurrentTask.AnyTasks()](#concurrenttaskanytasks)
          3. [ConcurrentTask.AllTasks()](#concurrenttaskalltasks)
@@ -213,20 +215,72 @@ The [NavX MXP](http://www.pdocs.kauailabs.com/navx-mxp/software/) has a library 
 
 ## Instructions
 ### Setting up your Environment
-After following the steps for [Installing Eclipse](https://wpilib.screenstepslive.com/s/currentCS/m/java/l/599681-installing-eclipse-c-java), you will need to do the following:
-1. Create a new Robot project in Eclipse to set up environment variables (File --> New --> Project, select "Robot Java Project", select "Iterative Robot", and enter your team number).  Once you have created the project, right-click it and delete it.
-2. Copy all of the files from the [Robot Libraries](https://github.com/irs1318dev/RobotLibraries) repository into the corresponding library directory (on Windows, C:\Users\<username>\wpilib\user\java\lib).
+To prepare your computer for Robot programming with our team, you will need to follow the following steps:
+1. Installing everything:
+   1. Install Java SDK.  In FRC, we previously used Java 8, but for 2019 we are going to be using Java 11.  Install the appropriate version of the [Java 11 SDK (JDK)](https://www.oracle.com/technetwork/java/javase/downloads/index.html) and/or the [Java 8 SE SDK (JDK)](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) for your operating system.  For Windows, we typically recommend the x64 version (Windows x64).
+   2. Install Git.  Our team uses Git for source control.  Git is commonly used in industry to help many people collaborate on the same software project.  Install the appropriate version of [Git](https://git-scm.com/downloads) for your operating system.  You can use all of the default options in the installer.
+   3. Install Visual Studio Code.  Starting in the 2019 season, VS Code is the supported development environment for FRC.  Install the appropriate version of [VS Code](https://code.visualstudio.com/download) for your operating system.
+   4. Install the Java Extension Pack for VS Code.  Navigate to the [Java Extension Pack](https://marketplace.visualstudio.com/items?itemName=vscjava.vscode-java-pack) in the VS Code Marketplace and click Install.  It should prompt you asking to allow it to open VS Code and install the extension.  If that doesn't work, open VS Code and go to the Extensions area.  By default, Extensions can be opened by clicking the bottom button of the icons on the top left of the window.  If you can't find it, you can instead go to View --> Extensions, or press CTRL+Shift+X (on Windows).  Then, search for the "Java Extension Pack" in the Marketplace and click "Install".
+   5. Install the WPILib Extension for Visual Studio Code.   Currently only an Alpha build is available.  To install, Download the latest alpha release from the [GitHub Releases](https://github.com/wpilibsuite/vscode-wpilib/releases) page for the extension.  Within VS Code, open the Extensions area, click the elipses ("..."), select "Install from VSIX", and select the vsix you downloaded earlier.  You will need to reload VS Code in order for the extension to be available.
+   6. Install GitHub Desktop (optional).  Our team uses GitHub as the host for our source control system, so if you are more comfortable having a GUI for interacting with it, then GitHub Desktop will be the best supported.  Install the appropriate version of [GitHub Desktop](https://desktop.github.com/) for your operating system.
+2. Configuring things:
+   1. Git uses VIM as the default text editor for commit messages.  If you are not very familiar with VIM usage, it is recommended to change to a more normal windowed application as VIM can be very confusing for beginners.  I would recommend switching to use VS Code as your editor and default diff tool.
+      1. Use VS Code as your default text editor by running ```git config --global core.editor "code --wait"``` from a Command Prompt window.
+      2. Modify your Global settings by running ```git config --global -e```, and then adding the following entries to the end of the file:
+      ```
+      [diff]
+        tool = vscode
+      [difftool "vscode"]
+        cmd = code --wait --diff \"$LOCAL\" \"$REMOTE\"
+      ```
+   2. VS Code's Java extension sometimes needs extra hints to find where the Java JDK was installed.  To do this, you will need to add an environment variable on Windows (sorry, don't know what to do for Mac). 
+      1. In Windows 10, press start and type "environment" in the search bar.
+      2. Click the option that says "Edit the system environment variables".  
+      3. Click the "Environment Variables..." button at the bottom of the window.
+      4. Within the "System variables" section, click the "New..." button.
+      5. In the "New System Variable" dialog, use the Variable name "JAVA_HOME" and value "C:\Program Files\Java\jdk-11", then click Ok.
+      6. Click ok to close the Environment Variables and System Properties windows.
+      7. Restart your computer.
 3. Get the code onto your local machine.
-   a. Copy the repository's URL.  In GitHub, find the repository you are interested in, click the "Clone or download" button, and then copy the text (e.g. "https://github.com/irs1318dev/irs1318_general.git").
-   b. In Eclipse, go to the "Git" perspective (Window --> Perspective --> Open Perspective --> other..., Git).
-   c. Click the "Clone a git repository and add the clone to this view" button.  It should auto-fill the URL you copied above.
-   d. Follow through the wizard, being sure to enable the "Import all existing Eclipse projects after clone finishes".
-   e. Switch back to the Java perspective.  Your project should now appear.
+   1. Copy the repository's URL.  In GitHub, find the repository you are interested in, click the "Clone or download" button, and then copy the text (e.g. "https://github.com/irs1318dev/Fauxbot.git").
+   2. Using commandline:
+      1. Open a commandline window.  On Windows, search for "cmd" or "Command Prompt".  Navigate within your directory structure to a directory where you'd like to keep your source files (e.g. "```cd C:\Users\username\git\```").
+      2. Run the following git command to clone the repository to your local machine: "```git clone https://github.com/irs1318dev/Fauxbot.git```"
+      3. Once the repository has been cloned, navigate into the main directory (e.g. "```cd C:\Users\username\git\Fauxbot\Fauxbot```") and tell Gradle to build the code in the directory (type "```gradlew build```").  If gradle hasn't been installed yet, this should trigger it to be installed.
+      4. Open VS Code for this project.  In the main directory, type "```code .```".  This will tell VS Code to open with a reference to the folder you are currently exploring within cmd.
+    3. Using GitHub Desktop:
+       1. Open GitHub Desktop.  For the best experience, you will need a GitHub user account that has been added to the irs1318dev group.  If you haven't done that, consider doing that first.
+       2. Go to File --> Clone Repository.  If you have been added to the irs1318dev group, you can select the repository you want (e.g. "irs1318dev/Fauxbot") from a list of repositories under the GitHub.com tab.  Otherwise, go to the the URL tab and enter the repository you want (e.g. "irs1318dev/Fauxbot") in the text box.  Then choose a local path where this repository will be cloned (e.g. "C:\Users\username\git\Fauxbot") and click the clone button.
+       3. Open VS Code for this project.  Open VS Code and open the folder where code is located by going to File --> Open Folder, and selecting the folder within the one where the repository was cloned (e.g. "C:\Users\username\git\Fauxbot\Fauxbot").
+
+### Simple Command Line operations and Git usage
+Starting in the 2019 season, there's a stronger need to use the command-line than in previous years.  Command line interfaces are used often in real world Engineering and Software Development, so learning it is very useful.
+
+#### Opening CMD and Navigating to a directory in Windows
+(Note that the first few steps in the instructions are different in Mac/Unix/Linux - please use the internet to figure out specific instructions for your non-Windows operating system.  In Linux/Unix you are looking for a bash or shell window, on Mac you are looking for the Terminal.)  Press the start button (or the Windows key on your keyboard) and type "cmd" and open Command Prompt.  This will open Command Prompt (cmd) scoped to your user home directory (typically "```C:\Users\username\```").
+
+You will need to navigate around in order to do anything useful.  To look at the contents of your current directory, type "```dir```" ("```ls```" on Mac/Linux/Unix).  To navigate to another directory, use the change directory command ("```cd```") and type "```cd directory```".  While using this command, you can use "```..```" to reference the directory above your current scope, and "```.```" to reference the current directory.  You can also use a full name of the directory, such as "```cd C:\Users\username\git\```" to navigate to that directory.
+
+#### Simple git operations in Command Prompt
+1. "```git status```" command will tell you all of the files that are different than what has been committed.
+2. "```git checkout -- filename```" command will get rid of any changes to the specified file in your working directory and replace it with the last-committed version of that file in the local repository.
+3. "```git add -A```" command will add all of the currently-changed files in your working directory to be staged and ready to commit.
+4. "```git commit -m "message"```" command will commit all of the currently staged changes with the provided message.
+5. "```git push```" command will push commits from your local repository to the remote repository (you will need to run "```git push origin branchname```" the first time you are pushing a new branch).
+6. "```git branch```" command will show you what branches currently exist for the current repository.
+7. "```git branch -c master branchname```" command will create a new topic branch off of the master branch.
+8. "```git pull```" command will update your local repository with changes that have been pushed to the remote repository.
+9. "```git checkout branchname```" command will switch your working directory to look at a different branch.
+10. "```git clone https://github.com/irs1318dev/Fauxbot.git```" command will clone the repository tracked at the provided url, creating a local copy that you can use to make changes.
+
+For more information about Git in command prompt, look here:
+[GitHub's git cheat-sheet](https://services.github.com/on-demand/downloads/github-git-cheat-sheet/)
+[GitHub's Git Handbook](https://guides.github.com/introduction/git-handbook/)
 
 ### Making Simple Operation changes
 To add a new action that the robot can take with a mechanism, first open the Operation enum (Operation.java) and add a new value to the list in that file.  We try to keep the various operations organized, so we keep them listed in a different section for each Mechanism.  The operation should be named starting with the mechanism (e.g. "DriveTrain", "Intake", etc.), and then a description of the action (e.g. "Turn", "RaiseArm", etc.).  Remember that Operations are a single, simple thing that is done by the robot.  Any more complex action that we want the robot to take will be a Macro which composes these Operations together (which we will talk about later).
 
-Next, you will open the ButtonMap.java file and add another mapping into the OperationSchema that describes the Operation that you just added.  There are two types of operations - Analog or Digital.  Analog operations represent things that are double (decimal) values, typically between -1.0 and 1.0.  Digital operations represent things that are Boolean values (true or false).  Each type, Analog or Digital, has their own type of Description.
+Next, you will open the ButtonMap.java file and add another mapping into the OperationSchema that describes the Operation that you just added.  There are two types of operations - Analog or Digital.  Analog operations represent things that are done to a certain extend, using double (decimal) values typically between -1.0 and 1.0.  Digital operations represent things that are either done or not done, using Boolean values (true or false).  Each type of Operation, Analog or Digital, has their own Description.
 
 ```java
 put(
@@ -238,7 +292,8 @@ put(
         TuningConstants.DRIVETRAIN_Y_DEAD_ZONE));
 ```
 
-The Analog description takes parameters describing the User Input Device (Driver or CoDriver joystick) and the axis of the joystick (X, Y, Throttle, etc.).
+The Analog description takes parameters describing the User Input Device (Driver or CoDriver joystick) and the axis of the joystick (X, Y, Throttle, etc.).  It also includes the ability to invert the axis (so that the "forward" direction matches positive) and the ability to provie a dead zone (as joysticks are often imperfect at mesauring the middle).
+
 ```java
 put(
     Operation.IntakeRaiseArm,
@@ -248,10 +303,10 @@ put(
         ButtonType.Simple));
 ```
 
-The Digital description takes arguments describing the User Input Device, the button on the joystick, and the type of button (Simple, Toggle, or Click).
+The Digital description takes arguments describing the User Input Device, the button on the joystick, and the type of button (Simple, Toggle, or Click).  Simple buttons are typically used for continuous actions (such as running an intake), Toggle actions are typically used for macros, and Click actions are typically used for single-shot actions (such as extending an arm).
 
 ### Writing a new Mechanism
-Mechanisms handle the interactions with the actuators (e.g. motors, pneumatic solenoids) and sensors (e.g. Encoders, Limit Switches) of each part of the robot, controlling them based on the operations from the Driver.  A mechanism is a class that implements the IMechanism interface with a name based on the name of that portion of the robot (e.g. DriveTrain, Intake) combined with "Mechanism", such as ThingMechanism.  It should be placed within the mechanisms folder with the other mechanisms and managers.
+Mechanisms handle the interactions with the actuators (e.g. motors, pneumatic solenoids) and sensors (e.g. encoders, limit switches) of each part of the robot, controlling them based on the operations from the Driver.  A mechanism is a class that implements the IMechanism interface with a name based on the name of that portion of the robot (e.g. DriveTrain, Intake) combined with "Mechanism", such as ThingMechanism.  It should be placed within the mechanisms folder with the other mechanisms and managers.
 
 #### Define mechanism class and member variables
 ```java
@@ -278,15 +333,15 @@ public class ThingMechanism implements IMechanism
   private boolean someState;
 ```
 
-At the top of the class, you should have a list of the definitions of your different actuators and sensors (see the "```private final ISomeActuator nameOfActuator;```" and "```private final ISomeSensor nameOfSensor;```").  These will be initialized in the constructor (a special function, as will be described below.  After the set of actuators and sensors are defined, you will also need to define the logger ("```private IDashboardLogger logger;```"), the driver ("```private Driver driver;```"), anything that will be read from the sensors ("```private boolean someSetting;```"), and any state that needs to be kept for the operation of the mechanism ("```private boolean someState;```").
+At the top of the class, you should have a list of the definitions of your different actuators and sensors ("```private final ISomeActuator nameOfActuator;```" and "```private final ISomeSensor nameOfSensor;```").  These will be initialized in the constructor.  After the set of actuators and sensors are defined, you will also need to define the logger ("```private IDashboardLogger logger;```"), the driver ("```private Driver driver;```"), anything that will be read from the sensors ("```private boolean someSetting;```"), and any state that needs to be kept for the operation of the mechanism ("```private boolean someState;```").
 
 #### Write mechanism constructor
 ```java
   @Inject
   public ThingMechanism(IWpilibProvider provider, IDashboardLogger logger)
   {
-    this.nameOfSensor = provider.GetSomeSensor(ElectronicsConstants.SOME_SENSOR_CHANNEL);
-    this.nameOfActuator = provider.GetSomeActuator(ElectronicsConstants.SOME_ACTUATOR_CHANNEL);
+    this.nameOfSensor = provider.GetSomeSensor(ElectronicsConstants.THING_NAMEOFSENSOR_PWM_CHANNEL);
+    this.nameOfActuator = provider.GetSomeActuator(ElectronicsConstants.THING_NAMEOFACTUATOR_PWM_CHANNEL);
 
     this.logger = logger;
 
@@ -296,7 +351,7 @@ At the top of the class, you should have a list of the definitions of your diffe
   ...
 ```
 
-After defining all of the class's variables, you will define a constructor named like "```public ThingMechanism(IWpilibProvider provider, IDashboardLogger logger)```".  Since 2017 we’ve made use of Google’s Guice to control dependency injection, which is the reason why the special @Inject markup is required.  You will then set the value for each actuator and sensor you defined at the top in the constructor by calling the corresponding function on the IWpilibProvider that is passed into the constructor.  These functions will take some number of arguments based on how the actuators/sensors are physically plugged together in the robot.  These arguments should be placed as constants in the ElectronicsConstants file.  We don’t necessarily know in advance how the robot plugs together, so they can be initialized with a value of -1 until we do.  After initializing the sensors and actuators, you should set the logger as provided and the settings and states to their default values.
+After defining all of the class's variables, you will define a constructor named like "```public ThingMechanism(IWpilibProvider provider, IDashboardLogger logger)```".  Since 2017 we’ve made use of Google’s Guice to control dependency injection, which is the reason why the special @Inject markup is required.  You will then set the value for each actuator and sensor you defined at the top in the constructor by calling the corresponding function on the IWpilibProvider that is passed into the constructor by Guice.  These functions will take some number of arguments based on how the actuators/sensors are physically plugged together in the robot (such as CAN Ids, DIO channel, Analog channel, PCM channel, or PWM channel).  These arguments should be placed as constants in the ElectronicsConstants file with names such as THING_NAMEOFACTUATOR_PWM_CHANNEL.  We don’t necessarily know in advance how the robot plugs together, so they can be initialized with a value of -1 until we do.  After initializing the sensors and actuators, you should set the logger as provided and the settings and states to their default values.
 
 #### Write mechanism readSensors function
 ```java
@@ -317,11 +372,17 @@ The readSensors function reads from the relevant sensors for that mechanism, sto
   {
     boolean shouldThingAction = this.driver.getDigital(Operation.ThingAction);
 
-    this.nameOfActuator.set(shouldThingAction);
+    double thingActionAmount = 0.0;
+    if (shouldThingAction)
+    {
+      thingActionAmount = TuningConstants.THING_ACTION_AMOUNT;
+    }
+
+    this.nameOfActuator.set(thingActionAmount);
   }
 ```
 
-The update function examines the inputs from the Driver, and then calculates the various outputs to use applies them to the outputs for the relevant actuators.  For some mechanisms, the logic will be very simple - reading an operation and applying it to an actuator.  Other mechanisms will involve some internal state and information from the most recent readings from the sensors in order to determine what the actuator should do.
+The update function examines the inputs from the Driver, and then calculates the various outputs to use applies them to the outputs for the relevant actuators.  For some mechanisms, the logic will be very simple - reading an operation and applying it to an actuator.  Other mechanisms will involve some internal state and information from the most recent readings from the sensors in order to determine what the actuator should do.  Note that there will often be a "degree" to which something should be done that we don't know in advance.  For example, if we are intaking a ball we may want to carefully choose the correct strength to run the motor at.  Because we don't know this value in advance and will discover it experimentally, we should put such values into the TuningConstants file as a constant with a guess for the value.
 
 #### Write mechanism stop function
 ```java
@@ -332,7 +393,7 @@ The update function examines the inputs from the Driver, and then calculates the
   }
 ```
 
-The stop function tells each of the actuators to stop moving.  This typically means setting any Motor to 0.0 and any DoubleSolenoid to kOff.  It is called when the robot is being disabled, and it is very important to stop everything to ensure that the robot is safe.
+The stop function tells each of the actuators to stop moving.  This typically means setting any Motor to 0.0 and any DoubleSolenoid to kOff.  It is called when the robot is being disabled, and it is very important to stop everything to ensure that the robot is safe to be around.
 
 #### Write mechanism setDriver function
 ```java
@@ -343,13 +404,23 @@ The stop function tells each of the actuators to stop moving.  This typically me
   }
 ```
 
-Sets the driver to use in this class (the implementation of this function should basically just contain "this.driver = driver;").  It is called when the robot is entering either the autonomous or teleop state, so it can also be used to reset the state of the mechanism if that is needed.
+Sets the driver to use in this class (the implementation of this function should basically just be "```this.driver = driver;```").  It is called when the robot is entering either the autonomous or teleop mode, so it can also be used to reset the state of the mechanism if that is needed.
+
+#### Write any getter functions
+```java
+  public boolean getSomeSetting()
+  {
+    return this.someSetting;
+  }
+```
+
+When there are sensors being read, often we will want to incorporate the data that they return into the running of tasks as a part of macros and autonomous routines.  In order to support that, we must add getter functions so that the tasks can access the values that were read from the sensors.  These functions just simply return the value that was read during the readSensors function.
 
 ### Writing Macros and Autonomous Routines
 Macros and Autonomous routines both involve control tasks.  These tasks control the robot through setting Operations.  For more advanced tasks, they can read the current state of the robot by running the functions that expose sensors on the Mechanism.
 
-#### Writing Tasks
-Tasks are used to control operations or groups of operations that run until a certain condition is met.  A task is a class that implements the IControlTask interface, and typically extends from the ControlTaskBase class. Tasks are named based on the sort of action they perform (e.g. RaiseElevator) combined with "Task", such as RaiseElevatorTask.  It should be placed within the controltasks folder with the other mechanisms and managers.
+#### Writing Control Tasks
+Tasks are used to control operations or groups of operations that run until a certain condition is met.  A task is a class that implements the IControlTask interface, and typically extends from the ControlTaskBase or TimedTask class.  Tasks are named based on the sort of action they perform (e.g. RaiseElevator) combined with "Task", such as RaiseElevatorTask.  It should be placed within the controltasks folder (which is within the driver folder) with the other tasks.
 
 ##### Define task class, member variables, and constructor
 ```java
@@ -362,7 +433,7 @@ public class RaiseElevatorTask extends ControlTaskBase implements IMechanism
   }
 ```
 
-At the top of the class, you should declare any member variables that you need.  Some of these may be initialized in the constructor, whereas others will be initialized in the begin function.
+At the top of the class, you should declare any member variables that you need.  Some of these member variables may be initialized in the constructor, such as when your task has parameters like a time duration, whereas other member variables will be initialized in the begin function.  Note that the constructor could be called well before the task actually starts, which is why we have the begin function below.
 
 ##### Define task begin function
 ```java
@@ -372,7 +443,7 @@ At the top of the class, you should declare any member variables that you need. 
   }
 ```
 
-The begin function is called at the very beginning of the task, and can be used to set some initial state and retrieve any mechanism that we need to reference.
+The begin function is called at the very beginning of the task, and can be used to set some initial state and retrieve any mechanism that we need to reference.  Note that this function is called right before hasCompleted and update are called for the first time.
 
 ##### Define task update function
 ```java
@@ -420,10 +491,10 @@ put(
             Operation.ThingAction,
         }));
 ```
-The MacroOperationDescription requires arguments describing the user input device to use, the button that triggers the macro, a constructor for the task that should be used within the macro, and a list of the different operations that this macro uses.
+The MacroOperationDescription requires arguments describing the user input device to use, the button that triggers the macro, tge type of button to use (either ```Simple``` or ```Toggle```), a supplier for the task that should be used within the macro (```() -> new SomeTask()```), and a list of the different operations that this macro uses.
 
-#### Composing Tasks into Routines
-Tasks can be grouped together in interesting ways to describe more complex tasks.  By having tasks happen in a certain order and sometimes simultaneously, you can end up with a routine that performs interesting things.  Some particular tasks you can utilize include:
+#### Composing Tasks together
+Tasks can be grouped together in interesting ways to describe more complex tasks.  By having tasks happen in a certain order and sometimes simultaneously, you can end up with a routine that performs interesting things.  To do this, you can utilize SequentialTask and ConcurrentTask.
 
 ##### SequentialTask.Sequence()
 Sequential task starts and completes each task in the order they are listed.
@@ -445,7 +516,7 @@ ConcurrentTask.AnyTasks(
   new DriveForwardTask(3.5));
 ```
 
-The example above is a pair of two tasks that will execute at the same time, completing when either 3 seconds has elapsed or once the robot has driven 3.5 inches forward.
+The example above is a pair of two tasks that will execute at the same time, completing when either 3 seconds has elapsed OR once the robot has driven 3.5 inches forward.
 
 ##### ConcurrentTask.AllTasks()
 Concurrent AllTasks starts all of the tasks at the same time and completes when all of them have considered themselves to be completed.
@@ -456,7 +527,7 @@ ConcurrentTask.AllTasks(
   new DriveForwardTask(3.5));
 ```
 
-The example above is a pair of two tasks that will execute at the same time, completing when the task has taken 3 seconds AND has driven 3.5 inches forward.
+The example above is a pair of two tasks that will execute at the same time, completing when the task has taken 3 seconds AND the robot has driven 3.5 inches forward.
 
 ## Advanced Topics
 ### PID Controllers

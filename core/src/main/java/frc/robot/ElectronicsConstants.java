@@ -33,15 +33,15 @@ public class ElectronicsConstants
 
     //================================================== DriveTrain ==============================================================
 
-    public static final int DRIVETRAIN_LEFT_MOTOR_CAN_ID = 1;
-    public static final int DRIVETRAIN_LEFT_FOLLOWER_CAN_ID_1 = 2;
-    public static final int DRIVETRAIN_LEFT_FOLLOWER_CAN_ID_2 = 3;
-    public static final int DRIVETRAIN_RIGHT_MOTOR_CAN_ID = 4;
-    public static final int DRIVETRAIN_RIGHT_FOLLOWER_CAN_ID_1 = 5;
-    public static final int DRIVETRAIN_RIGHT_FOLLOWER_CAN_ID_2 = 6;
+    public static final int DRIVETRAIN_LEFT_MASTER_CAN_ID = 1;
+    public static final int DRIVETRAIN_LEFT_FOLLOWER1_CAN_ID = 2;
+    public static final int DRIVETRAIN_LEFT_FOLLOWER2_CAN_ID = 3;
+    public static final int DRIVETRAIN_RIGHT_MASTER_CAN_ID = 4;
+    public static final int DRIVETRAIN_RIGHT_FOLLOWER1_CAN_ID = 5;
+    public static final int DRIVETRAIN_RIGHT_FOLLOWER2_CAN_ID = 6;
 
     //================================================== OneMotor ================================================================
 
-    public static final int ONEMOTOR_MASTER_MOTOR_CHANNEL = 5;
-    public static final int ONEMOTOR_FOLLOWER_MOTOR_CHANNEL = 6;
+    public static final int ONEMOTOR_MASTER_MOTOR_CHANNEL = 7;
+    public static final int ONEMOTOR_FOLLOWER_MOTOR_CHANNEL = 8;
 }

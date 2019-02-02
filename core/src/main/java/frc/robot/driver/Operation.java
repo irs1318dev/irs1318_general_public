@@ -18,8 +18,7 @@ public enum Operation
     DriveTrainRightPosition,
     DriveTrainLeftVelocity,
     DriveTrainRightVelocity,
-    DriveTrainLeftAcceleration,
-    DriveTrainRightAcceleration,
+    DriveTrainHeading,
     DriveTrainSwapFrontOrientation,
 
     // OneMotor operations:

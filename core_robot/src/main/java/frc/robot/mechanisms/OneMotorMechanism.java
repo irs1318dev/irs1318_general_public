@@ -34,7 +34,7 @@ public class OneMotorMechanism implements IMechanism
         this.motor = provider.getTalonSRX(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);
 
         this.motor.setSensorType(TalonSRXFeedbackDevice.QuadEncoder);
-        this.motor.setNeutralMode(TalonSRXNeutralMode.Brake);
+        this.motor.setNeutralMode(MotorNeutralMode.Brake);
         this.motor.setInvertOutput(TuningConstants.ONEMOTOR_INVERT_OUTPUT);
         this.motor.setInvertSensor(TuningConstants.ONEMOTOR_INVERT_SENSOR);
         this.motor.setForwardLimitSwitch(

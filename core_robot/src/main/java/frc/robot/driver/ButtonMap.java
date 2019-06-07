@@ -194,7 +194,7 @@ public class ButtonMap implements IButtonMap
                 Operation.OneMotorPower,
                 new AnalogOperationDescription(
                     UserInputDevice.Driver,
-                    AnalogAxis.Throttle,
+                    AnalogAxis.JOYSTICK_THROTTLE,
                     false,
                     0.0));
         }

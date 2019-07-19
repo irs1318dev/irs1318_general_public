@@ -4,7 +4,7 @@ import frc.robot.ElectronicsConstants;
 import frc.robot.TuningConstants;
 import frc.robot.common.IMechanism;
 import frc.robot.common.robotprovider.*;
-import frc.robot.driver.Operation;
+import frc.robot.driver.*;
 import frc.robot.driver.common.Driver;
 
 import com.google.inject.Inject;
@@ -123,7 +123,7 @@ public class OneMotorMechanism implements IMechanism
     @Override
     public void update()
     {
-        double setpoint = this.driver.getAnalog(Operation.OneMotorPower);
+        double setpoint = this.driver.getAnalog(AnalogOperation.OneMotorPower);
 
         double maxSetpointValue = 1.0;
         if (TuningConstants.ONEMOTOR_USE_PID)

@@ -22,8 +22,8 @@ public class TuningConstants
     public static List<IMechanism> GetActiveMechanisms(Injector injector)
     {
         List<IMechanism> mechanismList = new ArrayList<IMechanism>();
-        mechanismList.add(injector.getInstance(DriveTrainMechanism.class));
-        mechanismList.add(injector.getInstance(OneMotorMechanism.class));
+        //mechanismList.add(injector.getInstance(DriveTrainMechanism.class));
+        mechanismList.add(injector.getInstance(OneMotorSparkMechanism.class));
         //mechanismList.add(injector.getInstance(PowerManager.class));
         //mechanismList.add(injector.getInstance(PositionManager.class));
         //mechanismList.add(injector.getInstance(CompressorMechanism.class));
@@ -206,8 +206,8 @@ public class TuningConstants
     //================================================== One-Motor ==============================================================
 
     public static final boolean ONEMOTOR_USE_PID = false;
-    public static final boolean ONEMOTOR_PID_POSITIONAL = true;
-    public static final boolean ONEMOTOR_PID_POSITIONAL_MM = true;
+    public static final boolean ONEMOTOR_PID_POSITIONAL = false;
+    public static final boolean ONEMOTOR_PID_POSITIONAL_MM = false;
 
     public static final double ONEMOTOR_PID_KP = 0.0;
     public static final double ONEMOTOR_PID_KI = 0.0;
@@ -217,9 +217,9 @@ public class TuningConstants
     public static final int ONEMOTOR_PID_MM_ACCEL = 0;
 
     public static final double ONEMOTOR_PID_MAX_POSITION = (36.0 / 4.75) * 4096; // in ticks. 36 inches / (4.75 inches/rotation) * (4096 ticks/rotation)
-    public static final double ONEMOTOR_PID_MAX_VELOCITY = 3600.0;
+    public static final double ONEMOTOR_PID_MAX_VELOCITY = 6000.0;
 
-    public static final boolean ONEMOTOR_INVERT_OUTPUT = true;
+    public static final boolean ONEMOTOR_INVERT_OUTPUT = false;
     public static final boolean ONEMOTOR_INVERT_SENSOR = false;
     public static final boolean ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED = false;
     public static final boolean ONEMOTOR_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN = true;

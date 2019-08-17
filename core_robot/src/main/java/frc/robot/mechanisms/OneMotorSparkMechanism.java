@@ -20,8 +20,7 @@ public class OneMotorSparkMechanism implements IMechanism
     private Driver driver;
 
     private double velocity;
-    //private double error;
-    private double ticks;
+    private double position;
     public boolean reverseLimitSwtichStatus;
     public boolean forwardLimitSwitchStatus;
 
@@ -97,8 +96,7 @@ public class OneMotorSparkMechanism implements IMechanism
         }
 
         this.velocity = 0.0;
-        //this.error = 0.0;
-        this.ticks = 0;
+        this.position = 0.0;
         this.reverseLimitSwtichStatus = false;
         this.forwardLimitSwitchStatus = false;
     }
@@ -107,8 +105,7 @@ public class OneMotorSparkMechanism implements IMechanism
     public void readSensors()
     {
         this.velocity = this.motor.getVelocity();
-        //this.error = this.motor.get();
-        this.ticks = this.motor.getPosition();
+        this.position = this.motor.getPosition();
 
         if (TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED || TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_ENABLED)
         {
@@ -116,11 +113,10 @@ public class OneMotorSparkMechanism implements IMechanism
             this.reverseLimitSwtichStatus = this.motor.getReverseLimitSwitchStatus();
         }
 
-        this.logger.logNumber("om", "velocity", this.velocity);
-        //this.logger.logNumber("om", "error", this.error);
-        this.logger.logNumber("om", "position", this.ticks);
-        this.logger.logBoolean("om", "reverseLimitSwtich", this.reverseLimitSwtichStatus);
-        this.logger.logBoolean("om", "forwardLimitSwtich", this.forwardLimitSwitchStatus);
+        this.logger.logNumber(OneMotorSparkMechanism.LogName, "velocity", this.velocity);
+        this.logger.logNumber(OneMotorSparkMechanism.LogName, "position", this.position);
+        this.logger.logBoolean(OneMotorSparkMechanism.LogName, "reverseLimitSwtich", this.reverseLimitSwtichStatus);
+        this.logger.logBoolean(OneMotorSparkMechanism.LogName, "forwardLimitSwtich", this.forwardLimitSwitchStatus);
     }
 
     @Override
@@ -143,19 +139,8 @@ public class OneMotorSparkMechanism implements IMechanism
 
         setpoint *= maxSetpointValue;
 
-        this.logger.logNumber("om", "setpoint", setpoint);
+        this.logger.logNumber(OneMotorSparkMechanism.LogName, "setpoint", setpoint);
         this.motor.set(setpoint);
-
-        /*if (TuningConstants.ONEMOTOR_USE_PID)
-        {
-            double errorPercentage = 0.0;
-            if (setpoint != 0.0)
-            {
-                errorPercentage = 100.0 * (this.error / maxSetpointValue);
-            }
-
-            this.logger.logNumber("om", "error%", errorPercentage);
-        }*/
     }
 
     @Override

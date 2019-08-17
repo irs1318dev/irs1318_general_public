@@ -113,11 +113,11 @@ public class OneMotorSRXMechanism implements IMechanism
             this.forwardLimitSwitchStatus = limitSwitchStatus.isForwardClosed;
         }
 
-        this.logger.logNumber("om", "velocity", this.velocity);
-        this.logger.logNumber("om", "error", this.error);
-        this.logger.logNumber("om", "position", this.ticks);
-        this.logger.logBoolean("om", "reverseLimitSwtich", this.reverseLimitSwtichStatus);
-        this.logger.logBoolean("om", "forwardLimitSwtich", this.forwardLimitSwitchStatus);
+        this.logger.logNumber(OneMotorSRXMechanism.LogName, "velocity", this.velocity);
+        this.logger.logNumber(OneMotorSRXMechanism.LogName, "error", this.error);
+        this.logger.logNumber(OneMotorSRXMechanism.LogName, "position", this.ticks);
+        this.logger.logBoolean(OneMotorSRXMechanism.LogName, "reverseLimitSwtich", this.reverseLimitSwtichStatus);
+        this.logger.logBoolean(OneMotorSRXMechanism.LogName, "forwardLimitSwtich", this.forwardLimitSwitchStatus);
     }
 
     @Override
@@ -140,7 +140,7 @@ public class OneMotorSRXMechanism implements IMechanism
 
         setpoint *= maxSetpointValue;
 
-        this.logger.logNumber("om", "setpoint", setpoint);
+        this.logger.logNumber(OneMotorSRXMechanism.LogName, "setpoint", setpoint);
         this.motor.set(setpoint);
 
         if (TuningConstants.ONEMOTOR_USE_PID)
@@ -151,7 +151,7 @@ public class OneMotorSRXMechanism implements IMechanism
                 errorPercentage = 100.0 * (this.error / maxSetpointValue);
             }
 
-            this.logger.logNumber("om", "error%", errorPercentage);
+            this.logger.logNumber(OneMotorSRXMechanism.LogName, "error%", errorPercentage);
         }
     }
 

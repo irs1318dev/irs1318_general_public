@@ -31,12 +31,13 @@ public class OneMotorSparkMechanism implements IMechanism
     {
         this.logger = logger;
         this.motor = provider.getSparkMax(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL, SparkMaxMotorType.Brushless);
-
         this.motor.setNeutralMode(MotorNeutralMode.Brake);
         this.motor.setInvertOutput(TuningConstants.ONEMOTOR_INVERT_OUTPUT);
+        this.motor.reset();
 
         ISparkMax follower = provider.getSparkMax(ElectronicsConstants.ONEMOTOR_FOLLOWER_MOTOR_CHANNEL, SparkMaxMotorType.Brushless);
         follower.setNeutralMode(MotorNeutralMode.Brake);
+        follower.reset();
         follower.follow(this.motor);
 
         this.motor.setForwardLimitSwitch(
@@ -62,6 +63,8 @@ public class OneMotorSparkMechanism implements IMechanism
                         0,
                         TuningConstants.ONEMOTOR_PID_MM_CRUISE_VELOC,
                         TuningConstants.ONEMOTOR_PID_MM_ACCEL,
+                        TuningConstants.ONEMOTOR_PID_MIN_OUTPUT,
+                        TuningConstants.ONEMOTOR_PID_MAX_OUTPUT,
                         OneMotorSparkMechanism.slotId);
                 }
                 else
@@ -73,6 +76,8 @@ public class OneMotorSparkMechanism implements IMechanism
                         TuningConstants.ONEMOTOR_PID_KI,
                         TuningConstants.ONEMOTOR_PID_KD,
                         TuningConstants.ONEMOTOR_PID_KF,
+                        TuningConstants.ONEMOTOR_PID_MIN_OUTPUT,
+                        TuningConstants.ONEMOTOR_PID_MAX_OUTPUT,
                         OneMotorSparkMechanism.slotId);
                 }
             }
@@ -85,10 +90,12 @@ public class OneMotorSparkMechanism implements IMechanism
                     TuningConstants.ONEMOTOR_PID_KI,
                     TuningConstants.ONEMOTOR_PID_KD,
                     TuningConstants.ONEMOTOR_PID_KF,
+                    TuningConstants.ONEMOTOR_PID_MIN_OUTPUT,
+                    TuningConstants.ONEMOTOR_PID_MAX_OUTPUT,
                     OneMotorSparkMechanism.slotId);
             }
 
-            this.motor.set(OneMotorSparkMechanism.slotId);
+            this.motor.setSelectedSlot(OneMotorSparkMechanism.slotId);
         }
         else
         {

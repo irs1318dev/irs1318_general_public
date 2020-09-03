@@ -1,8 +1,10 @@
 package frc.robot.mechanisms;
 
 import frc.robot.ElectronicsConstants;
+import frc.robot.LoggingKey;
 import frc.robot.TuningConstants;
 import frc.robot.common.IMechanism;
+import frc.robot.common.LoggingManager;
 import frc.robot.common.robotprovider.*;
 import frc.robot.driver.*;
 import frc.robot.driver.common.Driver;
@@ -11,10 +13,9 @@ import com.google.inject.Inject;
 
 public class OneMotorSparkMechanism implements IMechanism
 {
-    private static final String LogName = "om_spark";
     private static final int slotId = 1;
 
-    private final IDashboardLogger logger;
+    private final ILogger logger;
     private final ISparkMax motor;
 
     private Driver driver;
@@ -26,7 +27,7 @@ public class OneMotorSparkMechanism implements IMechanism
 
     @Inject
     public OneMotorSparkMechanism(
-        IDashboardLogger logger,
+        LoggingManager logger,
         IRobotProvider provider)
     {
         this.logger = logger;
@@ -120,10 +121,10 @@ public class OneMotorSparkMechanism implements IMechanism
             this.reverseLimitSwtichStatus = this.motor.getReverseLimitSwitchStatus();
         }
 
-        this.logger.logNumber(OneMotorSparkMechanism.LogName, "velocity", this.velocity);
-        this.logger.logNumber(OneMotorSparkMechanism.LogName, "position", this.position);
-        this.logger.logBoolean(OneMotorSparkMechanism.LogName, "reverseLimitSwtich", this.reverseLimitSwtichStatus);
-        this.logger.logBoolean(OneMotorSparkMechanism.LogName, "forwardLimitSwtich", this.forwardLimitSwitchStatus);
+        this.logger.logNumber(LoggingKey.OneMotorSparkVelocity, this.velocity);
+        this.logger.logNumber(LoggingKey.OneMotorSparkPosition, this.position);
+        this.logger.logBoolean(LoggingKey.OneMotorSparkReverseLimit, this.reverseLimitSwtichStatus);
+        this.logger.logBoolean(LoggingKey.OneMotorSparkForwardLimit, this.forwardLimitSwitchStatus);
     }
 
     @Override
@@ -146,7 +147,7 @@ public class OneMotorSparkMechanism implements IMechanism
 
         setpoint *= maxSetpointValue;
 
-        this.logger.logNumber(OneMotorSparkMechanism.LogName, "setpoint", setpoint);
+        this.logger.logNumber(LoggingKey.OneMotorSparkSetpoint, setpoint);
         this.motor.set(setpoint);
     }
 

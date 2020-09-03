@@ -1,8 +1,10 @@
 package frc.robot.mechanisms;
 
 import frc.robot.ElectronicsConstants;
+import frc.robot.LoggingKey;
 import frc.robot.TuningConstants;
 import frc.robot.common.IMechanism;
+import frc.robot.common.LoggingManager;
 import frc.robot.common.robotprovider.*;
 import frc.robot.driver.*;
 import frc.robot.driver.common.Driver;
@@ -11,10 +13,9 @@ import com.google.inject.Inject;
 
 public class OneMotorSRXMechanism implements IMechanism
 {
-    private static final String LogName = "om_srx";
     private static final int slotId = 0;
 
-    private final IDashboardLogger logger;
+    private final ILogger logger;
     private final ITalonSRX motor;
 
     private Driver driver;
@@ -27,13 +28,13 @@ public class OneMotorSRXMechanism implements IMechanism
 
     @Inject
     public OneMotorSRXMechanism(
-        IDashboardLogger logger,
+        LoggingManager logger,
         IRobotProvider provider)
     {
         this.logger = logger;
         this.motor = provider.getTalonSRX(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);
 
-        this.motor.setSensorType(TalonSRXFeedbackDevice.QuadEncoder);
+        this.motor.setSensorType(TalonXFeedbackDevice.QuadEncoder);
         this.motor.setNeutralMode(MotorNeutralMode.Brake);
         this.motor.setInvertOutput(TuningConstants.ONEMOTOR_INVERT_OUTPUT);
         this.motor.setInvertSensor(TuningConstants.ONEMOTOR_INVERT_SENSOR);
@@ -108,16 +109,16 @@ public class OneMotorSRXMechanism implements IMechanism
 
         if (TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED || TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_ENABLED)
         {
-            TalonSRXLimitSwitchStatus limitSwitchStatus = this.motor.getLimitSwitchStatus();
+            TalonXLimitSwitchStatus limitSwitchStatus = this.motor.getLimitSwitchStatus();
             this.reverseLimitSwtichStatus = limitSwitchStatus.isReverseClosed;
             this.forwardLimitSwitchStatus = limitSwitchStatus.isForwardClosed;
         }
 
-        this.logger.logNumber(OneMotorSRXMechanism.LogName, "velocity", this.velocity);
-        this.logger.logNumber(OneMotorSRXMechanism.LogName, "error", this.error);
-        this.logger.logNumber(OneMotorSRXMechanism.LogName, "position", this.ticks);
-        this.logger.logBoolean(OneMotorSRXMechanism.LogName, "reverseLimitSwtich", this.reverseLimitSwtichStatus);
-        this.logger.logBoolean(OneMotorSRXMechanism.LogName, "forwardLimitSwtich", this.forwardLimitSwitchStatus);
+        this.logger.logNumber(LoggingKey.OneMotorSRXVelocity, this.velocity);
+        this.logger.logNumber(LoggingKey.OneMotorSRXError, this.error);
+        this.logger.logNumber(LoggingKey.OneMotorSRXPosition, this.ticks);
+        this.logger.logBoolean(LoggingKey.OneMotorSRXReverseLimit, this.reverseLimitSwtichStatus);
+        this.logger.logBoolean(LoggingKey.OneMotorSRXForwardLimit, this.forwardLimitSwitchStatus);
     }
 
     @Override
@@ -140,7 +141,7 @@ public class OneMotorSRXMechanism implements IMechanism
 
         setpoint *= maxSetpointValue;
 
-        this.logger.logNumber(OneMotorSRXMechanism.LogName, "setpoint", setpoint);
+        this.logger.logNumber(LoggingKey.OneMotorSRXSetpoint, setpoint);
         this.motor.set(setpoint);
 
         if (TuningConstants.ONEMOTOR_USE_PID)
@@ -151,7 +152,7 @@ public class OneMotorSRXMechanism implements IMechanism
                 errorPercentage = 100.0 * (this.error / maxSetpointValue);
             }
 
-            this.logger.logNumber(OneMotorSRXMechanism.LogName, "error%", errorPercentage);
+            this.logger.logNumber(LoggingKey.OneMotorSRXErrorPercent, errorPercentage);
         }
     }
 

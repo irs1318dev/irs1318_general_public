@@ -31,7 +31,7 @@ public class OneMotorSparkMechanism implements IMechanism
         IRobotProvider provider)
     {
         this.logger = logger;
-        this.motor = provider.getSparkMax(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL, SparkMaxMotorType.Brushless);
+        this.motor = provider.getSparkMax(ElectronicsConstants.ONEMOTOR_PRIMARY_MOTOR_CHANNEL, SparkMaxMotorType.Brushless);
         this.motor.setNeutralMode(MotorNeutralMode.Brake);
         this.motor.setInvertOutput(TuningConstants.ONEMOTOR_INVERT_OUTPUT);
         this.motor.reset();

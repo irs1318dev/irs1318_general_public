@@ -32,7 +32,7 @@ public class OneMotorSRXMechanism implements IMechanism
         IRobotProvider provider)
     {
         this.logger = logger;
-        this.motor = provider.getTalonSRX(ElectronicsConstants.ONEMOTOR_MASTER_MOTOR_CHANNEL);
+        this.motor = provider.getTalonSRX(ElectronicsConstants.ONEMOTOR_PRIMARY_MOTOR_CHANNEL);
 
         this.motor.setSensorType(TalonXFeedbackDevice.QuadEncoder);
         this.motor.setNeutralMode(MotorNeutralMode.Brake);

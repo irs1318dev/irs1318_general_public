@@ -9,10 +9,12 @@ package frc.robot;
 public class ElectronicsConstants
 {
     // change INVERT_X_AXIS to true if positive on the joystick isn't to the right, and negative isn't to the left
-    public static final boolean INVERT_X_AXIS = false;
+    public static final boolean INVERT_XBONE_LEFT_X_AXIS = false;
+    public static final boolean INVERT_XBONE_RIGHT_X_AXIS = false;
 
     // change INVERT_Y_AXIS to true if positive on the joystick isn't forward, and negative isn't backwards.
-    public static final boolean INVERT_Y_AXIS = true;
+    public static final boolean INVERT_XBONE_LEFT_Y_AXIS = true;
+    public static final boolean INVERT_XBONE_RIGHT_Y_AXIS = true;
 
     // change INVERT_THROTTLE_AXIS to true if positive on the joystick isn't forward, and negative isn't backwards.
     public static final boolean INVERT_THROTTLE_AXIS = true;
@@ -36,13 +38,13 @@ public class ElectronicsConstants
 
     //================================================== DriveTrain ==============================================================
 
-    public static final int DRIVETRAIN_LEFT_MASTER_CAN_ID = 1;
+    public static final int DRIVETRAIN_LEFT_PRIMARY_CAN_ID = 1;
     public static final int DRIVETRAIN_LEFT_FOLLOWER_CAN_ID = 2;
-    public static final int DRIVETRAIN_RIGHT_MASTER_CAN_ID = 3;
+    public static final int DRIVETRAIN_RIGHT_PRIMARY_CAN_ID = 3;
     public static final int DRIVETRAIN_RIGHT_FOLLOWER_CAN_ID = 4;
 
     //================================================== OneMotor ================================================================
 
-    public static final int ONEMOTOR_MASTER_MOTOR_CHANNEL = 5;
+    public static final int ONEMOTOR_PRIMARY_MOTOR_CHANNEL = 5;
     public static final int ONEMOTOR_FOLLOWER_MOTOR_CHANNEL = 6;
 }

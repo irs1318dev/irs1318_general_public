@@ -7,7 +7,7 @@ import frc.robot.common.IMechanism;
 import frc.robot.common.LoggingManager;
 import frc.robot.common.robotprovider.*;
 import frc.robot.driver.*;
-import frc.robot.driver.common.Driver;
+import frc.robot.driver.common.IDriver;
 
 import com.google.inject.Inject;
 
@@ -15,22 +15,23 @@ public class OneMotorSRXMechanism implements IMechanism
 {
     private static final int slotId = 0;
 
+    private final IDriver driver;
     private final ILogger logger;
     private final ITalonSRX motor;
 
-    private Driver driver;
-
     private double velocity;
     private double error;
-    private int ticks;
+    private double position;
     public boolean reverseLimitSwtichStatus;
     public boolean forwardLimitSwitchStatus;
 
     @Inject
     public OneMotorSRXMechanism(
+        IDriver driver,
         LoggingManager logger,
         IRobotProvider provider)
     {
+        this.driver = driver;
         this.logger = logger;
         this.motor = provider.getTalonSRX(ElectronicsConstants.ONEMOTOR_PRIMARY_MOTOR_CHANNEL);
 
@@ -95,7 +96,7 @@ public class OneMotorSRXMechanism implements IMechanism
 
         this.velocity = 0.0;
         this.error = 0.0;
-        this.ticks = 0;
+        this.position = 0.0;
         this.reverseLimitSwtichStatus = false;
         this.forwardLimitSwitchStatus = false;
     }
@@ -105,7 +106,7 @@ public class OneMotorSRXMechanism implements IMechanism
     {
         this.velocity = this.motor.getVelocity();
         this.error = this.motor.getError();
-        this.ticks = this.motor.getPosition();
+        this.position = this.motor.getPosition();
 
         if (TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED || TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_ENABLED)
         {
@@ -116,7 +117,7 @@ public class OneMotorSRXMechanism implements IMechanism
 
         this.logger.logNumber(LoggingKey.OneMotorSRXVelocity, this.velocity);
         this.logger.logNumber(LoggingKey.OneMotorSRXError, this.error);
-        this.logger.logNumber(LoggingKey.OneMotorSRXPosition, this.ticks);
+        this.logger.logNumber(LoggingKey.OneMotorSRXPosition, this.position);
         this.logger.logBoolean(LoggingKey.OneMotorSRXReverseLimit, this.reverseLimitSwtichStatus);
         this.logger.logBoolean(LoggingKey.OneMotorSRXForwardLimit, this.forwardLimitSwitchStatus);
     }
@@ -161,11 +162,5 @@ public class OneMotorSRXMechanism implements IMechanism
     {
         this.motor.reset();
         this.motor.stop();
-    }
-
-    @Override
-    public void setDriver(Driver driver)
-    {
-        this.driver = driver;
     }
 }

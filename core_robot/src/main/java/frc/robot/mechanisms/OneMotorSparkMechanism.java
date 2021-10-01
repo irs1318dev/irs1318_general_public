@@ -7,7 +7,7 @@ import frc.robot.common.IMechanism;
 import frc.robot.common.LoggingManager;
 import frc.robot.common.robotprovider.*;
 import frc.robot.driver.*;
-import frc.robot.driver.common.Driver;
+import frc.robot.driver.common.IDriver;
 
 import com.google.inject.Inject;
 
@@ -15,10 +15,9 @@ public class OneMotorSparkMechanism implements IMechanism
 {
     private static final int slotId = 1;
 
+    private final IDriver driver;
     private final ILogger logger;
     private final ISparkMax motor;
-
-    private Driver driver;
 
     private double velocity;
     private double position;
@@ -27,9 +26,11 @@ public class OneMotorSparkMechanism implements IMechanism
 
     @Inject
     public OneMotorSparkMechanism(
+        IDriver driver,
         LoggingManager logger,
         IRobotProvider provider)
     {
+        this.driver = driver;
         this.logger = logger;
         this.motor = provider.getSparkMax(ElectronicsConstants.ONEMOTOR_PRIMARY_MOTOR_CHANNEL, SparkMaxMotorType.Brushless);
         this.motor.setNeutralMode(MotorNeutralMode.Brake);
@@ -156,11 +157,5 @@ public class OneMotorSparkMechanism implements IMechanism
     {
         this.motor.reset();
         this.motor.stop();
-    }
-
-    @Override
-    public void setDriver(Driver driver)
-    {
-        this.driver = driver;
     }
 }

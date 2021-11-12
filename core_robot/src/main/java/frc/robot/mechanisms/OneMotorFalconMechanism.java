@@ -11,13 +11,13 @@ import frc.robot.driver.common.IDriver;
 
 import com.google.inject.Inject;
 
-public class OneMotorSRXMechanism implements IMechanism
+public class OneMotorFalconMechanism implements IMechanism
 {
     private static final int slotId = 0;
 
     private final IDriver driver;
     private final ILogger logger;
-    private final ITalonSRX motor;
+    private final ITalonFX motor;
 
     private double velocity;
     private double error;
@@ -26,14 +26,14 @@ public class OneMotorSRXMechanism implements IMechanism
     public boolean forwardLimitSwitchStatus;
 
     @Inject
-    public OneMotorSRXMechanism(
+    public OneMotorFalconMechanism(
         IDriver driver,
         LoggingManager logger,
         IRobotProvider provider)
     {
         this.driver = driver;
         this.logger = logger;
-        this.motor = provider.getTalonSRX(ElectronicsConstants.ONEMOTOR_PRIMARY_MOTOR_CHANNEL);
+        this.motor = provider.getTalonFX(ElectronicsConstants.ONEMOTOR_PRIMARY_MOTOR_CHANNEL);
 
         this.motor.setSensorType(TalonXFeedbackDevice.QuadEncoder);
         this.motor.setNeutralMode(MotorNeutralMode.Brake);
@@ -61,7 +61,7 @@ public class OneMotorSRXMechanism implements IMechanism
                         TuningConstants.ONEMOTOR_PID_KF,
                         TuningConstants.ONEMOTOR_PID_MM_CRUISE_VELOC,
                         TuningConstants.ONEMOTOR_PID_MM_ACCEL,
-                        OneMotorSRXMechanism.slotId);
+                        OneMotorFalconMechanism.slotId);
                 }
                 else
                 {
@@ -72,7 +72,7 @@ public class OneMotorSRXMechanism implements IMechanism
                         TuningConstants.ONEMOTOR_PID_KI,
                         TuningConstants.ONEMOTOR_PID_KD,
                         TuningConstants.ONEMOTOR_PID_KF,
-                        OneMotorSRXMechanism.slotId);
+                        OneMotorFalconMechanism.slotId);
                 }
             }
             else
@@ -84,10 +84,10 @@ public class OneMotorSRXMechanism implements IMechanism
                     TuningConstants.ONEMOTOR_PID_KI,
                     TuningConstants.ONEMOTOR_PID_KD,
                     TuningConstants.ONEMOTOR_PID_KF,
-                    OneMotorSRXMechanism.slotId);
+                    OneMotorFalconMechanism.slotId);
             }
 
-            this.motor.setSelectedSlot(OneMotorSRXMechanism.slotId);
+            this.motor.setSelectedSlot(OneMotorFalconMechanism.slotId);
         }
         else
         {

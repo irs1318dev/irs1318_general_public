@@ -50,19 +50,14 @@ public class ElectronicsConstants
 
     //================================================== DriveTrain ==============================================================
 
-    public static final int DRIVETRAIN_STEER_MOTOR_1_CAN_ID = 1;
-    public static final int DRIVETRAIN_DRIVE_MOTOR_1_CAN_ID = 2;
-    public static final int DRIVETRAIN_STEER_MOTOR_2_CAN_ID = 3;
-    public static final int DRIVETRAIN_DRIVE_MOTOR_2_CAN_ID = 4;
-    public static final int DRIVETRAIN_STEER_MOTOR_3_CAN_ID = 5;
-    public static final int DRIVETRAIN_DRIVE_MOTOR_3_CAN_ID = 6;
-    public static final int DRIVETRAIN_STEER_MOTOR_4_CAN_ID = 7;
-    public static final int DRIVETRAIN_DRIVE_MOTOR_4_CAN_ID = 8;
-
-    public static final int DRIVETRAIN_ABSOLUTE_ENCODER_1_ANALOG_INPUT = 0;
-    public static final int DRIVETRAIN_ABSOLUTE_ENCODER_2_ANALOG_INPUT = 1;
-    public static final int DRIVETRAIN_ABSOLUTE_ENCODER_3_ANALOG_INPUT = 2;
-    public static final int DRIVETRAIN_ABSOLUTE_ENCODER_4_ANALOG_INPUT = 3;
+    public static final int DRIVETRAIN_LEFT_MASTER_CAN_ID = 1;
+    public static final int DRIVETRAIN_LEFT_MASTER_PDP_SLOT = 1;
+    public static final int DRIVETRAIN_LEFT_FOLLOWER_CAN_ID = 2;
+    public static final int DRIVETRAIN_LEFT_FOLLOWER_PDP_SLOT = 0;
+    public static final int DRIVETRAIN_RIGHT_MASTER_CAN_ID = 3;
+    public static final int DRIVETRAIN_RIGHT_MASTER_PDP_SLOT = 14;
+    public static final int DRIVETRAIN_RIGHT_FOLLOWER_CAN_ID = 4;
+    public static final int DRIVETRAIN_RIGHT_FOLLOWER_PDP_SLOT = 15;
 
     //================================================== OneMotor ================================================================
 

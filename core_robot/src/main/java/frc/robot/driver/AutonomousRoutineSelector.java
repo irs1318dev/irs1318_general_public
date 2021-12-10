@@ -64,7 +64,7 @@ public class AutonomousRoutineSelector
         this.positionChooser.addObject("right", StartPosition.Right);
         networkTableProvider.addChooser("Start Position", this.positionChooser);
 
-        RoadRunnerTrajectoryGenerator.generateTrajectories(this.pathManager);
+        ////RoadRunnerTrajectoryGenerator.generateTrajectories(this.pathManager);
     }
 
     /**
@@ -100,7 +100,7 @@ public class AutonomousRoutineSelector
 
         this.logger.logString(LoggingKey.AutonomousSelection, startPosition.toString() + "." + routine.toString());
 
-        return new PositionStartingTask(0.0, true, true);
+        return new PositionStartingTask(0.0, true);
     }
 
     /**

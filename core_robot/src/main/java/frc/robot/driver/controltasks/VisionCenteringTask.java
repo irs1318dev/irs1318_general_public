@@ -60,10 +60,7 @@ public class VisionCenteringTask extends ControlTaskBase
             this.timer = this.getInjector().getInstance(ITimer.class);
         }
 
-        this.setDigitalOperationState(DigitalOperation.VisionDisableStream, false);
-        this.setDigitalOperationState(DigitalOperation.DriveTrainEnableFieldOrientation, false);
-        this.setDigitalOperationState(DigitalOperation.DriveTrainDisableFieldOrientation, true);
-        this.setDigitalOperationState(DigitalOperation.VisionEnableRetroreflectiveProcessing, true);
+        this.setDigitalOperationState(DigitalOperation.VisionEnableProcessing, true);
     }
 
     /**
@@ -72,12 +69,14 @@ public class VisionCenteringTask extends ControlTaskBase
     @Override
     public void update()
     {
+        this.setDigitalOperationState(DigitalOperation.DriveTrainUsePositionalMode, false);
+
         Double currentMeasuredAngle = this.visionManager.getHorizontalAngle();
         if (currentMeasuredAngle != null)
         {
             this.setAnalogOperationState(
-                AnalogOperation.DriveTrainTurnSpeed,
-                this.turnPidHandler.calculatePosition(0.0, currentMeasuredAngle));
+                AnalogOperation.DriveTrainTurn,
+                -this.turnPidHandler.calculatePosition(0.0, currentMeasuredAngle));
         }
     }
 
@@ -87,12 +86,10 @@ public class VisionCenteringTask extends ControlTaskBase
     @Override
     public void end()
     {
-        this.setAnalogOperationState(AnalogOperation.DriveTrainTurnSpeed, 0.0);
+        this.setDigitalOperationState(DigitalOperation.DriveTrainUsePositionalMode, false);
+        this.setAnalogOperationState(AnalogOperation.DriveTrainTurn, 0.0);
 
-        this.setDigitalOperationState(DigitalOperation.VisionDisableStream, false);
-        this.setDigitalOperationState(DigitalOperation.DriveTrainEnableFieldOrientation, false);
-        this.setDigitalOperationState(DigitalOperation.DriveTrainDisableFieldOrientation, false);
-        this.setDigitalOperationState(DigitalOperation.VisionEnableRetroreflectiveProcessing, false);
+        this.setDigitalOperationState(DigitalOperation.VisionEnableProcessing, false);
     }
 
     /**

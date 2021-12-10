@@ -19,44 +19,32 @@ public class HardwareConstants
     public static final double CAMERA_YAW = 0.0; // in degrees
 
     //================================================== DriveTrain ==============================================================
+    // Note: Pulse Distance is the distance moved per tick
 
-    public static final double DRIVETRAIN_ENCODER_DEGREES_PER_VOLT = -72.0;
+    public static final double DRIVETRAIN_LEFT_ENCODER_PULSES_PER_REVOLUTION = 2048.0;
+    public static final double DRIVETRAIN_LEFT_GEAR_RATIO = 8.45864662;
+    public static final double DRIVETRAIN_LEFT_WHEEL_DIAMETER = 6.0; // (in inches)
+    public static final double DRIVETRAIN_LEFT_WHEEL_CIRCUMFERENCE = Math.PI * HardwareConstants.DRIVETRAIN_LEFT_WHEEL_DIAMETER;
+    public static final double DRIVETRAIN_LEFT_PULSE_DISTANCE = HardwareConstants.DRIVETRAIN_LEFT_WHEEL_CIRCUMFERENCE / (HardwareConstants.DRIVETRAIN_LEFT_GEAR_RATIO * HardwareConstants.DRIVETRAIN_LEFT_ENCODER_PULSES_PER_REVOLUTION);
+    public static final double DRIVETRAIN_LEFT_TICKS_PER_INCH = (HardwareConstants.DRIVETRAIN_LEFT_GEAR_RATIO * HardwareConstants.DRIVETRAIN_LEFT_ENCODER_PULSES_PER_REVOLUTION) / HardwareConstants.DRIVETRAIN_LEFT_WHEEL_CIRCUMFERENCE;
 
-    public static final boolean DRIVETRAIN_STEER_MOTOR1_INVERT_OUTPUT = false;
-    public static final boolean DRIVETRAIN_STEER_MOTOR1_INVERT_SENSOR = false;
-    public static final boolean DRIVETRAIN_STEER_MOTOR2_INVERT_OUTPUT = false;
-    public static final boolean DRIVETRAIN_STEER_MOTOR2_INVERT_SENSOR = false;
-    public static final boolean DRIVETRAIN_STEER_MOTOR3_INVERT_OUTPUT = false;
-    public static final boolean DRIVETRAIN_STEER_MOTOR3_INVERT_SENSOR = false;
-    public static final boolean DRIVETRAIN_STEER_MOTOR4_INVERT_OUTPUT = false;
-    public static final boolean DRIVETRAIN_STEER_MOTOR4_INVERT_SENSOR = false;
+    public static final double DRIVETRAIN_RIGHT_ENCODER_PULSES_PER_REVOLUTION = 2048.0;
+    public static final double DRIVETRAIN_RIGHT_GEAR_RATIO = 8.45864662;
+    public static final double DRIVETRAIN_RIGHT_WHEEL_DIAMETER = 6.0; // (in inches)
+    public static final double DRIVETRAIN_RIGHT_WHEEL_CIRCUMFERENCE = Math.PI * HardwareConstants.DRIVETRAIN_RIGHT_WHEEL_DIAMETER;
+    public static final double DRIVETRAIN_RIGHT_PULSE_DISTANCE = HardwareConstants.DRIVETRAIN_RIGHT_WHEEL_CIRCUMFERENCE / (HardwareConstants.DRIVETRAIN_RIGHT_GEAR_RATIO * HardwareConstants.DRIVETRAIN_RIGHT_ENCODER_PULSES_PER_REVOLUTION);
+    public static final double DRIVETRAIN_RIGHT_TICKS_PER_INCH = (HardwareConstants.DRIVETRAIN_RIGHT_GEAR_RATIO * HardwareConstants.DRIVETRAIN_RIGHT_ENCODER_PULSES_PER_REVOLUTION) / HardwareConstants.DRIVETRAIN_RIGHT_WHEEL_CIRCUMFERENCE;
 
-    public static final boolean DRIVETRAIN_DRIVE_MOTOR1_INVERT_OUTPUT = false;
-    public static final boolean DRIVETRAIN_DRIVE_MOTOR1_INVERT_SENSOR = false;
-    public static final boolean DRIVETRAIN_DRIVE_MOTOR2_INVERT_OUTPUT = false;
-    public static final boolean DRIVETRAIN_DRIVE_MOTOR2_INVERT_SENSOR = false;
-    public static final boolean DRIVETRAIN_DRIVE_MOTOR3_INVERT_OUTPUT = false;
-    public static final boolean DRIVETRAIN_DRIVE_MOTOR3_INVERT_SENSOR = false;
-    public static final boolean DRIVETRAIN_DRIVE_MOTOR4_INVERT_OUTPUT = false;
-    public static final boolean DRIVETRAIN_DRIVE_MOTOR4_INVERT_SENSOR = false;
+    // measure from outside of wheel:
+    public static final double DRIVETRAIN_WHEEL_SEPARATION_DISTANCE = 24.75; // (in inches)
 
-    public static final double DRIVETRAIN_STEER_ENCODER_PULSES_PER_REVOLUTION = 2048.0;
-    public static final double DRIVETRAIN_STEER_GEAR_RATIO = 18.0; // set correctly
-    public static final double DRIVETRAIN_STEER_DEGREES = 360.0;
-    public static final double DRIVETRAIN_STEER_PULSE_DISTANCE = HardwareConstants.DRIVETRAIN_STEER_DEGREES / (HardwareConstants.DRIVETRAIN_STEER_GEAR_RATIO * HardwareConstants.DRIVETRAIN_STEER_ENCODER_PULSES_PER_REVOLUTION);
-    public static final double DRIVETRAIN_STEER_TICKS_PER_DEGREE = (HardwareConstants.DRIVETRAIN_STEER_GEAR_RATIO * HardwareConstants.DRIVETRAIN_STEER_ENCODER_PULSES_PER_REVOLUTION) / HardwareConstants.DRIVETRAIN_STEER_DEGREES;
-
-    public static final double DRIVETRAIN_DRIVE_ENCODER_PULSES_PER_REVOLUTION = 2048.0;
-    public static final double DRIVETRAIN_DRIVE_GEAR_RATIO = 8.95; // confirmed
-    public static final double DRIVETRAIN_DRIVE_WHEEL_DIAMETER = 4.0; // (in inches)
-    public static final double DRIVETRAIN_DRIVE_WHEEL_CIRCUMFERENCE = Math.PI * HardwareConstants.DRIVETRAIN_DRIVE_WHEEL_DIAMETER;
-    public static final double DRIVETRAIN_DRIVE_PULSE_DISTANCE = HardwareConstants.DRIVETRAIN_DRIVE_WHEEL_CIRCUMFERENCE / (HardwareConstants.DRIVETRAIN_DRIVE_GEAR_RATIO * HardwareConstants.DRIVETRAIN_DRIVE_ENCODER_PULSES_PER_REVOLUTION);
-    public static final double DRIVETRAIN_DRIVE_TICKS_PER_INCH = (HardwareConstants.DRIVETRAIN_DRIVE_GEAR_RATIO * HardwareConstants.DRIVETRAIN_DRIVE_ENCODER_PULSES_PER_REVOLUTION) / HardwareConstants.DRIVETRAIN_DRIVE_WHEEL_CIRCUMFERENCE;
-    public static final double DRIVETRAIN_DRIVE_MOTOR_VELOCITY_TO_INCHES_PER_SECOND = 10.0 * HardwareConstants.DRIVETRAIN_DRIVE_PULSE_DISTANCE; // converts #ticks per 100ms into inches per second.
-    public static final double DRIVETRAIN_DRIVE_INCHES_PER_SECOND_TO_MOTOR_VELOCITY = 0.1 * HardwareConstants.DRIVETRAIN_DRIVE_TICKS_PER_INCH; // converts inches per second into #ticks per 100ms.
-
-    public static final double DRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE = 21.5; // (in inches)
-    public static final double DRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE = 25.5; // (in inches)
-    public static final double DRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE = HardwareConstants.DRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE / 2.0; // (in inches)
-    public static final double DRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE = HardwareConstants.DRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE / 2.0; // (in inches)
+    // DriveTrain motor/sensor orientations
+    public static final boolean DRIVETRAIN_LEFT_MASTER_INVERT_OUTPUT = false;
+    public static final boolean DRIVETRAIN_LEFT_FOLLOWER1_INVERT_OUTPUT = false;
+    //public static final boolean DRIVETRAIN_LEFT_FOLLOWER2_INVERT_OUTPUT = false;
+    public static final boolean DRIVETRAIN_LEFT_INVERT_SENSOR = true;
+    public static final boolean DRIVETRAIN_RIGHT_MASTER_INVERT_OUTPUT = true;
+    public static final boolean DRIVETRAIN_RIGHT_FOLLOWER1_INVERT_OUTPUT = true;
+    //public static final boolean DRIVETRAIN_RIGHT_FOLLOWER2_INVERT_OUTPUT = true;
+    public static final boolean DRIVETRAIN_RIGHT_INVERT_SENSOR = true;
 }

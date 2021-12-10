@@ -118,19 +118,14 @@ public class OffboardVisionManager implements IMechanism
     {
         boolean enableVision = !this.driver.getDigital(DigitalOperation.VisionForceDisable);
         boolean enableVideoStream = !this.driver.getDigital(DigitalOperation.VisionDisableStream);
-        boolean enablePowercellProcessing = this.driver.getDigital(DigitalOperation.VisionEnablePowercellProcessing);
-        boolean enableRetroreflectiveProcessing = this.driver.getDigital(DigitalOperation.VisionEnableRetroreflectiveProcessing);
+        boolean enableProcessing = this.driver.getDigital(DigitalOperation.VisionEnableProcessing);
 
         double visionProcessingMode = 0.0;
         if (enableVision)
         {
-            if (enableRetroreflectiveProcessing)
+            if (enableProcessing)
             {
                 visionProcessingMode = 1.0;
-            }
-            else if (enablePowercellProcessing)
-            {
-                visionProcessingMode = 2.0;
             }
         }
 
@@ -138,7 +133,7 @@ public class OffboardVisionManager implements IMechanism
         this.logger.logBoolean(LoggingKey.OffboardVisionEnableStream, enableVideoStream);
         this.logger.logNumber(LoggingKey.OffboardVisionEnableProcessing, visionProcessingMode);
 
-        this.ringLight.set(enableVision && enableRetroreflectiveProcessing);
+        this.ringLight.set(enableVision && enableProcessing);
     }
 
     @Override

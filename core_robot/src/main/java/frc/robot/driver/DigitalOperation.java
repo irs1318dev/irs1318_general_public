@@ -8,18 +8,17 @@ public enum DigitalOperation implements IOperation
     // Vision operations:
     VisionForceDisable,
     VisionDisableStream,
-    VisionEnablePowercellProcessing,
-    VisionEnableRetroreflectiveProcessing,
+    VisionEnableProcessing,
 
     // Compressor operations:
     CompressorForceDisable,
 
     // DriveTrain operations:
-    DriveTrainPathMode,
-    DriveTrainPositionMode,
-    DriveTrainReset,
-    DriveTrainEnableFieldOrientation,
-    DriveTrainDisableFieldOrientation,
-    DriveTrainEnableMaintainDirectionMode,
-    DriveTrainDisableMaintainDirectionMode,
+    DriveTrainEnablePID,
+    DriveTrainDisablePID,
+    DriveTrainSimpleMode,
+    DriveTrainUseBrakeMode,
+    DriveTrainUsePositionalMode,
+    DriveTrainUsePathMode,
+    DriveTrainSwapFrontOrientation,
 }

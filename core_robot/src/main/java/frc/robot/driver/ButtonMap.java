@@ -27,46 +27,46 @@ public class ButtonMap implements IButtonMap
 
     public static AnalogOperationDescription[] AnalogOperationSchema = new AnalogOperationDescription[]
     {
-        new AnalogOperationDescription(
-            AnalogOperation.DriveTrainMoveForward,
-            UserInputDevice.Driver,
-            AnalogAxis.XBONE_LSY,
-            ElectronicsConstants.INVERT_XBONE_LEFT_Y_AXIS,
-            -TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY,
-            TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY,
-            TuningConstants.DRIVETRAIN_MAX_VELOCITY),
-        new AnalogOperationDescription(
-            AnalogOperation.DriveTrainMoveRight,
-            UserInputDevice.Driver,
-            AnalogAxis.XBONE_LSX,
-            ElectronicsConstants.INVERT_XBONE_LEFT_X_AXIS,
-            -TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY,
-            TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY,
-            TuningConstants.DRIVETRAIN_MAX_VELOCITY),
-        new AnalogOperationDescription(
-            AnalogOperation.DriveTrainTurnAngleGoal,
-            UserInputDevice.Driver,
-            AnalogAxis.XBONE_RSX,
-            AnalogAxis.XBONE_RSY,
-            Shift.DriverDebug,
-            Shift.None,
-            !ElectronicsConstants.INVERT_XBONE_RIGHT_X_AXIS, // make left positive...
-            ElectronicsConstants.INVERT_XBONE_RIGHT_Y_AXIS,
-            0.0,
-            TuningConstants.DRIVETRAIN_SKIP_OMEGA_ON_ZERO_DELTA,
-            true,
-            1.0,
-            TuningConstants.MAGIC_NULL_VALUE,
-            (x, y) -> Helpers.atan2d(x, y)),
-        new AnalogOperationDescription(
-            AnalogOperation.DriveTrainTurnSpeed,
-            UserInputDevice.Driver,
-            AnalogAxis.XBONE_RSX,
-            Shift.DriverDebug,
-            Shift.DriverDebug,
-            !ElectronicsConstants.INVERT_XBONE_RIGHT_X_AXIS, // make left positive, as counter-clockwise is positive
-            -TuningConstants.DRIVETRAIN_DEAD_ZONE_TURN,
-            TuningConstants.DRIVETRAIN_DEAD_ZONE_TURN),
+        // new AnalogOperationDescription(
+        //     AnalogOperation.DriveTrainMoveForward,
+        //     UserInputDevice.Driver,
+        //     AnalogAxis.XBONE_LSY,
+        //     ElectronicsConstants.INVERT_XBONE_LEFT_Y_AXIS,
+        //     -TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY,
+        //     TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY,
+        //     TuningConstants.DRIVETRAIN_MAX_VELOCITY),
+        // new AnalogOperationDescription(
+        //     AnalogOperation.DriveTrainMoveRight,
+        //     UserInputDevice.Driver,
+        //     AnalogAxis.XBONE_LSX,
+        //     ElectronicsConstants.INVERT_XBONE_LEFT_X_AXIS,
+        //     -TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY,
+        //     TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY,
+        //     TuningConstants.DRIVETRAIN_MAX_VELOCITY),
+        // new AnalogOperationDescription(
+        //     AnalogOperation.DriveTrainTurnAngleGoal,
+        //     UserInputDevice.Driver,
+        //     AnalogAxis.XBONE_RSX,
+        //     AnalogAxis.XBONE_RSY,
+        //     Shift.DriverDebug,
+        //     Shift.None,
+        //     !ElectronicsConstants.INVERT_XBONE_RIGHT_X_AXIS, // make left positive...
+        //     ElectronicsConstants.INVERT_XBONE_RIGHT_Y_AXIS,
+        //     0.0,
+        //     TuningConstants.DRIVETRAIN_SKIP_OMEGA_ON_ZERO_DELTA,
+        //     true,
+        //     1.0,
+        //     TuningConstants.MAGIC_NULL_VALUE,
+        //     (x, y) -> Helpers.atan2d(x, y)),
+        // new AnalogOperationDescription(
+        //     AnalogOperation.DriveTrainTurnSpeed,
+        //     UserInputDevice.Driver,
+        //     AnalogAxis.XBONE_RSX,
+        //     Shift.DriverDebug,
+        //     Shift.DriverDebug,
+        //     !ElectronicsConstants.INVERT_XBONE_RIGHT_X_AXIS, // make left positive, as counter-clockwise is positive
+        //     -TuningConstants.DRIVETRAIN_DEAD_ZONE_TURN,
+        //     TuningConstants.DRIVETRAIN_DEAD_ZONE_TURN),
 
 /*
         new AnalogOperationDescription(
@@ -91,8 +91,8 @@ public class ButtonMap implements IButtonMap
         new AnalogOperationDescription(
             AnalogOperation.OneMotorPower,
             UserInputDevice.Driver,
-            AnalogAxis.JOYSTICK_THROTTLE,
-            true,
+            AnalogAxis.XBONE_LSY,
+            ElectronicsConstants.INVERT_XBONE_LEFT_Y_AXIS,
             0.05),
     };
 

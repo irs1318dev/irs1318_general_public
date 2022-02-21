@@ -233,6 +233,7 @@ public class TuningConstants
     public static final boolean ONEMOTOR_USE_PID = false;
     public static final boolean ONEMOTOR_PID_POSITIONAL = false;
     public static final boolean ONEMOTOR_PID_POSITIONAL_MM = false;
+    public static final boolean ONEMOTOR_HAS_FOLLOWER = true;
 
     public static final double ONEMOTOR_PID_KP = 0.5 / 40.0; // 0.1 / 6000.0;
     public static final double ONEMOTOR_PID_KI = 0.0;
@@ -248,6 +249,9 @@ public class TuningConstants
 
     public static final boolean ONEMOTOR_INVERT_OUTPUT = false;
     public static final boolean ONEMOTOR_INVERT_SENSOR = false;
+
+    public static final boolean FOLLOWER_INVERT_OUTPUT = true;
+
     public static final boolean ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED = false;
     public static final boolean ONEMOTOR_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN = true;
     public static final boolean ONEMOTOR_REVERSE_LIMIT_SWITCH_ENABLED = false;

@@ -40,22 +40,20 @@ public class ButtonMap implements IButtonMap
         //     AnalogAxis.XBONE_LSY,
         //     ElectronicsConstants.INVERT_XBONE_LEFT_Y_AXIS,
         //     -TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY,
-        //     TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY,
-        //     TuningConstants.DRIVETRAIN_MAX_VELOCITY),
+        //     TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY),
         // new AnalogOperationDescription(
         //     AnalogOperation.DriveTrainMoveRight,
         //     UserInputDevice.Driver,
         //     AnalogAxis.XBONE_LSX,
         //     ElectronicsConstants.INVERT_XBONE_LEFT_X_AXIS,
         //     -TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY,
-        //     TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY,
-        //     TuningConstants.DRIVETRAIN_MAX_VELOCITY),
+        //     TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY),
         // new AnalogOperationDescription(
         //     AnalogOperation.DriveTrainTurnAngleGoal,
         //     UserInputDevice.Driver,
         //     AnalogAxis.XBONE_RSX,
         //     AnalogAxis.XBONE_RSY,
-        //     Shift.DriverDebug,
+        //     Shift.None, // Shift.DriverDebug,
         //     Shift.None,
         //     !ElectronicsConstants.INVERT_XBONE_RIGHT_X_AXIS, // make left positive...
         //     ElectronicsConstants.INVERT_XBONE_RIGHT_Y_AXIS,
@@ -65,24 +63,6 @@ public class ButtonMap implements IButtonMap
         //     1.0,
         //     TuningConstants.MAGIC_NULL_VALUE,
         //     (x, y) -> Helpers.atan2d(x, y)),
-        // new AnalogOperationDescription(
-        //     AnalogOperation.DriveTrainTurnSpeed,
-        //     UserInputDevice.Driver,
-        //     AnalogAxis.XBONE_RSX,
-        //     Shift.DriverDebug,
-        //     Shift.DriverDebug,
-        //     !ElectronicsConstants.INVERT_XBONE_RIGHT_X_AXIS, // make left positive, as counter-clockwise is positive
-        //     -TuningConstants.DRIVETRAIN_DEAD_ZONE_TURN,
-        //     TuningConstants.DRIVETRAIN_DEAD_ZONE_TURN),
-
-        // new AnalogOperationDescription(
-        //     AnalogOperation.DriveTrainRotationA,
-        //     UserInputDevice.Driver,
-        //     AnalogAxis.XBONE_LT,
-        //     ElectronicsConstants.INVERT_TRIGGER_AXIS,
-        //     -TuningConstants.DRIVETRAIN_DEAD_ZONE_TRIGGER_AB,
-        //     TuningConstants.DRIVETRAIN_DEAD_ZONE_TRIGGER_AB,
-        //     TuningConstants.DRIVETRAIN_ROTATION_A_MULTIPLIER),
         // new AnalogOperationDescription(
         //     AnalogOperation.DriveTrainSpinLeft,
         //     UserInputDevice.Driver,
@@ -94,10 +74,9 @@ public class ButtonMap implements IButtonMap
         //     AnalogOperation.DriveTrainSpinRight,
         //     UserInputDevice.Driver,
         //     AnalogAxis.XBONE_RT,
-        //     ElectronicsConstants.INVERT_TRIGGER_AXIS,
-        //     -TuningConstants.DRIVETRAIN_DEAD_ZONE_TRIGGER_AB,
-        //     TuningConstants.DRIVETRAIN_DEAD_ZONE_TRIGGER_AB,
-        //     TuningConstants.DRIVETRAIN_ROTATION_B_MULTIPLIER),
+        //     !ElectronicsConstants.INVERT_XBONE_RIGHT_TRIGGER, // make left positive, as counter-clockwise is positive
+        //     -TuningConstants.DRIVETRAIN_DEAD_ZONE_TURN,
+        //     TuningConstants.DRIVETRAIN_DEAD_ZONE_TURN),
 
         // Operations for the OneMotor
         new AnalogOperationDescription(

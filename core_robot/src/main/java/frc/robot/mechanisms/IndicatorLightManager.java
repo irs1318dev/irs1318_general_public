@@ -16,28 +16,37 @@ import com.google.inject.Singleton;
 @Singleton
 public class IndicatorLightManager implements IMechanism
 {
+    private final CompressorMechanism compress;
+    private final ICANdle candle;
+    private final IDriverStation ds;
+    
+    private LightMode currentMode;
+    
     private enum LightMode
     {
         Off,
-        Flashing,
-        On,
+        Red,
+        Yellow,
+        YellowFlashing,
+        Green,
+        Rainbow,
+        PurpleTwinkling,
     }
-
-    private static final double FlashingFrequency = 0.5;
-    private static final double FlashingComparisonFrequency = IndicatorLightManager.FlashingFrequency / 2.0;
-
-    private final ITimer timer;
-
-    private final IDigitalOutput xIndicator;
 
     @Inject
     public IndicatorLightManager(
         IRobotProvider provider,
-        ITimer timer)
+        CompressorMechanism compress)
     {
-        this.timer = timer;
+        this.compress = compress;
 
-        this.xIndicator = provider.getDigitalOutput(ElectronicsConstants.INDICATOR_LIGHT_X_DIO);
+        this.candle = provider.getCANdle(ElectronicsConstants.INDICATOR_LIGHT_CANDLE_CAN_ID, ElectronicsConstants.CANIVORE_NAME);
+        this.candle.configLEDType(CANdleLEDStripType.GRB);
+        this.candle.configVBatOutput(CANdleVBatOutputMode.Off);
+
+        this.ds = provider.getDriverStation();
+
+        this.currentMode = LightMode.Off;
     }
 
     @Override
@@ -48,42 +57,170 @@ public class IndicatorLightManager implements IMechanism
     @Override
     public void update()
     {
-        LightMode spunUpMode = LightMode.Off;
-        if (true == false) // some condition
+        LightMode newLightMode;
+
+        if (this.ds.getMode() == RobotMode.Autonomous) 
         {
-            spunUpMode = LightMode.On;
+            newLightMode = LightMode.PurpleTwinkling;
+        }
+        else
+        {
+            if (this.ds.getMode() == RobotMode.Teleop &&
+                this.ds.getMatchTime() <= TuningConstants.ENDGAME_START_TIME)
+            {
+                double compressorPressure = this.compress.getPressureValue();
+
+                double timeRemaining = this.ds.getMatchTime() - TuningConstants.ENDGAME_CLIMB_TIME;
+                double endPressure = compressorPressure + timeRemaining * TuningConstants.COMPRESSOR_FILL_RATE;
+                if (compressorPressure >= TuningConstants.COMPRESSOR_ENOUGH_PRESSURE)
+                {
+                    newLightMode = LightMode.Green;
+                }
+                else if (endPressure >= TuningConstants.COMPRESSOR_ENOUGH_PRESSURE)
+                {
+                    newLightMode = LightMode.Yellow;
+                }
+                else
+                {
+                    newLightMode = LightMode.Red;
+                }
+            }
+            else
+            {
+                newLightMode = LightMode.Green;
+            }
         }
 
-        this.controlLight(this.xIndicator, spunUpMode);
+        if (newLightMode != this.currentMode)
+        {
+            this.updateLightRange(
+                this.currentMode,
+                newLightMode,
+                0,
+                TuningConstants.CANDLE_TOTAL_NUMBER_LEDS,
+                TuningConstants.CANDLE_ANIMATION_SLOT_1);
+
+            this.currentMode = newLightMode;
+        }
     }
 
     @Override
     public void stop()
     {
-        this.xIndicator.set(false);
+        this.updateLightRange(
+            this.currentMode,
+            LightMode.Rainbow,
+            0,
+            TuningConstants.CANDLE_TOTAL_NUMBER_LEDS,
+            TuningConstants.CANDLE_ANIMATION_SLOT_1);
+
+        this.currentMode = LightMode.Rainbow;
     }
 
-    private void controlLight(IDigitalOutput indicatorLight, LightMode mode)
+    /**
+     * Update a light range to a certiain mode
+     * @param previousMode the previous mode for the lights
+     * @param desiredMode the desired mode for the lights
+     * @param rangeStart the beginning of the range to modify
+     * @param rangeCount the size of the range to modify
+     */
+    private void updateLightRange(
+        LightMode previousMode,
+        LightMode desiredMode,
+        int rangeStart,
+        int rangeCount,
+        int animationSlot)
     {
-        if (mode == LightMode.On)
+        // if we were in an animation previously, stop it:
+        switch (previousMode)
         {
-            indicatorLight.set(true);
+            case Rainbow:
+            case YellowFlashing:
+            case PurpleTwinkling:
+                this.candle.stopAnimation(animationSlot);
+                break;
+
+            default:
+                break;
         }
-        else if (mode == LightMode.Off)
+
+        // set based on our new mode:
+        switch (desiredMode)
         {
-            indicatorLight.set(false);
-        }
-        else
-        {
-            double currentTime = this.timer.get();
-            if (currentTime % IndicatorLightManager.FlashingFrequency >= IndicatorLightManager.FlashingComparisonFrequency)
-            {
-                indicatorLight.set(true);
-            }
-            else
-            {
-                indicatorLight.set(false);
-            }
+            case Rainbow:
+                this.candle.startRainbowAnimation(
+                    animationSlot,
+                    1.0,
+                    0.25,
+                    rangeCount,
+                    false,
+                    rangeStart);
+                break;
+
+            case YellowFlashing:
+                this.candle.startStrobeAnimation(
+                    animationSlot,
+                    TuningConstants.INDICATOR_YELLOW_COLOR_RED,
+                    TuningConstants.INDICATOR_YELLOW_COLOR_GREEN,
+                    TuningConstants.INDICATOR_YELLOW_COLOR_BLUE,
+                    TuningConstants.INDICATOR_YELLOW_COLOR_WHITE,
+                    0.75,
+                    rangeStart,
+                    rangeCount);
+
+            case Green:
+                this.candle.setLEDs(
+                    TuningConstants.INDICATOR_GREEN_COLOR_RED,
+                    TuningConstants.INDICATOR_GREEN_COLOR_GREEN,
+                    TuningConstants.INDICATOR_GREEN_COLOR_BLUE,
+                    TuningConstants.INDICATOR_GREEN_COLOR_WHITE,
+                    rangeStart,
+                    rangeCount);
+                break;
+
+            case Yellow:
+                this.candle.setLEDs(
+                    TuningConstants.INDICATOR_YELLOW_COLOR_RED,
+                    TuningConstants.INDICATOR_YELLOW_COLOR_GREEN,
+                    TuningConstants.INDICATOR_YELLOW_COLOR_BLUE,
+                    TuningConstants.INDICATOR_YELLOW_COLOR_WHITE,
+                    rangeStart,
+                    rangeCount);
+                break;
+
+            case Red:
+                this.candle.setLEDs(
+                    TuningConstants.INDICATOR_RED_COLOR_RED,
+                    TuningConstants.INDICATOR_RED_COLOR_GREEN,
+                    TuningConstants.INDICATOR_RED_COLOR_BLUE,
+                    TuningConstants.INDICATOR_RED_COLOR_WHITE,
+                    rangeStart,
+                    rangeCount);
+                break;
+
+            case PurpleTwinkling:
+                this.candle.startTwinkleAnimation(
+                    animationSlot,
+                    TuningConstants.INDICATOR_PURPLE_RED,
+                    TuningConstants.INDICATOR_PURPLE_GREEN,
+                    TuningConstants.INDICATOR_PURPLE_BLUE,
+                    TuningConstants.INDICATOR_PURPLE_WHITE,
+                    0.75,
+                    rangeCount,
+                    CANdleTwinklePercent.Percent88,
+                    rangeStart);
+                break;
+
+            default:
+            case Off:
+                this.candle.setLEDs(
+                    TuningConstants.INDICATOR_OFF_COLOR_RED,
+                    TuningConstants.INDICATOR_OFF_COLOR_GREEN,
+                    TuningConstants.INDICATOR_OFF_COLOR_BLUE,
+                    TuningConstants.INDICATOR_OFF_COLOR_WHITE,
+                    rangeStart,
+                    rangeCount);
+                break;
         }
     }
 }

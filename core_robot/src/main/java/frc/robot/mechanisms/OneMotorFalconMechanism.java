@@ -35,7 +35,7 @@ public class OneMotorFalconMechanism implements IMechanism
         this.logger = logger;
         this.motor = provider.getTalonFX(ElectronicsConstants.ONEMOTOR_PRIMARY_MOTOR_CHANNEL);
 
-        this.motor.setSensorType(TalonXFeedbackDevice.QuadEncoder);
+        this.motor.setSensorType(TalonXFeedbackDevice.IntegratedSensor);
         this.motor.setNeutralMode(MotorNeutralMode.Brake);
         this.motor.setInvertOutput(TuningConstants.ONEMOTOR_INVERT_OUTPUT);
         this.motor.setInvertSensor(TuningConstants.ONEMOTOR_INVERT_SENSOR);
@@ -92,6 +92,14 @@ public class OneMotorFalconMechanism implements IMechanism
         else
         {
             this.motor.setControlMode(TalonXControlMode.PercentOutput);
+        }
+
+        if (TuningConstants.ONEMOTOR_HAS_FOLLOWER)
+        {
+            ITalonFX follower = provider.getTalonFX(ElectronicsConstants.ONEMOTOR_FOLLOWER_MOTOR_CHANNEL);
+            follower.setNeutralMode(MotorNeutralMode.Brake);
+            follower.setInvertOutput(TuningConstants.FOLLOWER_INVERT_OUTPUT);
+            follower.follow(this.motor);
         }
 
         this.velocity = 0.0;

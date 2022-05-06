@@ -4,10 +4,14 @@ public enum MacroOperation implements IOperation
 {
     AutonomousRoutine,
 
+    // Path testing
+    FollowPathTest1,
+    FollowPathTest2,
+
     // DriveTrain operations:
     PIDBrake,
 
-    // Testing operations
-    VisionCenter,
-    VisionCenterAndAdvance,
+    // Vision operations
+    VisionCenterHub,
+    VisionCenterCargo,
 }

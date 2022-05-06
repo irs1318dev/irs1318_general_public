@@ -1,9 +1,12 @@
 package frc.robot.mechanisms;
 
+import frc.robot.ElectronicsConstants;
 import frc.robot.common.ComplementaryFilter;
 import frc.robot.common.IMechanism;
-import frc.robot.common.robotprovider.IPowerDistributionPanel;
+import frc.robot.common.robotprovider.IPowerDistribution;
 import frc.robot.common.robotprovider.IRobotProvider;
+import frc.robot.driver.DigitalOperation;
+import frc.robot.driver.common.IDriver;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -17,7 +20,8 @@ import com.google.inject.Singleton;
 @Singleton
 public class PowerManager implements IMechanism
 {
-    private final IPowerDistributionPanel pdp;
+    private final IDriver driver;
+    private final IPowerDistribution powerDistribution;
 
     private ComplementaryFilter batteryVoltageFilter;
 
@@ -26,15 +30,16 @@ public class PowerManager implements IMechanism
      * @param provider for obtaining electronics objects
      */
     @Inject
-    public PowerManager(IRobotProvider provider)
+    public PowerManager(IDriver driver, IRobotProvider provider)
     {
-        this.pdp = provider.getPDP();
-        this.batteryVoltageFilter = new ComplementaryFilter(0.4, 0.6, this.pdp.getBatteryVoltage());
+        this.driver = driver;
+        this.powerDistribution = provider.getPowerDistribution(ElectronicsConstants.POWER_DISTRIBUTION_CAN_ID, ElectronicsConstants.POWER_DISTRIBUTION_TYPE);
+        this.batteryVoltageFilter = new ComplementaryFilter(0.4, 0.6, this.powerDistribution.getBatteryVoltage());
     }
 
     public double getCurrent(int pdpChannel)
     {
-        return this.pdp.getCurrent(pdpChannel);
+        return this.powerDistribution.getCurrent(pdpChannel);
     }
 
     public double getBatteryVoltage()
@@ -45,18 +50,22 @@ public class PowerManager implements IMechanism
     @Override
     public void readSensors()
     {
-        this.batteryVoltageFilter.update(this.pdp.getBatteryVoltage());
+        this.batteryVoltageFilter.update(this.powerDistribution.getBatteryVoltage());
     }
 
     @Override
     public void update()
     {
-        // no outputs to update for this mechanism
+        boolean enableVision = !this.driver.getDigital(DigitalOperation.VisionForceDisable);
+        boolean enableGamePieceProcessing = this.driver.getDigital(DigitalOperation.VisionEnableGamePieceProcessing);
+        boolean enableRetroreflectiveProcessing = this.driver.getDigital(DigitalOperation.VisionEnableRetroreflectiveProcessing);
+        this.powerDistribution.setSwitchableChannel(enableVision && (enableGamePieceProcessing || enableRetroreflectiveProcessing));
     }
 
     @Override
     public void stop()
     {
+        this.powerDistribution.setSwitchableChannel(false);
         this.batteryVoltageFilter.reset();
     }
 }

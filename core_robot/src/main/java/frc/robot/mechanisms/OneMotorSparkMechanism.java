@@ -96,8 +96,6 @@ public class OneMotorSparkMechanism implements IMechanism
                     TuningConstants.ONEMOTOR_PID_MAX_OUTPUT,
                     OneMotorSparkMechanism.slotId);
             }
-
-            this.motor.setSelectedSlot(OneMotorSparkMechanism.slotId);
         }
         else
         {

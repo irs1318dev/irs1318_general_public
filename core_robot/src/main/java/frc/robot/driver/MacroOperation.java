@@ -12,6 +12,6 @@ public enum MacroOperation implements IOperation
     PIDBrake,
 
     // Vision operations
-    VisionCenterHub,
-    VisionCenterCargo,
+    VisionCenterRetroReflective,
+    VisionCenterGamePiece,
 }

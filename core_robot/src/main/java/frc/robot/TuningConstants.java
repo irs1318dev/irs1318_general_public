@@ -119,29 +119,31 @@ public class TuningConstants
     public static final int CANDLE_ANIMATION_SLOT_1 = 0;
     public static final int CANDLE_ANIMATION_SLOT_2 = 1;
 
+    // IRS1318 Purple color
     public static final int INDICATOR_PURPLE_RED = 101;
     public static final int INDICATOR_PURPLE_GREEN = 34;
     public static final int INDICATOR_PURPLE_BLUE = 129;
     public static final int INDICATOR_PURPLE_WHITE = 0;
 
+    // No color
     public static final int INDICATOR_OFF_COLOR_RED = 0;
     public static final int INDICATOR_OFF_COLOR_GREEN = 0;
     public static final int INDICATOR_OFF_COLOR_BLUE = 0;
     public static final int INDICATOR_OFF_COLOR_WHITE = 0;
 
-    // Has (at least) a single cargo light
+    // Bright Red color
     public static final int INDICATOR_RED_COLOR_RED = 255;
     public static final int INDICATOR_RED_COLOR_GREEN = 0;
     public static final int INDICATOR_RED_COLOR_BLUE = 0;
     public static final int INDICATOR_RED_COLOR_WHITE = 0;
 
-    // Has a second cargo light
+    // Bright Yellow color
     public static final int INDICATOR_YELLOW_COLOR_RED = 255;
     public static final int INDICATOR_YELLOW_COLOR_GREEN = 255;
     public static final int INDICATOR_YELLOW_COLOR_BLUE = 0;
     public static final int INDICATOR_YELLOW_COLOR_WHITE = 0;
 
-    // Shooter spin-up lights
+    // Bright Green color
     public static final int INDICATOR_GREEN_COLOR_RED = 0;
     public static final int INDICATOR_GREEN_COLOR_GREEN = 255;
     public static final int INDICATOR_GREEN_COLOR_BLUE = 0;
@@ -282,5 +284,5 @@ public class TuningConstants
     public static final boolean ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED = false;
     public static final boolean ONEMOTOR_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN = true;
     public static final boolean ONEMOTOR_REVERSE_LIMIT_SWITCH_ENABLED = false;
-    public static final boolean ONEMOTOR_REVERSE_LIMIT_SWITCH_NORMALLY_OPEN = true;    
+    public static final boolean ONEMOTOR_REVERSE_LIMIT_SWITCH_NORMALLY_OPEN = true;
 }

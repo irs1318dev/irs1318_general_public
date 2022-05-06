@@ -185,8 +185,12 @@ public class TuningConstants
     // gets the max speed in inches per second
     // (TalonSRX: 10 * (ticks per 100ms) * (inches per tick) * (10) == in / s)
     // (SparkMAX: (rotations per second) * (inches per rotation) == in / s)
+    public static final double DRIVETRAIN_PATH_LEFT_MAX_VELOCITY_INCHES_PER_SECOND = 10.0 * TuningConstants.DRIVETRAIN_VELOCITY_PID_LEFT_KS * HardwareConstants.DRIVETRAIN_LEFT_PULSE_DISTANCE;
     public static final double DRIVETRAIN_PATH_RIGHT_MAX_VELOCITY_INCHES_PER_SECOND = 10.0 * TuningConstants.DRIVETRAIN_VELOCITY_PID_RIGHT_KS * HardwareConstants.DRIVETRAIN_RIGHT_PULSE_DISTANCE;
-    // public static final double DRIVETRAIN_PATH_RIGHT_MAX_VELOCITY_INCHES_PER_SECOND = TuningConstants.DRIVETRAIN_VELOCITY_PID_LEFT_KS * HardwareConstants.DRIVETRAIN_LEFT_PULSE_DISTANCE;
+    public static final double DRIVETRAIN_PATH_MAX_VELOCITY_INCHES_PER_SECOND = 0.5 * (TuningConstants.DRIVETRAIN_PATH_LEFT_MAX_VELOCITY_INCHES_PER_SECOND + TuningConstants.DRIVETRAIN_PATH_RIGHT_MAX_VELOCITY_INCHES_PER_SECOND) / 2.0;
+    public static final double DRIVETRAIN_MAX_PATH_TURN_VELOCITY = 5.0;
+    public static final double DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY = 100.0;
+    public static final double DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION = 200.0;
 
     // Path PID (left)
     public static final double DRIVETRAIN_PATH_PID_LEFT_KP = 0.0;
@@ -196,11 +200,6 @@ public class TuningConstants
     public static final double DRIVETRAIN_PATH_PID_LEFT_KV = 1.0;
     public static final double DRIVETRAIN_PATH_PID_LEFT_KCC = 0.0;
     public static final double DRIVETRAIN_PATH_LEFT_HEADING_CORRECTION = 0.0;
-
-    // gets the max control speed in inches per second
-    // (TalonSRX: 10 * (ticks per 100ms) * (inches per tick) * (10) == in / s)
-    public static final double DRIVETRAIN_PATH_LEFT_MAX_VELOCITY_INCHES_PER_SECOND = 10.0 * TuningConstants.DRIVETRAIN_VELOCITY_PID_LEFT_KS * HardwareConstants.DRIVETRAIN_LEFT_PULSE_DISTANCE;
-    // public static final double DRIVETRAIN_PATH_LEFT_MAX_VELOCITY_INCHES_PER_SECOND = TuningConstants.DRIVETRAIN_VELOCITY_PID_LEFT_KS * HardwareConstants.DRIVETRAIN_LEFT_PULSE_DISTANCE;
 
     // Position PID (right)
     public static final double DRIVETRAIN_POSITION_PID_RIGHT_KP = 0.0002;

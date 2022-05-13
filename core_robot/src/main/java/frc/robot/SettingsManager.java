@@ -19,10 +19,10 @@ public class SettingsManager
         // mechanismList.add(injector.getInstance(CompressorMechanism.class));
         // mechanismList.add(injector.getInstance(PigeonManager.class)); // PigeonManager/NavxManager should come before DriveTrainMechanism
         // mechanismList.add(injector.getInstance(PowerManager.class));
-        // mechanismList.add(injector.getInstance(DriveTrainMechanism.class));
+        mechanismList.add(injector.getInstance(DriveTrainMechanism.class));
         // mechanismList.add(injector.getInstance(OffboardVisionManager.class));
         // mechanismList.add(injector.getInstance(IndicatorLightManager.class));
-        mechanismList.add(injector.getInstance(OneMotorFalconMechanism.class));
+        // mechanismList.add(injector.getInstance(OneMotorFalconMechanism.class));
         // mechanismList.add(injector.getInstance(OneMotorSRXMechanism.class));
         // mechanismList.add(injector.getInstance(OneMotorSparkMechanism.class));
         return mechanismList;

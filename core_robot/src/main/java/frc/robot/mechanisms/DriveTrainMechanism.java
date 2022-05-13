@@ -47,6 +47,12 @@ public class DriveTrainMechanism implements IMechanism
     private double rightError;
     private double rightPosition;
 
+    private double odometryX;
+    private double odometryY;
+    private double odometryAngle;
+    private double prevLeftDistance;
+    private double prevRightDistance;
+
     /**
      * Initializes a new DriveTrainMechanism
      * @param driver to use
@@ -152,6 +158,12 @@ public class DriveTrainMechanism implements IMechanism
         this.rightError = 0.0;
         this.rightPosition = 0.0;
 
+        this.odometryX = 0.0;
+        this.odometryY = 0.0;
+        this.odometryAngle = 0.0;
+        this.prevLeftDistance = 0.0;
+        this.prevRightDistance = 0.0;
+
         this.setControlMode();
     }
 
@@ -230,6 +242,33 @@ public class DriveTrainMechanism implements IMechanism
         this.logger.logNumber(LoggingKey.DriveTrainRightVelocity, this.rightVelocity);
         this.logger.logNumber(LoggingKey.DriveTrainRightError, this.rightError);
         this.logger.logNumber(LoggingKey.DriveTrainRightTicks, this.rightPosition);
+
+        // Calculate odometry:
+        // check the current distance recorded by the encoders
+        double leftDistance = this.leftPosition * HardwareConstants.DRIVETRAIN_LEFT_PULSE_DISTANCE;
+        double rightDistance = this.rightPosition * HardwareConstants.DRIVETRAIN_RIGHT_PULSE_DISTANCE;
+
+        // calculate the angle (in radians) based on the total distance traveled
+        double angleR = (leftDistance - rightDistance) / HardwareConstants.DRIVETRAIN_WHEEL_SEPARATION_DISTANCE;
+
+        // correct for odometry angle inconsistencies
+        angleR *= TuningConstants.DRIVETRAIN_ENCODER_ODOMETRY_ANGLE_CORRECTION;
+
+        // calculate the average distance traveled
+        double averagePositionChange = ((leftDistance - this.prevLeftDistance) + (rightDistance - this.prevRightDistance)) / 2;
+
+        // calculate the change since last time, and update our relative position
+        this.odometryX += averagePositionChange * Math.cos(angleR);
+        this.odometryY += averagePositionChange * Math.sin(angleR);
+
+        this.odometryAngle = (angleR * 360.0 / (2.0 * Math.PI)) % 360;
+
+        // record distance for next time
+        this.prevLeftDistance = leftDistance;
+        this.prevRightDistance = rightDistance;
+
+        this.logger.logNumber(LoggingKey.DriveTrainXPosition, this.odometryX);
+        this.logger.logNumber(LoggingKey.DriveTrainYPosition, this.odometryY);
     }
 
     /**
@@ -319,6 +358,16 @@ public class DriveTrainMechanism implements IMechanism
         this.rightVelocity = 0.0;
         this.rightError = 0.0;
         this.rightPosition = 0;
+    }
+
+    public double getXPosition()
+    {
+        return this.odometryX;
+    }
+
+    public double getYPosition()
+    {
+        return this.odometryY;
     }
 
     /**

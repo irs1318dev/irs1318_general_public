@@ -48,6 +48,8 @@ public enum LoggingKey
     DriveTrainLeftPositionGoal("dt.leftPositionGoal", true),
     DriveTrainRightPositionGoal("dt.rightPositionGoal", true),
 
+    DriveTrainXPosition("dt.x", true),
+    DriveTrainYPosition("dt.y", true),
 
     CompressorPreassure("com.pres"),
 

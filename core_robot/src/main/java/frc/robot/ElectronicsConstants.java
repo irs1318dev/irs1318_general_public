@@ -32,13 +32,13 @@ public class ElectronicsConstants
     public static final boolean INVERT_THROTTLE_AXIS = true;
     public static final boolean INVERT_TRIGGER_AXIS = false;
 
-    public static final int POWER_DISTRIBUTION_CAN_ID = 1;
-    public static final PowerDistributionModuleType POWER_DISTRIBUTION_TYPE = PowerDistributionModuleType.PowerDistributionHub;
+    public static final int POWER_DISTRIBUTION_CAN_ID = 0;
+    public static final PowerDistributionModuleType POWER_DISTRIBUTION_TYPE = PowerDistributionModuleType.PowerDistributionPanel;
 
     public static final String CANIVORE_NAME = "CANIVORE1"; // Module A
 
-    public static final int PNEUMATICS_MODULE_A = 1; // Module A
-    public static final PneumaticsModuleType PNEUMATICS_MODULE_TYPE_A = PneumaticsModuleType.PneumaticsHub; // Module A
+    public static final int PNEUMATICS_MODULE_A = 0; // Module A
+    public static final PneumaticsModuleType PNEUMATICS_MODULE_TYPE_A = PneumaticsModuleType.PneumaticsControlModule; // Module A
     public static final int PNEUMATICS_MODULE_B = 2; // Module B
     public static final PneumaticsModuleType PNEUMATICS_MODULE_TYPE_B = PneumaticsModuleType.PneumaticsHub; // Module B
 

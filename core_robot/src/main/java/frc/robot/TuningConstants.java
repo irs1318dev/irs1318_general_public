@@ -11,6 +11,8 @@ public class TuningConstants
     public static final boolean COMPETITION_ROBOT = true;
     public static boolean THROW_EXCEPTIONS = !TuningConstants.COMPETITION_ROBOT;
     public static boolean LOG_EXCEPTIONS = true;
+    public static double LOOP_DURATION = 0.02; // we expect the robot's main loop to run at roughly ~50 Hz, or 1 update per 20ms (0.02s)
+    public static int LOOPS_PER_SECOND = 50; // we expect the robot's main loop to run at roughly ~50 Hz, or 1 update per 20ms (0.02s)
 
     public static final boolean EXPECT_UNUSED_JOYSTICKS = true;
 
@@ -58,6 +60,14 @@ public class TuningConstants
     public static final double NAVX_FAST_TURN_PID_KS = 1.0;
     public static final double NAVX_FAST_TURN_PID_MIN = -0.8;
     public static final double NAVX_FAST_TURN_PID_MAX = 0.8;
+
+    //================================================= Power ======================================================
+
+    public static final boolean POWER_TRACK_CURRENT = true;
+    public static final double POWER_OVERCURRENT_TRACKING_DURATION = 5.0; // duration of time to keep track of the average current
+    public static final int POWER_OVERCURRENT_SAMPLES = (int)(TuningConstants.POWER_OVERCURRENT_TRACKING_DURATION / TuningConstants.LOOP_DURATION); // duration of time to keep track of the average current
+    public static final double POWER_OVERCURRENT_THRESHOLD = 120.0;
+    public static final double POWER_OVERCURREHT_HIGH_THRESHOLD = 160.0;
 
     //================================================= Vision ======================================================
 

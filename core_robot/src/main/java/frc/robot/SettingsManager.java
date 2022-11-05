@@ -25,6 +25,7 @@ public class SettingsManager
         mechanismList.add(injector.getInstance(OneMotorFalconMechanism.class));
         // mechanismList.add(injector.getInstance(OneMotorSRXMechanism.class));
         // mechanismList.add(injector.getInstance(OneMotorSparkMechanism.class));
+        // mechanismList.add(injector.getInstance(DriverFeedbackManager.class)); // DriverFeedbackManager should always be the last mechanism on the list
         return mechanismList;
     }
 

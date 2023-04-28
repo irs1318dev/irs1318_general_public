@@ -1,13 +1,15 @@
 package frc.robot.driver.controltasks;
 
+import frc.lib.driver.TrajectoryManager;
+import frc.lib.helpers.ExceptionHelpers;
+import frc.lib.helpers.Helpers;
+import frc.lib.robotprovider.ITimer;
+import frc.lib.robotprovider.ITrajectory;
+import frc.lib.robotprovider.Pose2d;
+import frc.lib.robotprovider.TrajectoryState;
 import frc.robot.TuningConstants;
-import frc.robot.common.robotprovider.ITimer;
-import frc.robot.common.robotprovider.ITrajectory;
-import frc.robot.common.robotprovider.Pose2d;
-import frc.robot.common.robotprovider.TrajectoryState;
 import frc.robot.driver.AnalogOperation;
 import frc.robot.driver.DigitalOperation;
-import frc.robot.driver.common.PathManager;
 import frc.robot.mechanisms.DriveTrainMechanism;
 
 /**
@@ -16,9 +18,15 @@ import frc.robot.mechanisms.DriveTrainMechanism;
  */
 public class FollowPathTask extends ControlTaskBase
 {
+    public enum Type
+    {
+        Absolute, // poses should match how they are on the field exactly
+        RobotRelativeFromCurrentPose,
+        FieldRelativeFromCurrentPose,
+    }
+
     private final String pathName;
-    private final boolean fromCurrentPose;
-    private final boolean maintainInitialAngle;
+    private final Type type;
 
     private ITimer timer;
 
@@ -29,20 +37,22 @@ public class FollowPathTask extends ControlTaskBase
 
     /**
      * Initializes a new FollowPathTask
+     * @param pathName the path to follow
      */
     public FollowPathTask(String pathName)
     {
-        this(pathName, true, true);
+        this(pathName, Type.RobotRelativeFromCurrentPose);
     }
 
     /**
      * Initializes a new FollowPathTask
+     * @param pathName the path to follow
+     * @param type describing how to follow the path
      */
-    public FollowPathTask(String pathName, boolean fromCurrentPose, boolean maintainInitialAngle)
+    public FollowPathTask(String pathName, Type type)
     {
         this.pathName = pathName;
-        this.fromCurrentPose = fromCurrentPose;
-        this.maintainInitialAngle = maintainInitialAngle;
+        this.type = type;
     }
 
     /**
@@ -51,14 +61,22 @@ public class FollowPathTask extends ControlTaskBase
     @Override
     public void begin()
     {
-        PathManager pathManager = this.getInjector().getInstance(PathManager.class);
-        this.trajectory = pathManager.getTrajectory(this.pathName);
-
         this.timer = this.getInjector().getInstance(ITimer.class);
+
+        TrajectoryManager trajectoryManager = this.getInjector().getInstance(TrajectoryManager.class);
+        this.trajectory = trajectoryManager.getTrajectory(this.pathName);
+        if (this.trajectory == null)
+        {
+            ExceptionHelpers.Assert(false, "Unknown trajectory " + this.pathName);
+            this.startTime = 0.0;
+            this.trajectoryDuration = 0.0;
+            return;
+        }
+
         this.startTime = this.timer.get();
         this.trajectoryDuration = this.trajectory.getDuration();
 
-        if (this.fromCurrentPose)
+        if (this.type != Type.Absolute)
         {
             DriveTrainMechanism driveTrain = this.getInjector().getInstance(DriveTrainMechanism.class);
             this.initialPose = driveTrain.getPose();
@@ -76,18 +94,62 @@ public class FollowPathTask extends ControlTaskBase
      */
     @Override
     public void update()
-    {
+    { 
         TrajectoryState state = this.trajectory.get(this.timer.get() - this.startTime);
-        this.setAnalogOperationState(AnalogOperation.DriveTrainPathXGoal, state.xPosition + this.initialPose.x);
-        this.setAnalogOperationState(AnalogOperation.DriveTrainPathYGoal, state.yPosition + this.initialPose.y);
-        this.setAnalogOperationState(AnalogOperation.DriveTrainTurnAngleGoal, state.angle);
-        this.setAnalogOperationState(AnalogOperation.DriveTrainPathXVelocityGoal, state.xVelocity);
-        this.setAnalogOperationState(AnalogOperation.DriveTrainPathYVelocityGoal, state.yVelocity);
-        this.setAnalogOperationState(AnalogOperation.DriveTrainPathAngleVelocityGoal, state.angleVelocity);
-        if (this.maintainInitialAngle)
+
+        double xPos = state.xPosition;
+        double yPos = state.yPosition;
+        double anglePos = state.angle;
+        double xVel = state.xVelocity;
+        double yVel = state.yVelocity;
+        double angleVel = state.angleVelocity;
+
+        double xGoal;
+        double yGoal;
+        double angleGoal;
+        double xVelGoal;
+        double yVelGoal;
+        double angleVelGoal;
+        switch (this.type)
         {
-            this.setAnalogOperationState(AnalogOperation.DriveTrainTurnAngleReference, this.initialPose.angle);
+            case FieldRelativeFromCurrentPose:
+                xGoal = xPos + this.initialPose.x;
+                yGoal = yPos + this.initialPose.y;
+                angleGoal = anglePos + this.initialPose.angle;
+                xVelGoal = xVel;
+                yVelGoal = yVel;
+                angleVelGoal = angleVel;
+                break;
+
+            case RobotRelativeFromCurrentPose:
+                double initialAngle = this.initialPose.angle;
+
+                // change so that we move in relation to the direction the robot was initially pointing
+                xGoal = Helpers.cosd(-initialAngle) * xPos + Helpers.sind(-initialAngle) * yPos + this.initialPose.x;
+                yGoal = Helpers.cosd(-initialAngle) * yPos - Helpers.sind(-initialAngle) * xPos + this.initialPose.y;
+                angleGoal = state.angle + initialAngle;
+                xVelGoal = Helpers.cosd(-initialAngle) * xVel + Helpers.sind(-initialAngle) * yVel;
+                yVelGoal = Helpers.cosd(-initialAngle) * yVel - Helpers.sind(-initialAngle) * xVel;
+                angleVelGoal = state.angleVelocity;
+                break;
+
+            default:
+            case Absolute:
+                xGoal = xPos;
+                yGoal = yPos;
+                angleGoal = anglePos;
+                xVelGoal = xVel;
+                yVelGoal = yVel;
+                angleVelGoal = angleVel;
+                break;
         }
+
+        this.setAnalogOperationState(AnalogOperation.DriveTrainPathXGoal, xGoal);
+        this.setAnalogOperationState(AnalogOperation.DriveTrainPathYGoal, yGoal);
+        this.setAnalogOperationState(AnalogOperation.DriveTrainTurnAngleGoal, angleGoal);
+        this.setAnalogOperationState(AnalogOperation.DriveTrainPathXVelocityGoal, xVelGoal);
+        this.setAnalogOperationState(AnalogOperation.DriveTrainPathYVelocityGoal, yVelGoal);
+        this.setAnalogOperationState(AnalogOperation.DriveTrainPathAngleVelocityGoal, angleVelGoal);
     }
 
     /**
@@ -103,10 +165,6 @@ public class FollowPathTask extends ControlTaskBase
         this.setAnalogOperationState(AnalogOperation.DriveTrainPathXVelocityGoal, 0.0);
         this.setAnalogOperationState(AnalogOperation.DriveTrainPathYVelocityGoal, 0.0);
         this.setAnalogOperationState(AnalogOperation.DriveTrainPathAngleVelocityGoal, 0.0);
-        if (this.maintainInitialAngle)
-        {
-            this.setAnalogOperationState(AnalogOperation.DriveTrainTurnAngleReference, 0.0);
-        }
     }
 
     /**

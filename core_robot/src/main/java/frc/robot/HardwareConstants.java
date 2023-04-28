@@ -1,7 +1,5 @@
 package frc.robot;
 
-import frc.robot.common.robotprovider.TalonFXInvertType;
-
 /**
  * All constants describing the physical structure of the robot (distances and sizes of things).
  * 
@@ -10,12 +8,8 @@ import frc.robot.common.robotprovider.TalonFXInvertType;
  */
 public class HardwareConstants
 {
-    //================================================== DriveTrain ==============================================================
-
-    public static final TalonFXInvertType DRIVETRAIN_STEER_MOTOR1_INVERT = TalonFXInvertType.Clockwise;
-    public static final TalonFXInvertType DRIVETRAIN_STEER_MOTOR2_INVERT = TalonFXInvertType.Clockwise;
-    public static final TalonFXInvertType DRIVETRAIN_STEER_MOTOR3_INVERT = TalonFXInvertType.Clockwise;
-    public static final TalonFXInvertType DRIVETRAIN_STEER_MOTOR4_INVERT = TalonFXInvertType.Clockwise;
+    public static final double MAX_ROBOT_HEIGHT = 78.0; // inches, max overall height
+    public static final double MAX_ROBOT_EXTENSION = 48.0; // inches, max extension beyond frame perimeter
 
     //================================================== DriveTrain ==============================================================
     // Note: Pulse Distance is the distance moved per tick

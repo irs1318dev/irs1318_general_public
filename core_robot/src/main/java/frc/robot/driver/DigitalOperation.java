@@ -1,16 +1,21 @@
 package frc.robot.driver;
 
+import frc.lib.driver.IOperation;
+
 public enum DigitalOperation implements IOperation
 {
     PositionResetFieldOrientation,
+    PositionResetRobotLevel,
 
     // Driver interaction operations
     ForceLightDriverRumble,
+    ForcePurpleStrobe,
+    ForceRainbow,
 
     // Vision operations:
     VisionForceDisable,
     VisionDisableStream,
-    VisionEnableGamePieceProcessing,
+    VisionEnableAprilTagProcessing,
     VisionEnableRetroreflectiveProcessing,
 
     // Compressor operations:
@@ -24,4 +29,5 @@ public enum DigitalOperation implements IOperation
     DriveTrainUsePositionalMode,
     DriveTrainUsePathMode,
     DriveTrainSwapFrontOrientation,
+    DriveTrainResetXYPosition,
 }

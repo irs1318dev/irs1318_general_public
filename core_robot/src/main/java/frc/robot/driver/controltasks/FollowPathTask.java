@@ -1,11 +1,23 @@
 package frc.robot.driver.controltasks;
 
-import frc.robot.common.*;
-import frc.robot.common.robotprovider.*;
-import frc.robot.driver.*;
-import frc.robot.driver.common.*;
-import frc.robot.mechanisms.*;
+import frc.lib.driver.TrajectoryManager;
+import frc.lib.helpers.ExceptionHelpers;
+import frc.lib.helpers.Helpers;
+import frc.lib.mechanisms.IPositionManager;
+import frc.lib.robotprovider.ITimer;
+import frc.lib.robotprovider.ITrajectory;
+import frc.lib.robotprovider.Pose2d;
+import frc.lib.robotprovider.TrajectoryState;
+import frc.robot.TuningConstants;
+import frc.robot.driver.AnalogOperation;
+import frc.robot.driver.DigitalOperation;
+import frc.robot.mechanisms.DriveTrainMechanism;
+import frc.robot.mechanisms.PigeonManager;
 
+/**
+ * Task that follows a path
+ * 
+ */
 public class FollowPathTask extends ControlTaskBase
 {
     private final String pathName;
@@ -27,6 +39,7 @@ public class FollowPathTask extends ControlTaskBase
 
     /**
      * Initializes a new FollowPathTask
+     * @param pathName the path to follow
      */
     public FollowPathTask(String pathName)
     {
@@ -49,9 +62,9 @@ public class FollowPathTask extends ControlTaskBase
         this.startRightPosition = this.driveTrain.getRightPosition();
 
         this.positionManager = this.getInjector().getInstance(PigeonManager.class);
-        this.startHeading = this.positionManager.getAngle();
+        this.startHeading = this.positionManager.getYaw();
 
-        PathManager pathManager = this.getInjector().getInstance(PathManager.class);
+        TrajectoryManager pathManager = this.getInjector().getInstance(TrajectoryManager.class);
         this.trajectory = pathManager.getTrajectory(this.pathName);
         this.duration = this.trajectory.getDuration();
 

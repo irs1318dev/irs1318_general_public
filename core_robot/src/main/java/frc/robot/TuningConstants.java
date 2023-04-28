@@ -3,12 +3,10 @@ package frc.robot;
 /**
  * All constants related to tuning the operation of the robot.
  * 
- * @author Will
- * 
  */
 public class TuningConstants
 {
-    public static final boolean COMPETITION_ROBOT = false;
+    public static final boolean COMPETITION_ROBOT = true;
     public static boolean THROW_EXCEPTIONS = !TuningConstants.COMPETITION_ROBOT;
     public static boolean LOG_EXCEPTIONS = true;
     public static double LOOP_DURATION = 0.02; // we expect the robot's main loop to run at roughly ~50 Hz, or 1 update per 20ms (0.02s)
@@ -19,19 +17,21 @@ public class TuningConstants
     //================================================== Magic Values ==============================================================
 
     public static final double MAGIC_NULL_VALUE = -1318.0;
-    public static final double PERRY_THE_PLATYPUS = 0.0;
+    public static final double ZERO = 0.0;
     public static final double ENDGAME_START_TIME = 30.0;
     public static final double ENDGAME_CLIMB_TIME = 5.0;
 
     //================================================== Logging  ==============================================================
 
-    public static final int CALENDAR_YEAR = 2022;
-    public static final boolean LOG_TO_FILE = TuningConstants.COMPETITION_ROBOT;
-    public static final boolean LOG_FILE_ONLY_COMPETITION_MATCHES = true;
+    public static final int CALENDAR_YEAR = 2023;
+    public static final boolean LOG_TO_FILE = true; // TuningConstants.COMPETITION_ROBOT;
+    public static final boolean LOG_FILE_ONLY_COMPETITION_MATCHES = false;
     public static final long LOG_FILE_REQUIRED_FREE_SPACE = 50 * 1024 * 1024; // require at least 50 MB of space
     public static final int LOG_FLUSH_THRESHOLD = 25;
 
     //================================================== Autonomous ==============================================================
+
+    public static final boolean TRAJECTORY_FORCE_BUILD = false;
 
     public static final boolean CANCEL_AUTONOMOUS_ROUTINE_ON_DISABLE = true;
 
@@ -63,61 +63,94 @@ public class TuningConstants
 
     //================================================= Power ======================================================
 
-    public static final boolean POWER_TRACK_CURRENT = true;
     public static final double POWER_OVERCURRENT_TRACKING_DURATION = 5.0; // duration of time to keep track of the average current
-    public static final double SAMPLES_PER_LOOP = 1.0; // we may want to increase this if we find our update loop duration isn't very consistent...
-    public static final double SAMPLES_PER_SECOND = TuningConstants.LOOPS_PER_SECOND * TuningConstants.SAMPLES_PER_LOOP;
-    public static final double SAMPLE_DURATION = TuningConstants.LOOP_DURATION / TuningConstants.SAMPLES_PER_LOOP;
-    public static final int POWER_OVERCURRENT_SAMPLES = (int)(TuningConstants.POWER_OVERCURRENT_TRACKING_DURATION / TuningConstants.SAMPLE_DURATION); // duration of time to keep track of the average current
-    public static final double POWER_OVERCURRENT_THRESHOLD = 120.0;
-    public static final double POWER_OVERCURREHT_HIGH_THRESHOLD = 160.0;
+    public static final double POWER_OVERCURRENT_SAMPLES_PER_LOOP = 1.0; // we may want to increase this if we find our update loop duration isn't very consistent...
+    public static final double POWER_OVERCURRENT_SAMPLES_PER_SECOND = TuningConstants.LOOPS_PER_SECOND * TuningConstants.POWER_OVERCURRENT_SAMPLES_PER_LOOP;
+    public static final double POWER_OVERCURRENT_THRESHOLD = 140.0;
+    public static final double POWER_OVERCURREHT_HIGH_THRESHOLD = 180.0;
 
     //================================================= Vision ======================================================
 
+    // Finding AprilTags to determine if theres enough valid data to translate 
+    public static final int TAGS_MISSED_THRESHOLD = 30;
+    public static final int TAGS_FOUND_THRESHOLD = 5;
+    public static final double ACCEPTABLE_RANGE_IN_X_AND_Y_FOR_ALIGNMENT_TRANSLATE = 1.0; // in inches
+
     // Acceptable vision centering range values in degrees
-    public static final double MAX_VISION_CENTERING_RANGE_DEGREES = 5.0;
+    public static final double MAX_PID_TURNING_RANGE_DEGREES = 7.0;
 
     // How long the robot system must remain centered on the target when using time
-    public static final double VISION_CENTERING_DURATION = 0.75;
+    public static final double PID_TURNING_DURATION = 0.75;
 
     // Acceptable vision distance from tape in inches (as measured by vision system)
     public static final double MAX_VISION_ACCEPTABLE_FORWARD_DISTANCE = 1.75;
+    public static final double MAX_VISION_ACCEPTABLE_STRAFE_DISTANCE = 0.7;
+
+    // Acceptable vision distance from tape in angles 
+    public static final double MAX_VISION_ACCEPTABLE_MOVING_RR_ANGLE_ERROR = 4.0;
 
     // PID settings for Centering the robot on a vision target from one stationary place
-    public static final double VISION_STATIONARY_CENTERING_PID_KP = 0.025;
-    public static final double VISION_STATIONARY_CENTERING_PID_KI = 0.0;
-    public static final double VISION_STATIONARY_CENTERING_PID_KD = 0.01;
-    public static final double VISION_STATIONARY_CENTERING_PID_KF = 0.0;
-    public static final double VISION_STATIONARY_CENTERING_PID_KS = 1.0;
-    public static final double VISION_STATIONARY_CENTERING_PID_MIN = -0.4;
-    public static final double VISION_STATIONARY_CENTERING_PID_MAX = 0.4;
+    public static final double STATIONARY_PID_TURNING_PID_KP = 0.027;
+    public static final double STATIONARY_PID_TURNING_PID_KI = 0.0;
+    public static final double STATIONARY_PID_TURNING_PID_KD = 0.01;
+    public static final double STATIONARY_PID_TURNING_PID_KF = 0.0;
+    public static final double STATIONARY_PID_TURNING_PID_KS = 1.0;
+    public static final double STATIONARY_PID_TURNING_PID_MIN = -0.4;
+    public static final double STATIONARY_PID_TURNING_PID_MAX = 0.4;
 
-    // PID settings for Centering the robot on a vision target
-    public static final double VISION_MOVING_CENTERING_PID_KP = 0.012;
-    public static final double VISION_MOVING_CENTERING_PID_KI = 0.0;
-    public static final double VISION_MOVING_CENTERING_PID_KD = 0.0;
-    public static final double VISION_MOVING_CENTERING_PID_KF = 0.0;
-    public static final double VISION_MOVING_CENTERING_PID_KS = 1.0;
-    public static final double VISION_MOVING_CENTERING_PID_MIN = -0.3;
-    public static final double VISION_MOVING_CENTERING_PID_MAX = 0.3;
+    // PID settings for rotating the robot based on a vision target while in-motion
+    public static final double VISION_MOVING_TURNING_PID_KP = 0.012;
+    public static final double VISION_MOVING_TURNING_PID_KI = 0.0;
+    public static final double VISION_MOVING_TURNING_PID_KD = 0.0;
+    public static final double VISION_MOVING_TURNING_PID_KF = 0.0;
+    public static final double VISION_MOVING_TURNING_PID_KS = 1.0;
+    public static final double VISION_MOVING_TURNING_PID_MIN = -0.3;
+    public static final double VISION_MOVING_TURNING_PID_MAX = 0.3;
 
-    // PID settings for Advancing the robot towards a vision target
-    public static final double VISION_ADVANCING_PID_KP = 0.015;
-    public static final double VISION_ADVANCING_PID_KI = 0.0;
-    public static final double VISION_ADVANCING_PID_KD = 0.0;
-    public static final double VISION_ADVANCING_PID_KF = 0.0;
-    public static final double VISION_ADVANCING_PID_KS = 1.0;
-    public static final double VISION_ADVANCING_PID_MIN = -0.3;
-    public static final double VISION_ADVANCING_PID_MAX = 0.3;
+    // PID settings for translating the robot based on a vision target
+    public static final double VISION_MOVING_PID_KP = 0.015;
+    public static final double VISION_MOVING_PID_KI = 0.0;
+    public static final double VISION_MOVING_PID_KD = 0.0;
+    public static final double VISION_MOVING_PID_KF = 0.0;
+    public static final double VISION_MOVING_PID_KS = 1.0;
+    public static final double VISION_MOVING_PID_MIN = -0.3;
+    public static final double VISION_MOVING_PID_MAX = 0.3;
 
-    // PID settings for Advancing the robot quickly towards a vision target
-    public static final double VISION_FAST_ADVANCING_PID_KP = 0.15;
-    public static final double VISION_FAST_ADVANCING_PID_KI = 0.0;
-    public static final double VISION_FAST_ADVANCING_PID_KD = 0.0;
-    public static final double VISION_FAST_ADVANCING_PID_KF = 0.0;
-    public static final double VISION_FAST_ADVANCING_PID_KS = 1.0;
-    public static final double VISION_FAST_ADVANCING_PID_MIN = -0.45;
-    public static final double VISION_FAST_ADVANCING_PID_MAX = 0.45;
+    // PID settings for translating the robot based on a vision target
+    public static final double VISION_AT_TRANSLATION_X_PID_KP = 0.023;
+    public static final double VISION_AT_TRANSLATION_X_PID_KI = 0.0;
+    public static final double VISION_AT_TRANSLATION_X_PID_KD = 0.0;
+    public static final double VISION_AT_TRANSLATION_X_PID_KF = 0.0;
+    public static final double VISION_AT_TRANSLATION_X_PID_KS = 1.0;
+    public static final double VISION_AT_TRANSLATION_X_PID_MIN = -0.3;
+    public static final double VISION_AT_TRANSLATION_X_PID_MAX = 0.3;
+
+    // PID settings for translating the robot based on a vision target
+    public static final double VISION_AT_TRANSLATION_Y_PID_KP = 0.023;
+    public static final double VISION_AT_TRANSLATION_Y_PID_KI = 0.0;
+    public static final double VISION_AT_TRANSLATION_Y_PID_KD = 0.0;
+    public static final double VISION_AT_TRANSLATION_Y_PID_KF = 0.0;
+    public static final double VISION_AT_TRANSLATION_Y_PID_KS = 1.0;
+    public static final double VISION_AT_TRANSLATION_Y_PID_MIN = -0.3;
+    public static final double VISION_AT_TRANSLATION_Y_PID_MAX = 0.3;
+
+    // PID settings for translating the robot slowly based on a vision target
+    public static final double VISION_SLOW_MOVING_PID_KP = 0.013;
+    public static final double VISION_SLOW_MOVING_PID_KI = 0.0;
+    public static final double VISION_SLOW_MOVING_PID_KD = 0.0;
+    public static final double VISION_SLOW_MOVING_PID_KF = 0.0;
+    public static final double VISION_SLOW_MOVING_PID_KS = 1.0;
+    public static final double VISION_SLOW_MOVING_PID_MIN = -0.3;
+    public static final double VISION_SLOW_MOVING_PID_MAX = 0.3;
+
+    // PID settings for translating the robot quickly based on a vision target
+    public static final double VISION_FAST_MOVING_PID_KP = 0.17;
+    public static final double VISION_FAST_MOVING_PID_KI = 0.0;
+    public static final double VISION_FAST_MOVING_PID_KD = 0.0;
+    public static final double VISION_FAST_MOVING_PID_KF = 0.0;
+    public static final double VISION_FAST_MOVING_PID_KS = 1.0;
+    public static final double VISION_FAST_MOVING_PID_MIN = -0.45;
+    public static final double VISION_FAST_MOVING_PID_MAX = 0.45;
 
     public static final int VISION_MISSED_HEARTBEAT_THRESHOLD = 500;
 
@@ -125,30 +158,22 @@ public class TuningConstants
 
     public static final double INDICATOR_LIGHT_VISION_ACCEPTABLE_ANGLE_RANGE = 3.0;
 
+    public static final int CANDLE_LED_START = 0;
     public static final int CANDLE_LED_COUNT = 8;
+    public static final int LED_STRIP_LED_START = TuningConstants.CANDLE_LED_COUNT;
     public static final int LED_STRIP_LED_COUNT = 60; // 60 LEDs per meter-long strip from CTRE
-    public static final int CANDLE_TOTAL_NUMBER_LEDS = TuningConstants.CANDLE_LED_COUNT; //+ TuningConstants.LED_STRIP_LED_COUNT; // * 2;
+    public static final int CANDLE_TOTAL_NUMBER_LEDS = TuningConstants.CANDLE_LED_COUNT + TuningConstants.LED_STRIP_LED_COUNT;
 
-    public static final int CANDLE_ANIMATION_SLOT_1 = 0;
-    public static final int CANDLE_ANIMATION_SLOT_2 = 1;
+    public static final int CANDLE_ANIMATION_SLOT_0 = 0;
+    public static final int CANDLE_ANIMATION_SLOT_1 = 1;
+    public static final int CANDLE_ANIMATION_SLOT_2 = 2;
+    public static final int CANDLE_ANIMATION_SLOT_3 = 3;
 
     // IRS1318 Purple color
-    public static final int INDICATOR_PURPLE_RED = 101;
-    public static final int INDICATOR_PURPLE_GREEN = 34;
-    public static final int INDICATOR_PURPLE_BLUE = 129;
-    public static final int INDICATOR_PURPLE_WHITE = 0;
-
-    // No color
-    public static final int INDICATOR_OFF_COLOR_RED = 0;
-    public static final int INDICATOR_OFF_COLOR_GREEN = 0;
-    public static final int INDICATOR_OFF_COLOR_BLUE = 0;
-    public static final int INDICATOR_OFF_COLOR_WHITE = 0;
-
-    // Bright Red color
-    public static final int INDICATOR_RED_COLOR_RED = 255;
-    public static final int INDICATOR_RED_COLOR_GREEN = 0;
-    public static final int INDICATOR_RED_COLOR_BLUE = 0;
-    public static final int INDICATOR_RED_COLOR_WHITE = 0;
+    public static final int INDICATOR_PURPLE_COLOR_RED = 101;
+    public static final int INDICATOR_PURPLE_COLOR_GREEN = 34;
+    public static final int INDICATOR_PURPLE_COLOR_BLUE = 129;
+    public static final int INDICATOR_PURPLE_COLOR_WHITE = 0;
 
     // Bright Yellow color
     public static final int INDICATOR_YELLOW_COLOR_RED = 255;
@@ -162,8 +187,34 @@ public class TuningConstants
     public static final int INDICATOR_GREEN_COLOR_BLUE = 0;
     public static final int INDICATOR_GREEN_COLOR_WHITE = 0;
 
-    public static final double COMPRESSOR_FILL_RATE = 10.0;
-    public static final double COMPRESSOR_ENOUGH_PRESSURE = 110.0;
+    // Bright Red color
+    public static final int INDICATOR_RED_COLOR_RED = 255;
+    public static final int INDICATOR_RED_COLOR_GREEN = 0;
+    public static final int INDICATOR_RED_COLOR_BLUE = 0;
+    public static final int INDICATOR_RED_COLOR_WHITE = 0;
+
+    // Blue
+    public static final int INDICATOR_BLUE_COLOR_RED = 0;
+    public static final int INDICATOR_BLUE_COLOR_GREEN = 0;
+    public static final int INDICATOR_BLUE_COLOR_BLUE = 255;
+    public static final int INDICATOR_BLUE_COLOR_WHITE = 0;
+
+    // Orange
+    public static final int INDICATOR_ORANGE_COLOR_RED = 255;
+    public static final int INDICATOR_ORANGE_COLOR_GREEN = 165;
+    public static final int INDICATOR_ORANGE_COLOR_BLUE = 0;
+    public static final int INDICATOR_ORANGE_COLOR_WHITE = 0;
+
+    // Rainbow
+    public static final int INDICATOR_RAINBOW_BRIGHTNESS = 1;
+    public static final double INDICATOR_RAINBOW_SPEED = 0.25;
+    public static final boolean INDICATOR_RAINBOW_REVERSE_DIRECTION = false;
+
+    // No color
+    public static final int INDICATOR_OFF_COLOR_RED = 0;
+    public static final int INDICATOR_OFF_COLOR_GREEN = 0;
+    public static final int INDICATOR_OFF_COLOR_BLUE = 0;
+    public static final int INDICATOR_OFF_COLOR_WHITE = 0;
 
     //================================================== DriveTrain ==============================================================
 

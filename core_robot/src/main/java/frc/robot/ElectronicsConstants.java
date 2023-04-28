@@ -1,7 +1,7 @@
 package frc.robot;
 
-import frc.robot.common.robotprovider.PneumaticsModuleType;
-import frc.robot.common.robotprovider.PowerDistributionModuleType;
+import frc.lib.robotprovider.PneumaticsModuleType;
+import frc.lib.robotprovider.PowerDistributionModuleType;
 
 /**
  * All constants describing how the electronics are plugged together.
@@ -39,10 +39,11 @@ public class ElectronicsConstants
 
     public static final int PNEUMATICS_MODULE_A = 1; // Module A
     public static final PneumaticsModuleType PNEUMATICS_MODULE_TYPE_A = PneumaticsModuleType.PneumaticsHub; // Module A
+
     public static final int PNEUMATICS_MODULE_B = 2; // Module B
     public static final PneumaticsModuleType PNEUMATICS_MODULE_TYPE_B = PneumaticsModuleType.PneumaticsHub; // Module B
 
-    public static final boolean PNEUMATICS_USE_HYBRID = true;
+    public static final boolean PNEUMATICS_USE_HYBRID = false;
     public static final boolean PNEUMATICS_USE_ANALOG = false;
     public static final double PNEUMATICS_MIN_PSI = 110.0;
     public static final double PNEUMATICS_MAX_PSI = 120.0;

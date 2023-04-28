@@ -7,12 +7,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import org.junit.jupiter.api.Test;
+import frc.lib.driver.Driver;
+import frc.lib.mechanisms.LoggingManager;
+import frc.lib.robotprovider.*;
 import frc.robot.*;
-import frc.robot.common.LoggingManager;
-import frc.robot.common.robotprovider.*;
 import frc.robot.driver.AnalogOperation;
 import frc.robot.driver.DigitalOperation;
-import frc.robot.driver.common.Driver;
 
 public class DriveTrainMechanismTests
 {

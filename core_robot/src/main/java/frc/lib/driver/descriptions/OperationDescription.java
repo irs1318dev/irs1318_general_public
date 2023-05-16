@@ -8,9 +8,9 @@ import frc.robot.driver.Shift;
  * Describes an operation.
  *
  */
-public abstract class OperationDescription
+public abstract class OperationDescription<TOperation extends IOperation>
 {
-    private final IOperation operation;
+    private final TOperation operation;
     private final OperationType type;
     private final UserInputDevice userInputDevice;
     private final Shift relevantShifts;
@@ -18,7 +18,7 @@ public abstract class OperationDescription
     private final double userInputDeviceRangeMin;
     private final double userInputDeviceRangeMax;
 
-    protected OperationDescription(IOperation operation, OperationType type, UserInputDevice userInputDevice, double userInputDeviceRangeMin, double userInputDeviceRangeMax, Shift relevantShifts, Shift requiredShifts)
+    protected OperationDescription(TOperation operation, OperationType type, UserInputDevice userInputDevice, double userInputDeviceRangeMin, double userInputDeviceRangeMax, Shift relevantShifts, Shift requiredShifts)
     {
         this.operation = operation;
         this.type = type;
@@ -32,7 +32,7 @@ public abstract class OperationDescription
         ExceptionHelpers.Assert(relevantShifts == null || requiredShifts == null || relevantShifts.hasFlag(requiredShifts), "relevant shifts must contain required shifts");
     }
 
-    public IOperation getOperation()
+    public TOperation getOperation()
     {
         return this.operation;
     }

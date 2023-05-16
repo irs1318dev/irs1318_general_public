@@ -1,5 +1,6 @@
 package frc.lib.driver.states;
 
+import java.util.EnumMap;
 import java.util.Map;
 
 import frc.robot.TuningConstants;
@@ -14,6 +15,9 @@ import frc.lib.driver.buttons.ToggleButton;
 import frc.lib.driver.descriptions.MacroOperationDescription;
 import frc.lib.driver.descriptions.UserInputDevice;
 import frc.lib.helpers.ExceptionHelpers;
+import frc.lib.helpers.Helpers;
+import frc.robot.driver.AnalogOperation;
+import frc.robot.driver.DigitalOperation;
 import frc.robot.driver.Shift;
 
 import com.google.inject.Injector;
@@ -25,19 +29,22 @@ import com.google.inject.Injector;
 public class MacroOperationState extends OperationState implements IMacroOperationState
 {
     private final IButton button;
-    private final Map<IOperation, OperationState> operationStateMap;
+    private final EnumMap<AnalogOperation, AnalogOperationState> analogOperationStateMap;
+    private final EnumMap<DigitalOperation, DigitalOperationState> digitalOperationStateMap;
     private final Injector injector;
 
     private IControlTask task;
 
     public MacroOperationState(
         MacroOperationDescription description,
-        Map<IOperation, OperationState> operationStateMap,
+        EnumMap<AnalogOperation, AnalogOperationState> analogOperationStateMap,
+        EnumMap<DigitalOperation, DigitalOperationState> digitalOperationStateMap,
         Injector injector)
     {
         super(description);
 
-        this.operationStateMap = operationStateMap;
+        this.analogOperationStateMap = analogOperationStateMap;
+        this.digitalOperationStateMap = digitalOperationStateMap;
         this.injector = injector;
 
         switch (description.getButtonType())
@@ -150,9 +157,14 @@ public class MacroOperationState extends OperationState implements IMacroOperati
         return buttonPressed;
     }
 
-    public IOperation[] getMacroCancelOperations()
+    public AnalogOperation[] getMacroCancelAnalogOperations()
     {
-        return ((MacroOperationDescription)this.getDescription()).getMacroCancelOperations();
+        return ((MacroOperationDescription)this.getDescription()).getMacroCancelAnalogOperations();
+    }
+
+    public DigitalOperation[] getMacroCancelDigitalOperations()
+    {
+        return ((MacroOperationDescription)this.getDescription()).getMacroCancelDigitalOperations();
     }
 
     public IOperation[] getAffectedOperations()
@@ -173,12 +185,20 @@ public class MacroOperationState extends OperationState implements IMacroOperati
             {
                 for (IOperation operation : this.getAffectedOperations())
                 {
-                    this.operationStateMap.get(operation).setIsInterrupted(true);
+                    if (operation instanceof AnalogOperation)
+                    {
+                        this.analogOperationStateMap.get((AnalogOperation)operation).setIsInterrupted(true);
+                    }
+                    else
+                    {
+                        ExceptionHelpers.Assert(operation instanceof DigitalOperation, "Expect operation of type DigitalOperation");
+                        this.analogOperationStateMap.get((AnalogOperation)operation).setIsInterrupted(true);
+                    }
                 }
 
                 // start task
                 this.task = ((MacroOperationDescription)this.getDescription()).constructTask();
-                this.task.initialize(this.operationStateMap, this.injector);
+                this.task.initialize(this.analogOperationStateMap, this.digitalOperationStateMap, this.injector);
                 this.task.begin();
             }
 
@@ -203,7 +223,15 @@ public class MacroOperationState extends OperationState implements IMacroOperati
                 {
                     for (IOperation operation : this.getAffectedOperations())
                     {
-                        this.operationStateMap.get(operation).setIsInterrupted(false);
+                        if (operation instanceof AnalogOperation)
+                        {
+                            this.analogOperationStateMap.get((AnalogOperation)operation).setIsInterrupted(false);
+                        }
+                        else
+                        {
+                            ExceptionHelpers.Assert(operation instanceof DigitalOperation, "Expect operation of type DigitalOperation");
+                            this.analogOperationStateMap.get((AnalogOperation)operation).setIsInterrupted(false);
+                        }
                     }
                 }
             }
@@ -220,7 +248,15 @@ public class MacroOperationState extends OperationState implements IMacroOperati
 
             for (IOperation operation : this.getAffectedOperations())
             {
-                this.operationStateMap.get(operation).setIsInterrupted(false);
+                if (operation instanceof AnalogOperation)
+                {
+                    this.analogOperationStateMap.get((AnalogOperation)operation).setIsInterrupted(false);
+                }
+                else
+                {
+                    ExceptionHelpers.Assert(operation instanceof DigitalOperation, "Expect operation of type DigitalOperation");
+                    this.analogOperationStateMap.get((AnalogOperation)operation).setIsInterrupted(false);
+                }
             }
         }
     }

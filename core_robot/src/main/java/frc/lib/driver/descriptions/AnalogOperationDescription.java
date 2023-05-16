@@ -8,7 +8,7 @@ import frc.robot.driver.Shift;
  * Describes an operation that will give a double value (typically between -1 and 1).
  * 
  */
-public class AnalogOperationDescription extends OperationDescription
+public class AnalogOperationDescription extends OperationDescription<AnalogOperation>
 {
     private final AnalogAxis userInputDeviceAxis;
     private final AnalogAxis userInputDeviceSecondaryAxis;

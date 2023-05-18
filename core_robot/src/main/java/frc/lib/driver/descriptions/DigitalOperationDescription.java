@@ -1,5 +1,7 @@
 package frc.lib.driver.descriptions;
 
+import java.util.EnumSet;
+
 import frc.lib.driver.AnalogAxis;
 import frc.lib.driver.UserInputDeviceButton;
 import frc.lib.driver.buttons.ButtonType;
@@ -76,8 +78,8 @@ public class DigitalOperationDescription extends OperationDescription<DigitalOpe
         DigitalOperation operation,
         UserInputDevice userInputDevice,
         UserInputDeviceButton userInputDeviceButton,
-        Shift relevantShifts,
-        Shift requiredShifts,
+        EnumSet<Shift> relevantShifts,
+        EnumSet<Shift> requiredShifts,
         ButtonType buttonType)
     {
         this(
@@ -132,8 +134,8 @@ public class DigitalOperationDescription extends OperationDescription<DigitalOpe
         DigitalOperation operation,
         UserInputDevice userInputDevice,
         int povValue,
-        Shift relevantShifts,
-        Shift requiredShifts,
+        EnumSet<Shift> relevantShifts,
+        EnumSet<Shift> requiredShifts,
         ButtonType buttonType)
     {
         this(
@@ -196,8 +198,8 @@ public class DigitalOperationDescription extends OperationDescription<DigitalOpe
         AnalogAxis analogAxis,
         double axisRangeMinValue,
         double axisRangeMaxValue,
-        Shift relevantShifts,
-        Shift requiredShifts,
+        EnumSet<Shift> relevantShifts,
+        EnumSet<Shift> requiredShifts,
         ButtonType buttonType)
     {
         this(
@@ -221,8 +223,8 @@ public class DigitalOperationDescription extends OperationDescription<DigitalOpe
         AnalogAxis analogAxis,
         double axisRangeMinValue,
         double axisRangeMaxValue,
-        Shift relevantShifts,
-        Shift requiredShifts,
+        EnumSet<Shift> relevantShifts,
+        EnumSet<Shift> requiredShifts,
         ButtonType buttonType)
     {
         super(operation, OperationType.Digital, userInputDevice, axisRangeMinValue, axisRangeMaxValue, relevantShifts, requiredShifts);

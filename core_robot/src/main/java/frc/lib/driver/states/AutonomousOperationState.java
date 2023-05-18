@@ -1,6 +1,7 @@
 package frc.lib.driver.states;
 
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -91,7 +92,7 @@ public class AutonomousOperationState extends OperationState implements IMacroOp
      * @return true if there was any active user input that triggered a state change
      */
     @Override
-    public boolean checkInput(IJoystick[] joysticks, Shift activeShifts)
+    public boolean checkInput(IJoystick[] joysticks, EnumSet<Shift> activeShifts)
     {
         return false;
     }

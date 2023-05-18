@@ -1,5 +1,7 @@
 package frc.robot.driver;
 
+import java.util.EnumSet;
+
 import javax.inject.Singleton;
 
 import frc.lib.driver.*;
@@ -58,8 +60,8 @@ public class ButtonMap implements IButtonMap
             UserInputDevice.Driver,
             AnalogAxis.XBONE_RSX,
             AnalogAxis.XBONE_RSY,
-            Shift.None, // Shift.DriverDebug,
-            Shift.None,
+            EnumSet.noneOf(Shift.class),
+            EnumSet.noneOf(Shift.class),
             !ElectronicsConstants.INVERT_XBONE_RIGHT_X_AXIS, // make left positive...
             ElectronicsConstants.INVERT_XBONE_RIGHT_Y_AXIS,
             0.0,
@@ -90,58 +92,58 @@ public class ButtonMap implements IButtonMap
             DigitalOperation.PositionResetFieldOrientation,
             UserInputDevice.Driver,
             0, // DPAD-up
-            Shift.DriverDebug,
-            Shift.DriverDebug,
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.of(Shift.DriverDebug),
             ButtonType.Click),
         new DigitalOperationDescription(
             DigitalOperation.DriveTrainReset,
             UserInputDevice.Driver,
             UserInputDeviceButton.XBONE_Y_BUTTON,
-            Shift.DriverDebug,
-            Shift.DriverDebug,
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.of(Shift.DriverDebug),
             ButtonType.Click),
         new DigitalOperationDescription(
             DigitalOperation.DriveTrainEnableFieldOrientation,
             UserInputDevice.Driver,
             270,
-            Shift.DriverDebug,
-            Shift.None,
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.noneOf(Shift.class),
             ButtonType.Click),
         new DigitalOperationDescription(
             DigitalOperation.DriveTrainDisableFieldOrientation,
             UserInputDevice.Driver,
             270,
-            Shift.DriverDebug,
-            Shift.DriverDebug,
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.of(Shift.DriverDebug),
             ButtonType.Click),
         // new DigitalOperationDescription(
         //     DigitalOperation.DriveTrainEnableMaintainDirectionMode,
         //     UserInputDevice.Driver,
         //     90,
-        //     Shift.DriverDebug,
-        //     Shift.None,
+        //     EnumSet.of(Shift.DriverDebug),
+        //     EnumSet.noneOf(Shift.class),
         //     ButtonType.Click),
         // new DigitalOperationDescription(
         //     DigitalOperation.DriveTrainDisableMaintainDirectionMode,
         //     UserInputDevice.Driver,
         //     90,
-        //     Shift.DriverDebug,
-        //     Shift.DriverDebug,
+        //     EnumSet.of(Shift.DriverDebug),
+        //     EnumSet.of(Shift.DriverDebug),
         //     ButtonType.Click),
         new DigitalOperationDescription(
             DigitalOperation.DriveTrainSlowMode,
             UserInputDevice.Driver,
             UserInputDeviceButton.XBONE_A_BUTTON,
-            Shift.None,
-            Shift.None,
+            EnumSet.noneOf(Shift.class),
+            EnumSet.noneOf(Shift.class),
             ButtonType.Simple),
 
         new DigitalOperationDescription(
             DigitalOperation.ForceRainbow,
             UserInputDevice.Codriver,
             UserInputDeviceButton.XBONE_SELECT_BUTTON,
-            Shift.CodriverDebug,
-            Shift.CodriverDebug,
+            EnumSet.of(Shift.CodriverDebug),
+            EnumSet.of(Shift.CodriverDebug),
             ButtonType.Simple),
 
         // Test operations:
@@ -149,15 +151,15 @@ public class ButtonMap implements IButtonMap
             DigitalOperation.VisionEnableAprilTagProcessing,
             UserInputDevice.Test1,
             UserInputDeviceButton.XBONE_A_BUTTON,
-            Shift.Test1Debug,
-            Shift.None,
+            EnumSet.of(Shift.Test1Debug),
+            EnumSet.noneOf(Shift.class),
             ButtonType.Toggle),
         new DigitalOperationDescription(
             DigitalOperation.VisionEnableRetroreflectiveProcessing,
             UserInputDevice.Test1,
             UserInputDeviceButton.XBONE_A_BUTTON,
-            Shift.Test1Debug,
-            Shift.Test1Debug,
+            EnumSet.of(Shift.Test1Debug),
+            EnumSet.of(Shift.Test1Debug),
             ButtonType.Toggle),
     };
 
@@ -168,8 +170,8 @@ public class ButtonMap implements IButtonMap
         //     MacroOperation.PIDLightBrake,
         //     UserInputDevice.Driver,
         //     UserInputDeviceButton.XBONE_LEFT_STICK_BUTTON,
-        //     Shift.DriverDebug,
-        //     Shift.None,
+        //     EnumSet.of(Shift.DriverDebug),
+        //     EnumSet.noneOf(Shift.class),
         //     ButtonType.Simple,
         //     () -> new PIDBrakeTask(false),
         //     new IOperation[]
@@ -206,8 +208,8 @@ public class ButtonMap implements IButtonMap
         //     MacroOperation.PIDHeavyBrake,
         //     UserInputDevice.Driver,
         //     UserInputDeviceButton.XBONE_LEFT_STICK_BUTTON,
-        //     Shift.DriverDebug,
-        //     Shift.DriverDebug,
+        //     EnumSet.of(Shift.DriverDebug),
+        //     EnumSet.of(Shift.DriverDebug),
         //     ButtonType.Simple,
         //     () -> new PIDBrakeTask(true),
         //     new IOperation[]
@@ -245,8 +247,8 @@ public class ButtonMap implements IButtonMap
             MacroOperation.FaceForward,
             UserInputDevice.Driver,
             0, // DPAD-up
-            Shift.DriverDebug,
-            Shift.None,
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.noneOf(Shift.class),
             ButtonType.Toggle,
             () -> new OrientationTask(0),
             new IOperation[]
@@ -259,8 +261,8 @@ public class ButtonMap implements IButtonMap
             MacroOperation.FaceBackward,
             UserInputDevice.Driver,
             180, // DPAD-down
-            Shift.DriverDebug,
-            Shift.None,
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.noneOf(Shift.class),
             ButtonType.Toggle,
             () -> new OrientationTask(180),
             new IOperation[]
@@ -274,8 +276,8 @@ public class ButtonMap implements IButtonMap
             MacroOperation.FollowPathTest1,
             UserInputDevice.Test1,
             0,
-            Shift.Test1Debug,
-            Shift.None,
+            EnumSet.of(Shift.Test1Debug),
+            EnumSet.noneOf(Shift.class),
             ButtonType.Toggle,
             () -> SequentialTask.Sequence(
                 new FollowPathTask("goLeft32inForward18in", Type.RobotRelativeFromCurrentPose)
@@ -327,8 +329,8 @@ public class ButtonMap implements IButtonMap
             MacroOperation.FollowPathTest2,
             UserInputDevice.Test1,
             180,
-            Shift.None,
-            Shift.None,
+            EnumSet.noneOf(Shift.class),
+            EnumSet.noneOf(Shift.class),
             ButtonType.Toggle,
             () -> new FollowPathTask("goBackwards30in", Type.RobotRelativeFromCurrentPose),
             new IOperation[]
@@ -376,8 +378,8 @@ public class ButtonMap implements IButtonMap
             MacroOperation.FollowPathTest3,
             UserInputDevice.Test1,
             270,
-            Shift.None,
-            Shift.None,
+            EnumSet.noneOf(Shift.class),
+            EnumSet.noneOf(Shift.class),
             ButtonType.Toggle,
             () -> new FollowPathTask("goLeft22in", Type.RobotRelativeFromCurrentPose),
             new IOperation[]
@@ -425,8 +427,8 @@ public class ButtonMap implements IButtonMap
             MacroOperation.FollowPathTest4,
             UserInputDevice.Test1,
             90,
-            Shift.None,
-            Shift.None,
+            EnumSet.noneOf(Shift.class),
+            EnumSet.noneOf(Shift.class),
             ButtonType.Toggle,
             () -> new FollowPathTask("goRight22in", Type.RobotRelativeFromCurrentPose),
             new IOperation[]

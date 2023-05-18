@@ -38,7 +38,7 @@ public class Driver implements IDriver
     private final DigitalOperation[] allDigitalOperations;
     private final AnalogOperation[] allAnalogOperations;
 
-    private final Map<Shift, ShiftDescription> shiftMap;
+    private final EnumMap<Shift, ShiftDescription> shiftMap;
     private final EnumMap<MacroOperation, IMacroOperationState> macroStateMap;
 
     private final AutonomousRoutineSelector routineSelector;
@@ -107,7 +107,7 @@ public class Driver implements IDriver
         this.routineSelector = injector.getInstance(AutonomousRoutineSelector.class);
 
         ShiftDescription[] shiftSchema = buttonMap.getShiftSchema();
-        this.shiftMap = new HashMap<Shift, ShiftDescription>();
+        this.shiftMap = new EnumMap<Shift, ShiftDescription>(Shift.class);
         for (ShiftDescription description : shiftSchema)
         {
             this.shiftMap.put(description.getShift(), description);
@@ -175,18 +175,15 @@ public class Driver implements IDriver
         }
 
         // check inputs and update shifts based on it...
-        int shiftIndex = 0;
-        Shift[] activeShiftList = new Shift[this.shiftMap.size()];
+        EnumSet<Shift> activeShifts = EnumSet.noneOf(Shift.class);
         for (Shift shift : this.shiftMap.keySet())
         {
             ShiftDescription shiftDescription = this.shiftMap.get(shift);
             if (this.currentMode != RobotMode.Autonomous && shiftDescription.checkInput(this.joysticks))
             {
-                activeShiftList[shiftIndex++] = shift;
+                activeShifts.add(shift);
             }
         }
-
-        Shift activeShifts = Shift.Union(activeShiftList);
 
         // check user inputs for various analog operations and keep track of:
         // operations that were interrupted already, and operations that were modified by user input in this update

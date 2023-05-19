@@ -1,11 +1,14 @@
 package frc.robot.driver;
 
+import java.util.EnumSet;
+
 import javax.inject.Singleton;
 
+import frc.lib.driver.*;
+import frc.lib.driver.buttons.*;
+import frc.lib.driver.descriptions.*;
+import frc.lib.helpers.Helpers;
 import frc.robot.*;
-import frc.robot.driver.common.*;
-import frc.robot.driver.common.buttons.*;
-import frc.robot.driver.common.descriptions.*;
 import frc.robot.driver.controltasks.*;
 
 @Singleton
@@ -16,11 +19,11 @@ public class ButtonMap implements IButtonMap
         new ShiftDescription(
             Shift.DriverDebug,
             UserInputDevice.Driver,
-            UserInputDeviceButton.XBONE_LEFT_BUTTON),
+            UserInputDeviceButton.XBONE_SELECT_BUTTON),
         new ShiftDescription(
             Shift.CodriverDebug,
             UserInputDevice.Codriver,
-            UserInputDeviceButton.BUTTON_PAD_BUTTON_16),
+            UserInputDeviceButton.XBONE_LEFT_BUTTON),
         new ShiftDescription(
             Shift.Test1Debug,
             UserInputDevice.Test1,
@@ -44,7 +47,7 @@ public class ButtonMap implements IButtonMap
             AnalogOperation.DriveTrainTurn,
             UserInputDevice.Driver,
             AnalogAxis.XBONE_LSX,
-            ElectronicsConstants.INVERT_XBONE_RIGHT_X_AXIS,
+            ElectronicsConstants.INVERT_XBONE_LEFT_X_AXIS,
             TuningConstants.DRIVETRAIN_X_DEAD_ZONE),
 
         // Operations for the OneMotor
@@ -61,65 +64,158 @@ public class ButtonMap implements IButtonMap
         // driving operations
         new DigitalOperationDescription(
             DigitalOperation.PositionResetFieldOrientation,
-            UserInputDevice.Codriver,
-            UserInputDeviceButton.BUTTON_PAD_BUTTON_1,
-            Shift.CodriverDebug,
-            Shift.None,
+            UserInputDevice.Driver,
+            0, // DPAD-up
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.of(Shift.DriverDebug),
             ButtonType.Click),
+
         new DigitalOperationDescription(
-            DigitalOperation.VisionEnableGamePieceProcessing,
+            DigitalOperation.ForceRainbow,
             UserInputDevice.Codriver,
-            UserInputDeviceButton.BUTTON_PAD_BUTTON_2,
-            Shift.None,
-            Shift.None,
+            UserInputDeviceButton.XBONE_SELECT_BUTTON,
+            EnumSet.of(Shift.CodriverDebug),
+            EnumSet.of(Shift.CodriverDebug),
             ButtonType.Simple),
+
+        // Test operations:
+        new DigitalOperationDescription(
+            DigitalOperation.VisionEnableAprilTagProcessing,
+            UserInputDevice.Test1,
+            UserInputDeviceButton.XBONE_A_BUTTON,
+            EnumSet.of(Shift.Test1Debug),
+            EnumSet.noneOf(Shift.class),
+            ButtonType.Toggle),
         new DigitalOperationDescription(
             DigitalOperation.VisionEnableRetroreflectiveProcessing,
-            UserInputDevice.Codriver,
-            UserInputDeviceButton.BUTTON_PAD_BUTTON_3,
-            Shift.None,
-            Shift.None,
-            ButtonType.Simple),
+            UserInputDevice.Test1,
+            UserInputDeviceButton.XBONE_A_BUTTON,
+            EnumSet.of(Shift.Test1Debug),
+            EnumSet.of(Shift.Test1Debug),
+            ButtonType.Toggle),
     };
 
     public static MacroOperationDescription[] MacroSchema = new MacroOperationDescription[]
     {
         // driving macros
+        // new MacroOperationDescription(
+        //     MacroOperation.PIDLightBrake,
+        //     UserInputDevice.Driver,
+        //     UserInputDeviceButton.XBONE_LEFT_STICK_BUTTON,
+        //     EnumSet.of(Shift.DriverDebug),
+        //     EnumSet.noneOf(Shift.class),
+        //     ButtonType.Simple,
+        //     () -> new PIDBrakeTask(false),
+        //     new IOperation[]
+        //     {
+        //         AnalogOperation.DriveTrainMoveForward,
+        //         AnalogOperation.DriveTrainMoveRight,
+        //         AnalogOperation.DriveTrainTurnAngleGoal,
+        //         AnalogOperation.DriveTrainSpinLeft,
+        //         AnalogOperation.DriveTrainSpinRight,
+        //         AnalogOperation.DriveTrainRotationA,
+        //         AnalogOperation.DriveTrainRotationB,
+        //         AnalogOperation.DriveTrainPathXGoal,
+        //         AnalogOperation.DriveTrainPathYGoal,
+        //         AnalogOperation.DriveTrainPathXVelocityGoal,
+        //         AnalogOperation.DriveTrainPathYVelocityGoal,
+        //         AnalogOperation.DriveTrainPathAngleVelocityGoal,
+        //         AnalogOperation.DriveTrainPositionDrive1,
+        //         AnalogOperation.DriveTrainPositionDrive2,
+        //         AnalogOperation.DriveTrainPositionDrive3,
+        //         AnalogOperation.DriveTrainPositionDrive4,
+        //         AnalogOperation.DriveTrainPositionSteer1,
+        //         AnalogOperation.DriveTrainPositionSteer2,
+        //         AnalogOperation.DriveTrainPositionSteer3,
+        //         AnalogOperation.DriveTrainPositionSteer4,
+        //         DigitalOperation.DriveTrainSteerMode,
+        //         DigitalOperation.DriveTrainMaintainPositionMode,
+        //         DigitalOperation.DriveTrainPathMode,
+        //         DigitalOperation.DriveTrainReset,
+        //         DigitalOperation.DriveTrainEnableFieldOrientation,
+        //         DigitalOperation.DriveTrainDisableFieldOrientation,
+        //         DigitalOperation.DriveTrainUseRobotOrientation,
+        //     }),
+        // new MacroOperationDescription(
+        //     MacroOperation.PIDHeavyBrake,
+        //     UserInputDevice.Driver,
+        //     UserInputDeviceButton.XBONE_LEFT_STICK_BUTTON,
+        //     EnumSet.of(Shift.DriverDebug),
+        //     EnumSet.of(Shift.DriverDebug),
+        //     ButtonType.Simple,
+        //     () -> new PIDBrakeTask(true),
+        //     new IOperation[]
+        //     {
+        //         AnalogOperation.DriveTrainMoveForward,
+        //         AnalogOperation.DriveTrainMoveRight,
+        //         AnalogOperation.DriveTrainTurnAngleGoal,
+        //         AnalogOperation.DriveTrainSpinLeft,
+        //         AnalogOperation.DriveTrainSpinRight,
+        //         AnalogOperation.DriveTrainRotationA,
+        //         AnalogOperation.DriveTrainRotationB,
+        //         AnalogOperation.DriveTrainPathXGoal,
+        //         AnalogOperation.DriveTrainPathYGoal,
+        //         AnalogOperation.DriveTrainPathXVelocityGoal,
+        //         AnalogOperation.DriveTrainPathYVelocityGoal,
+        //         AnalogOperation.DriveTrainPathAngleVelocityGoal,
+        //         AnalogOperation.DriveTrainPositionDrive1,
+        //         AnalogOperation.DriveTrainPositionDrive2,
+        //         AnalogOperation.DriveTrainPositionDrive3,
+        //         AnalogOperation.DriveTrainPositionDrive4,
+        //         AnalogOperation.DriveTrainPositionSteer1,
+        //         AnalogOperation.DriveTrainPositionSteer2,
+        //         AnalogOperation.DriveTrainPositionSteer3,
+        //         AnalogOperation.DriveTrainPositionSteer4,
+        //         DigitalOperation.DriveTrainSteerMode,
+        //         DigitalOperation.DriveTrainMaintainPositionMode,
+        //         DigitalOperation.DriveTrainPathMode,
+        //         DigitalOperation.DriveTrainReset,
+        //         DigitalOperation.DriveTrainEnableFieldOrientation,
+        //         DigitalOperation.DriveTrainDisableFieldOrientation,
+        //         DigitalOperation.DriveTrainUseRobotOrientation,
+        //     }),
+
         new MacroOperationDescription(
-            MacroOperation.PIDBrake,
+            MacroOperation.FaceForward,
             UserInputDevice.Driver,
             0, // DPAD-up
-            Shift.DriverDebug,
-            Shift.None,
-            ButtonType.Simple,
-            () -> new PIDBrakeTask(),
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.noneOf(Shift.class),
+            ButtonType.Toggle,
+            () -> new OrientationTask(0),
             new IOperation[]
             {
-                AnalogOperation.DriveTrainMoveForward,
                 AnalogOperation.DriveTrainTurn,
-                AnalogOperation.DriveTrainLeftPosition,
-                AnalogOperation.DriveTrainRightPosition,
-                AnalogOperation.DriveTrainLeftVelocity,
-                AnalogOperation.DriveTrainRightVelocity,
-                AnalogOperation.DriveTrainHeadingCorrection,
-                DigitalOperation.DriveTrainEnablePID,
-                DigitalOperation.DriveTrainDisablePID,
-                DigitalOperation.DriveTrainSimpleMode,
-                DigitalOperation.DriveTrainUseBrakeMode,
-                DigitalOperation.DriveTrainUsePositionalMode,
-                DigitalOperation.DriveTrainUsePathMode,
-                DigitalOperation.DriveTrainSwapFrontOrientation,
             }),
         new MacroOperationDescription(
-            MacroOperation.VisionCenterRetroReflective,
+            MacroOperation.FaceBackward,
             UserInputDevice.Driver,
-            0, // DPAD-up
-            Shift.DriverDebug,
-            Shift.DriverDebug,
+            180, // DPAD-down
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.noneOf(Shift.class),
             ButtonType.Toggle,
-            () -> new VisionCenteringTask(false, true),
+            () -> new OrientationTask(180),
             new IOperation[]
             {
+                AnalogOperation.DriveTrainTurn,
+            }),
+
+        new MacroOperationDescription(
+            MacroOperation.FollowPathTest1,
+            UserInputDevice.Test1,
+            0,
+            EnumSet.of(Shift.Test1Debug),
+            EnumSet.noneOf(Shift.class),
+            ButtonType.Toggle,
+            () -> SequentialTask.Sequence(
+                new FollowPathTask("goLeft32inForward18in")
+            ),
+            new IOperation[]
+            {
+                DigitalOperation.PositionResetFieldOrientation,
+                DigitalOperation.PositionResetRobotLevel,
+                AnalogOperation.PositionStartingAngle,
+                DigitalOperation.DriveTrainResetXYPosition,
                 AnalogOperation.DriveTrainMoveForward,
                 AnalogOperation.DriveTrainTurn,
                 AnalogOperation.DriveTrainLeftPosition,
@@ -135,20 +231,26 @@ public class ButtonMap implements IButtonMap
                 DigitalOperation.DriveTrainUsePathMode,
                 DigitalOperation.DriveTrainSwapFrontOrientation,
                 DigitalOperation.VisionDisableStream,
-                DigitalOperation.VisionEnableGamePieceProcessing,
+                DigitalOperation.VisionEnableAprilTagProcessing,
                 DigitalOperation.VisionEnableRetroreflectiveProcessing,
                 DigitalOperation.VisionForceDisable,
             }),
+
+        // Full auton test
         new MacroOperationDescription(
-            MacroOperation.VisionCenterGamePiece,
-            UserInputDevice.Driver,
-            90, // DPAD-right
-            Shift.DriverDebug,
-            Shift.DriverDebug,
+            MacroOperation.FollowPathTest2,
+            UserInputDevice.Test1,
+            180,
+            EnumSet.noneOf(Shift.class),
+            EnumSet.noneOf(Shift.class),
             ButtonType.Toggle,
-            () -> new VisionCenteringTask(true, true),
+            () -> new FollowPathTask("goBackwards30in"),
             new IOperation[]
             {
+                DigitalOperation.PositionResetFieldOrientation,
+                DigitalOperation.PositionResetRobotLevel,
+                AnalogOperation.PositionStartingAngle,
+                DigitalOperation.DriveTrainResetXYPosition,
                 AnalogOperation.DriveTrainMoveForward,
                 AnalogOperation.DriveTrainTurn,
                 AnalogOperation.DriveTrainLeftPosition,
@@ -164,10 +266,10 @@ public class ButtonMap implements IButtonMap
                 DigitalOperation.DriveTrainUsePathMode,
                 DigitalOperation.DriveTrainSwapFrontOrientation,
                 DigitalOperation.VisionDisableStream,
-                DigitalOperation.VisionEnableGamePieceProcessing,
+                DigitalOperation.VisionEnableAprilTagProcessing,
                 DigitalOperation.VisionEnableRetroreflectiveProcessing,
                 DigitalOperation.VisionForceDisable,
-            }),
+            })
     };
 
     @Override

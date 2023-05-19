@@ -1,5 +1,7 @@
 package frc.robot.driver;
 
+import frc.lib.driver.IOperation;
+
 public enum AnalogOperation implements IOperation
 {
     PositionStartingAngle,
@@ -12,6 +14,8 @@ public enum AnalogOperation implements IOperation
     DriveTrainLeftVelocity,
     DriveTrainRightVelocity,
     DriveTrainHeadingCorrection,
+    DriveTrainStartingXPosition,
+    DriveTrainStartingYPosition,
 
     // OneMotor operations:
     OneMotorPower;

@@ -4,8 +4,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import frc.lib.robotprovider.*;
 import frc.robot.IRealWorldSimulator;
-import frc.robot.common.robotprovider.*;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -17,27 +17,27 @@ public class RobotSimulator implements IRealWorldSimulator
 {
     private static final FauxbotActuatorConnection AngleMotor1Connection = new FauxbotActuatorConnection(FauxbotActuatorConnection.ActuatorConnector.CAN, 1);
     private static final FauxbotActuatorConnection DriveMotor1Connection = new FauxbotActuatorConnection(FauxbotActuatorConnection.ActuatorConnector.CAN, 2);
-    private static final FauxbotSensorConnection AngleEncoder1Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, 1);
-    private static final FauxbotSensorConnection DriveEncoder1Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, 2);
+    private static final FauxbotSensorConnection AngleEncoder1Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, FauxbotTalonXBase.class, 1);
+    private static final FauxbotSensorConnection DriveEncoder1Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, FauxbotTalonXBase.class, 2);
     private static final FauxbotActuatorConnection AngleMotor2Connection = new FauxbotActuatorConnection(FauxbotActuatorConnection.ActuatorConnector.CAN, 3);
     private static final FauxbotActuatorConnection DriveMotor2Connection = new FauxbotActuatorConnection(FauxbotActuatorConnection.ActuatorConnector.CAN, 4);
-    private static final FauxbotSensorConnection AngleEncoder2Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, 3);
-    private static final FauxbotSensorConnection DriveEncoder2Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, 4);
+    private static final FauxbotSensorConnection AngleEncoder2Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, FauxbotTalonXBase.class, 3);
+    private static final FauxbotSensorConnection DriveEncoder2Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, FauxbotTalonXBase.class, 4);
     private static final FauxbotActuatorConnection AngleMotor3Connection = new FauxbotActuatorConnection(FauxbotActuatorConnection.ActuatorConnector.CAN, 5);
     private static final FauxbotActuatorConnection DriveMotor3Connection = new FauxbotActuatorConnection(FauxbotActuatorConnection.ActuatorConnector.CAN, 6);
-    private static final FauxbotSensorConnection AngleEncoder3Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, 5);
-    private static final FauxbotSensorConnection DriveEncoder3Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, 6);
+    private static final FauxbotSensorConnection AngleEncoder3Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, FauxbotTalonXBase.class, 5);
+    private static final FauxbotSensorConnection DriveEncoder3Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, FauxbotTalonXBase.class, 6);
     private static final FauxbotActuatorConnection AngleMotor4Connection = new FauxbotActuatorConnection(FauxbotActuatorConnection.ActuatorConnector.CAN, 7);
     private static final FauxbotActuatorConnection DriveMotor4Connection = new FauxbotActuatorConnection(FauxbotActuatorConnection.ActuatorConnector.CAN, 8);
-    private static final FauxbotSensorConnection AngleEncoder4Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, 7);
-    private static final FauxbotSensorConnection DriveEncoder4Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, 8);
+    private static final FauxbotSensorConnection AngleEncoder4Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, FauxbotTalonXBase.class, 7);
+    private static final FauxbotSensorConnection DriveEncoder4Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, FauxbotTalonXBase.class, 8);
 
-    private static final FauxbotSensorConnection AbsoluteEncoder1Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.AnalogInput, 0);
-    private static final FauxbotSensorConnection AbsoluteEncoder2Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.AnalogInput, 1);
-    private static final FauxbotSensorConnection AbsoluteEncoder3Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.AnalogInput, 2);
-    private static final FauxbotSensorConnection AbsoluteEncoder4Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.AnalogInput, 3);
+    private static final FauxbotSensorConnection AbsoluteEncoder1Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, FauxbotCANCoder.class, 1);
+    private static final FauxbotSensorConnection AbsoluteEncoder2Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, FauxbotCANCoder.class, 2);
+    private static final FauxbotSensorConnection AbsoluteEncoder3Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, FauxbotCANCoder.class, 3);
+    private static final FauxbotSensorConnection AbsoluteEncoder4Connection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.CAN, FauxbotCANCoder.class, 4);
 
-    private static final FauxbotSensorConnection NavXConnection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.NavX, 0);
+    private static final FauxbotSensorConnection NavXConnection = new FauxbotSensorConnection(FauxbotSensorConnection.SensorConnector.NavX, FauxbotNavx.class, 0);
 
     private static final FauxbotActuatorConnection[] DriveMotors =
         new FauxbotActuatorConnection[]

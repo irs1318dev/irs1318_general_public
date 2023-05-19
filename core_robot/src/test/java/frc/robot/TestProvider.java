@@ -4,7 +4,7 @@ import static org.mockito.Mockito.mock;
 
 import java.util.HashMap;
 
-import frc.robot.common.robotprovider.*;
+import frc.lib.robotprovider.*;
 
 public class TestProvider implements IRobotProvider
 {
@@ -345,19 +345,6 @@ public class TestProvider implements IRobotProvider
     {
         return mock(ICANdle.class);
     }
-
-    @Override
-    public IVideoStream getMJPEGStream(String name, int width, int height)
-    {
-        return null;
-    }
-
-    @Override
-    public IUsbCamera getUsbCamera(String name, int dev)
-    {
-        return null;
-    }
-
     @Override
     public IDriverStation getDriverStation()
     {
@@ -365,13 +352,13 @@ public class TestProvider implements IRobotProvider
     }
 
     @Override
-    public IOpenCVProvider getOpenCVProvider()
+    public INetworkTableProvider getNetworkTableProvider()
     {
         return null;
     }
 
     @Override
-    public INetworkTableProvider getNetworkTableProvider()
+    public IPathPlanner getPathPlanner()
     {
         return null;
     }

@@ -70,6 +70,7 @@
          7. [Write task stop function (optional)](#write-task-stop-function-optional)
       2. [Adding Macros](#adding-macros)
       3. [Adding Autonomous Routines](#adding-autonomous-routines)
+          1. [PathPlanner](#PathPlanner)
       4. [Composing Tasks together](#composing-tasks-together)
          1. [SequentialTask.Sequence()](#sequentialtasksequence)
          2. [ConcurrentTask.AnyTasks()](#concurrenttaskanytasks)
@@ -78,7 +79,6 @@
    1. [PID Controllers](#pid-controllers)
    2. [Motion Planning](#motion-planning)
    3. [Vision](#vision)
-   4. [PathPlanner](#PathPlanner)
 
 ## Overview
 > "Everything should be made as simple as possible, but not simpler." - Albert Einstein

@@ -177,6 +177,7 @@ public class DriveTrainMechanism implements IMechanism
                 ElectronicsConstants.DRIVETRAIN_ABSOLUTE_ENCODER_4_CAN_ID
             };
 
+        //What are the invert types used for?
         TalonFXInvertType[] driveMotorInvert =
             new TalonFXInvertType[]
             {
@@ -199,10 +200,12 @@ public class DriveTrainMechanism implements IMechanism
         {
             this.driveMotors[i] = provider.getTalonFX(driveMotorCanIds[i], ElectronicsConstants.CANIVORE_NAME);
             this.driveMotors[i].setNeutralMode(MotorNeutralMode.Brake);
+            //What is setSensorType used for?
             this.driveMotors[i].setSensorType(TalonXFeedbackDevice.IntegratedSensor);
             this.driveMotors[i].setFeedbackFramePeriod(TuningConstants.DRIVETRAIN_SENSOR_FRAME_PERIOD_MS);
             this.driveMotors[i].setPIDFFramePeriod(TuningConstants.DRIVETRAIN_PID_FRAME_PERIOD_MS);
             this.driveMotors[i].setInvert(driveMotorInvert[i]);
+            //What does configureVelocityMeasurements do?
             this.driveMotors[i].configureVelocityMeasurements(10, 32);
             this.driveMotors[i].setPIDF(
                 TuningConstants.DRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KP,
@@ -253,6 +256,7 @@ public class DriveTrainMechanism implements IMechanism
                 TuningConstants.DRIVETRAIN_STEER_SUPPLY_CURRENT_MAX,
                 TuningConstants.DRIVETRAIN_STEER_SUPPLY_TRIGGER_CURRENT,
                 TuningConstants.DRIVETRAIN_STEER_SUPPLY_TRIGGER_DURATION);
+            //Why is setFeedbackFramePeriod used twice?
             this.steerMotors[i].setFeedbackFramePeriod(TuningConstants.DRIVETRAIN_SENSOR_FRAME_PERIOD_MS);
             this.steerMotors[i].setFeedbackFramePeriod(TuningConstants.DRIVETRAIN_PID_FRAME_PERIOD_MS);
             if (TuningConstants.DRIVETRAIN_STEER_MOTORS_USE_MOTION_MAGIC)
@@ -270,6 +274,7 @@ public class DriveTrainMechanism implements IMechanism
             this.absoluteEncoders[i].configAbsoluteRange(false);
         }
 
+        //What does this do? Next few lines?
         this.driveVelocities = new double[DriveTrainMechanism.NUM_MODULES];
         this.drivePositions = new double[DriveTrainMechanism.NUM_MODULES];
         this.driveErrors = new double[DriveTrainMechanism.NUM_MODULES];
@@ -400,6 +405,7 @@ public class DriveTrainMechanism implements IMechanism
         this.robotYaw = this.imuManager.getYaw();
         this.time = this.timer.get();
 
+        //Why keep this postive?
         this.deltaT = this.time - prevTime;
         if (this.deltaT <= 0.0)
         {

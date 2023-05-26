@@ -199,7 +199,7 @@ public class DriveTrainMechanism implements IMechanism
         {
             this.driveMotors[i] = provider.getTalonFX(driveMotorCanIds[i], ElectronicsConstants.CANIVORE_NAME);
             this.driveMotors[i].setNeutralMode(MotorNeutralMode.Brake);
-            this.driveMotors[i].setSensorType(TalonXFeedbackDevice.IntegratedSensor);
+            this.driveMotors[i].setSensorType(TalonSRXFeedbackDevice.IntegratedSensor);
             this.driveMotors[i].setFeedbackFramePeriod(TuningConstants.DRIVETRAIN_SENSOR_FRAME_PERIOD_MS);
             this.driveMotors[i].setPIDFFramePeriod(TuningConstants.DRIVETRAIN_PID_FRAME_PERIOD_MS);
             this.driveMotors[i].setInvert(driveMotorInvert[i]);
@@ -230,7 +230,7 @@ public class DriveTrainMechanism implements IMechanism
             this.steerMotors[i] = provider.getTalonFX(steerMotorCanIds[i], ElectronicsConstants.CANIVORE_NAME);
             this.steerMotors[i].setInvert(steerMotorInvert[i]);
             this.steerMotors[i].setNeutralMode(MotorNeutralMode.Brake);
-            this.steerMotors[i].setSensorType(TalonXFeedbackDevice.IntegratedSensor);
+            this.steerMotors[i].setSensorType(TalonSRXFeedbackDevice.IntegratedSensor);
             this.steerMotors[i].setPIDF(
                 TuningConstants.DRIVETRAIN_STEER_MOTORS_POSITION_PID_KP,
                 TuningConstants.DRIVETRAIN_STEER_MOTORS_POSITION_PID_KI,

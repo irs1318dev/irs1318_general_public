@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -20,6 +21,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.ControlModeValue;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 
 public class TalonFXWrapper implements ITalonFX
 {
@@ -27,6 +29,9 @@ public class TalonFXWrapper implements ITalonFX
     private static final double timeoutSecs = 0.010;
 
     final TalonFX wrappedObject;
+
+    private TalonFXConfiguration currentConfiguration;
+    private TalonFXConfigurator currentConfigurator;
 
     private ControlModeValue controlMode;
     private ControlRequest currentControlRequest;
@@ -58,12 +63,12 @@ public class TalonFXWrapper implements ITalonFX
 
     public void set(TalonXControlMode mode, double value)
     {
-        this.internalSet(TalonSRXWrapper.getControlMode(mode), this.selectedSlot, value);
+        this.internalSet(TalonFXWrapper.getControlMode(mode), this.selectedSlot, value);
     }
 
     public void set(TalonXControlMode mode, int slotId, double value)
     {
-        this.internalSet(TalonSRXWrapper.getControlMode(mode), slotId, value);
+        this.internalSet(TalonFXWrapper.getControlMode(mode), slotId, value);
     }
 
     private void internalSet(ControlModeValue mode, int slotId, double value)
@@ -259,48 +264,48 @@ public class TalonFXWrapper implements ITalonFX
     public void follow(ITalonSRX talonSRX)
     {
         this.controlMode = ControlModeValue.Follower;
-        this.currentControlRequest = new StrictFollower((((TalonSRXWrapper)talonSRX).wrappedObject.getDeviceID());
+        this.currentControlRequest = new StrictFollower(((TalonSRXWrapper)talonSRX).wrappedObject.getDeviceID());
         this.wrappedObject.setControl((StrictFollower)this.currentControlRequest);
     }
 
     public void follow(ITalonSRX talonSRX, boolean invertDirection)
     {
         this.controlMode = ControlModeValue.Follower;
-        this.currentControlRequest = new Follower((((TalonSRXWrapper)talonSRX).wrappedObject.getDeviceID(), invertDirection);
+        this.currentControlRequest = new Follower(((TalonSRXWrapper)talonSRX).wrappedObject.getDeviceID(), invertDirection);
         this.wrappedObject.setControl((Follower)this.currentControlRequest);
     }
 
     public void follow(ITalonFX talonFX)
     {
         this.controlMode = ControlModeValue.Follower;
-        this.currentControlRequest = new StrictFollower((((TalonFXWrapper)talonFX).wrappedObject.getDeviceID());
+        this.currentControlRequest = new StrictFollower(((TalonFXWrapper)talonFX).wrappedObject.getDeviceID());
         this.wrappedObject.setControl((StrictFollower)this.currentControlRequest);
     }
 
     public void follow(ITalonFX talonFX, boolean invertDirection)
     {
         this.controlMode = ControlModeValue.Follower;
-        this.currentControlRequest = new Follower((((TalonFXWrapper)talonFX).wrappedObject.getDeviceID(), invertDirection);
+        this.currentControlRequest = new Follower(((TalonFXWrapper)talonFX).wrappedObject.getDeviceID(), invertDirection);
         this.wrappedObject.setControl((Follower)this.currentControlRequest);
     }
 
     public void follow(IVictorSPX victorSPX)
     {
         this.controlMode = ControlModeValue.Follower;
-        this.currentControlRequest = new StrictFollower((((VictorSPXWrapper)victorSPX).wrappedObject.getDeviceID());
+        this.currentControlRequest = new StrictFollower(((VictorSPXWrapper)victorSPX).wrappedObject.getDeviceID());
         this.wrappedObject.setControl((StrictFollower)this.currentControlRequest);
     }
 
     public void follow(IVictorSPX victorSPX, boolean invertDirection)
     {
         this.controlMode = ControlModeValue.Follower;
-        this.currentControlRequest = new Follower((((VictorSPXWrapper)victorSPX).wrappedObject.getDeviceID(), invertDirection);
+        this.currentControlRequest = new Follower(((VictorSPXWrapper)victorSPX).wrappedObject.getDeviceID(), invertDirection);
         this.wrappedObject.setControl((Follower)this.currentControlRequest);
     }
 
     public void setControlMode(TalonXControlMode mode)
     {
-        ControlModeValue newControlMode = TalonSRXWrapper.getControlMode(mode);
+        ControlModeValue newControlMode = TalonFXWrapper.getControlMode(mode);
         if (this.controlMode != newControlMode)
         {
             this.controlMode = newControlMode;
@@ -348,29 +353,44 @@ public class TalonFXWrapper implements ITalonFX
         }
     }
 
-    public void setSensorType(TalonXFeedbackDevice feedbackDevice)
+    public void clearRemoteSensor()
     {
-        FeedbackDevice device;
-        if (feedbackDevice == TalonXFeedbackDevice.QuadEncoder)
+        if (this.currentConfiguration == null || this.currentConfigurator == null)
         {
-            device = FeedbackDevice.QuadEncoder;
-        }
-        else if (feedbackDevice == TalonXFeedbackDevice.PulseWidthEncodedPosition)
-        {
-            device = FeedbackDevice.PulseWidthEncodedPosition;
-        }
-        else if (feedbackDevice == TalonXFeedbackDevice.IntegratedSensor)
-        {
-            device = FeedbackDevice.IntegratedSensor;
-        }
-        else
-        {
-            return;
+            this.currentConfiguration = new TalonFXConfiguration();
+            this.currentConfigurator = this.wrappedObject.getConfigurator();
         }
 
         CTREStatusCodeHelper.printError(
-            this.wrappedObject.configSelectedFeedbackSensor(device, TalonFXWrapper.pidIdx, 0),
-            "TalonFX.configSelectedFeedbackSensor");
+            this.currentConfigurator.refresh(this.currentConfiguration, TalonFXWrapper.timeoutSecs),
+            "TalonFX.clearRemoteSensor-refresh");
+
+        this.currentConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+        this.currentConfiguration.Feedback.FeedbackRemoteSensorID = 0;
+
+        CTREStatusCodeHelper.printError(
+            this.currentConfigurator.apply(this.currentConfiguration, TalonFXWrapper.timeoutSecs),
+            "TalonFX.clearRemoteSensor-apply");
+    }
+
+    public void setRemoteSensor(int sensorId)
+    {
+        if (this.currentConfiguration == null || this.currentConfigurator == null)
+        {
+            this.currentConfiguration = new TalonFXConfiguration();
+            this.currentConfigurator = this.wrappedObject.getConfigurator();
+        }
+
+        CTREStatusCodeHelper.printError(
+            this.currentConfigurator.refresh(this.currentConfiguration, TalonFXWrapper.timeoutSecs),
+            "TalonFX.setRemoteSensor-refresh");
+
+        this.currentConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+        this.currentConfiguration.Feedback.FeedbackRemoteSensorID = sensorId;
+
+        CTREStatusCodeHelper.printError(
+            this.currentConfigurator.apply(this.currentConfiguration, TalonFXWrapper.timeoutSecs),
+            "TalonFX.setRemoteSensor-apply");
     }
 
     public void setGeneralFramePeriod(double frequencyHz)
@@ -386,7 +406,7 @@ public class TalonFXWrapper implements ITalonFX
             this.wrappedObject.getPosition().setUpdateFrequency(frequencyHz, TalonFXWrapper.timeoutSecs),
             "TalonFX.setFeedbackUpdateRate-Position");
         CTREStatusCodeHelper.printError(
-            this.wrappedObject.getVelocity().setUpdateFrequency(0frequencyHz, TalonFXWrapper.timeoutSecs),
+            this.wrappedObject.getVelocity().setUpdateFrequency(frequencyHz, TalonFXWrapper.timeoutSecs),
             "TalonFX.setFeedbackFramePeriod-Velocity");
     }
 
@@ -790,5 +810,45 @@ public class TalonFXWrapper implements ITalonFX
         return new TalonXLimitSwitchStatus(
             collection.isFwdLimitSwitchClosed() == 1,
             collection.isRevLimitSwitchClosed() == 1);
+    }
+
+    static ControlModeValue getControlMode(TalonXControlMode mode)
+    {
+        switch (mode)
+        {
+            case DutyCycleOut:
+                return ControlModeValue.DutyCycleOut;
+
+            case VoltageOut:
+                return ControlModeValue.VoltageOut;
+
+            case PositionDutyCycle:
+                return ControlModeValue.PositionDutyCycle;
+
+            case PositionVoltage:
+                return ControlModeValue.PositionVoltage;
+
+            case VelocityDutyCycle:
+                return ControlModeValue.VelocityDutyCycle;
+
+            case VelocityVoltage:
+                return ControlModeValue.VelocityVoltage;
+
+            case MotionMagicDutyCycle:
+                return ControlModeValue.MotionMagicDutyCycle;
+
+            case MotionMagicVoltage:
+                return ControlModeValue.MotionMagicVoltage;
+
+            case CoastOut:
+                return ControlModeValue.CoastOut;
+
+            case StaticBrake:
+                return ControlModeValue.StaticBrake;
+
+            default:
+            case NeutralOut:
+                return ControlModeValue.NeutralOut;
+        }
     }
 }

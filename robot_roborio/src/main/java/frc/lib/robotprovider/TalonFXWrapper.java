@@ -1,73 +1,351 @@
 package frc.lib.robotprovider;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
-import com.ctre.phoenix.motorcontrol.TalonFXSensorCollection;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
-
-import frc.lib.helpers.ExceptionHelpers;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.Slot1Configs;
+import com.ctre.phoenix6.configs.Slot2Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.CoastOut;
+import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.StaticBrake;
+import com.ctre.phoenix6.controls.StrictFollower;
+import com.ctre.phoenix6.controls.VelocityDutyCycle;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.ControlModeValue;
 
 public class TalonFXWrapper implements ITalonFX
 {
     private static final int pidIdx = 0;
-    private static final int timeoutMS = 10;
+    private static final double timeoutSecs = 0.010;
 
     final TalonFX wrappedObject;
 
-    private boolean controlModeRequired;
-    private ControlMode controlMode;
+    private ControlModeValue controlMode;
+    private ControlRequest currentControlRequest;
+    private int selectedSlot;
 
     public TalonFXWrapper(int deviceNumber)
     {
-        this.wrappedObject = new TalonFX(deviceNumber);
-        this.controlMode = ControlMode.PercentOutput;
-        this.controlModeRequired = false;
+        this(new TalonFX(deviceNumber));
     }
 
     public TalonFXWrapper(int deviceNumber, String canbus)
     {
-        this.wrappedObject = new TalonFX(deviceNumber, canbus);
-        this.controlMode = ControlMode.PercentOutput;
-        this.controlModeRequired = false;
+        this(new TalonFX(deviceNumber, canbus));
+    }
+
+    private TalonFXWrapper(TalonFX wrappedObject)
+    {
+        this.wrappedObject = wrappedObject;
+
+        this.controlMode = ControlModeValue.DutyCycleOut;
+        this.currentControlRequest = new DutyCycleOut(0.0);
+        this.selectedSlot = 0;
     }
 
     public void set(double value)
     {
-        ExceptionHelpers.Assert(!this.controlModeRequired, "Control mode must be specified!");
-
-        this.wrappedObject.set(this.controlMode, value);
+        this.internalSet(this.controlMode, this.selectedSlot, value);
     }
 
     public void set(TalonXControlMode mode, double value)
     {
-        this.wrappedObject.set(TalonSRXWrapper.getControlMode(mode), value);
+        this.internalSet(TalonSRXWrapper.getControlMode(mode), this.selectedSlot, value);
+    }
+
+    public void set(TalonXControlMode mode, int slotId, double value)
+    {
+        this.internalSet(TalonSRXWrapper.getControlMode(mode), slotId, value);
+    }
+
+    private void internalSet(ControlModeValue mode, int slotId, double value)
+    {
+        switch (mode)
+        {
+            case DutyCycleOut:
+                DutyCycleOut dcRequest;
+                if (this.currentControlRequest instanceof DutyCycleOut)
+                {
+                    dcRequest = (DutyCycleOut)this.currentControlRequest;
+                    dcRequest.withOutput(value);
+                }
+                else
+                {
+                    dcRequest = new DutyCycleOut(value);
+                }
+
+                this.wrappedObject.setControl(dcRequest);
+                break;
+
+            case VoltageOut:
+                VoltageOut voRequest;
+                if (this.currentControlRequest instanceof VoltageOut)
+                {
+                    voRequest = (VoltageOut)this.currentControlRequest;
+                    voRequest.withOutput(value);
+                }
+                else
+                {
+                    voRequest = new VoltageOut(value);
+                }
+
+                this.wrappedObject.setControl(voRequest);
+                break;
+
+            case Follower:
+                StrictFollower fRequest;
+                if (this.currentControlRequest instanceof StrictFollower)
+                {
+                    fRequest = (StrictFollower)this.currentControlRequest;
+                    fRequest.withMasterID((int)value);
+                }
+                else
+                {
+                    fRequest = new StrictFollower((int)value);
+                }
+
+                this.wrappedObject.setControl(fRequest);
+                break;
+
+            case PositionDutyCycle:
+                PositionDutyCycle pdcRequest;
+                if (this.currentControlRequest instanceof PositionDutyCycle)
+                {
+                    pdcRequest = (PositionDutyCycle)this.currentControlRequest;
+                    pdcRequest.withPosition(value);
+                }
+                else
+                {
+                    pdcRequest = new PositionDutyCycle(value);
+                }
+
+                pdcRequest.withSlot(slotId);
+                this.wrappedObject.setControl(pdcRequest);
+                break;
+
+            case PositionVoltage:
+                PositionVoltage pvRequest;
+                if (this.currentControlRequest instanceof PositionVoltage)
+                {
+                    pvRequest = (PositionVoltage)this.currentControlRequest;
+                    pvRequest.withPosition(value);
+                }
+                else
+                {
+                    pvRequest = new PositionVoltage(value);
+                }
+
+                pvRequest.withSlot(slotId);
+                this.wrappedObject.setControl(pvRequest);
+                break;
+
+            case VelocityDutyCycle:
+                VelocityDutyCycle vdcRequest;
+                if (this.currentControlRequest instanceof VelocityDutyCycle)
+                {
+                    vdcRequest = (VelocityDutyCycle)this.currentControlRequest;
+                    vdcRequest.withVelocity(value);
+                }
+                else
+                {
+                    vdcRequest = new VelocityDutyCycle(value);
+                }
+
+                vdcRequest.withSlot(slotId);
+                this.wrappedObject.setControl(vdcRequest);
+                break;
+
+            case VelocityVoltage:
+                VelocityVoltage vvRequest;
+                if (this.currentControlRequest instanceof VelocityVoltage)
+                {
+                    vvRequest = (VelocityVoltage)this.currentControlRequest;
+                    vvRequest.withVelocity(value);
+                }
+                else
+                {
+                    vvRequest = new VelocityVoltage(value);
+                }
+
+                vvRequest.withSlot(slotId);
+                this.wrappedObject.setControl(vvRequest);
+                break;
+
+            case MotionMagicDutyCycle:
+                MotionMagicDutyCycle mmdcRequest;
+                if (this.currentControlRequest instanceof MotionMagicDutyCycle)
+                {
+                    mmdcRequest = (MotionMagicDutyCycle)this.currentControlRequest;
+                    mmdcRequest.withPosition(value);
+                }
+                else
+                {
+                    mmdcRequest = new MotionMagicDutyCycle(value);
+                }
+
+                mmdcRequest.withSlot(slotId);
+                this.wrappedObject.setControl(mmdcRequest);
+                break;
+
+            case MotionMagicVoltage:
+                MotionMagicVoltage mmvRequest;
+                if (this.currentControlRequest instanceof MotionMagicVoltage)
+                {
+                    mmvRequest = (MotionMagicVoltage)this.currentControlRequest;
+                    mmvRequest.withPosition(value);
+                }
+                else
+                {
+                    mmvRequest = new MotionMagicVoltage(value);
+                }
+
+                mmvRequest.withSlot(slotId);
+                this.wrappedObject.setControl(mmvRequest);
+                break;
+
+            case CoastOut:
+                CoastOut coRequest;
+                if (this.currentControlRequest instanceof CoastOut)
+                {
+                    coRequest = (CoastOut)this.currentControlRequest;
+                }
+                else
+                {
+                    coRequest = new CoastOut();
+                }
+
+                this.wrappedObject.setControl(coRequest);
+                break;
+
+            case StaticBrake:
+                StaticBrake sbRequest;
+                if (this.currentControlRequest instanceof StaticBrake)
+                {
+                    sbRequest = (StaticBrake)this.currentControlRequest;
+                }
+                else
+                {
+                    sbRequest = new StaticBrake();
+                }
+
+                this.wrappedObject.setControl(sbRequest);
+                break;
+
+            default:
+            case NeutralOut:
+                NeutralOut noRequest;
+                if (this.currentControlRequest instanceof NeutralOut)
+                {
+                    noRequest = (NeutralOut)this.currentControlRequest;
+                }
+                else
+                {
+                    noRequest = new NeutralOut();
+                }
+
+                this.wrappedObject.setControl(noRequest);
+                break;
+        }
     }
 
     public void follow(ITalonSRX talonSRX)
     {
-        this.wrappedObject.follow(((TalonSRXWrapper)talonSRX).wrappedObject);
+        this.controlMode = ControlModeValue.Follower;
+        this.currentControlRequest = new StrictFollower((((TalonSRXWrapper)talonSRX).wrappedObject.getDeviceID());
+        this.wrappedObject.setControl((StrictFollower)this.currentControlRequest);
+    }
+
+    public void follow(ITalonSRX talonSRX, boolean invertDirection)
+    {
+        this.controlMode = ControlModeValue.Follower;
+        this.currentControlRequest = new Follower((((TalonSRXWrapper)talonSRX).wrappedObject.getDeviceID(), invertDirection);
+        this.wrappedObject.setControl((Follower)this.currentControlRequest);
     }
 
     public void follow(ITalonFX talonFX)
     {
-        this.wrappedObject.follow(((TalonFXWrapper)talonFX).wrappedObject);
+        this.controlMode = ControlModeValue.Follower;
+        this.currentControlRequest = new StrictFollower((((TalonFXWrapper)talonFX).wrappedObject.getDeviceID());
+        this.wrappedObject.setControl((StrictFollower)this.currentControlRequest);
+    }
+
+    public void follow(ITalonFX talonFX, boolean invertDirection)
+    {
+        this.controlMode = ControlModeValue.Follower;
+        this.currentControlRequest = new Follower((((TalonFXWrapper)talonFX).wrappedObject.getDeviceID(), invertDirection);
+        this.wrappedObject.setControl((Follower)this.currentControlRequest);
     }
 
     public void follow(IVictorSPX victorSPX)
     {
-        this.wrappedObject.follow(((VictorSPXWrapper)victorSPX).wrappedObject);
+        this.controlMode = ControlModeValue.Follower;
+        this.currentControlRequest = new StrictFollower((((VictorSPXWrapper)victorSPX).wrappedObject.getDeviceID());
+        this.wrappedObject.setControl((StrictFollower)this.currentControlRequest);
+    }
+
+    public void follow(IVictorSPX victorSPX, boolean invertDirection)
+    {
+        this.controlMode = ControlModeValue.Follower;
+        this.currentControlRequest = new Follower((((VictorSPXWrapper)victorSPX).wrappedObject.getDeviceID(), invertDirection);
+        this.wrappedObject.setControl((Follower)this.currentControlRequest);
     }
 
     public void setControlMode(TalonXControlMode mode)
     {
-        this.controlModeRequired = (mode == TalonXControlMode.Required);
-        this.controlMode = TalonSRXWrapper.getControlMode(mode);
+        ControlModeValue newControlMode = TalonSRXWrapper.getControlMode(mode);
+        if (this.controlMode != newControlMode)
+        {
+            this.controlMode = newControlMode;
+            switch (this.controlMode)
+            {
+                case DutyCycleOut:
+                    this.currentControlRequest = new DutyCycleOut(0.0);
+                    break;
+                case VoltageOut:
+                    this.currentControlRequest = new VoltageOut(0.0);
+                    break;
+                case Follower:
+                    this.currentControlRequest = new StrictFollower(-1);
+                    break;
+                case PositionDutyCycle:
+                    this.currentControlRequest = (new PositionDutyCycle(0.0)).withSlot(this.selectedSlot);
+                    break;
+                case PositionVoltage:
+                    this.currentControlRequest = (new PositionVoltage(0.0)).withSlot(this.selectedSlot);
+                    break;
+                case VelocityDutyCycle:
+                    this.currentControlRequest = (new VelocityDutyCycle(0.0)).withSlot(this.selectedSlot);
+                    break;
+                case VelocityVoltage:
+                    this.currentControlRequest = (new VelocityVoltage(0.0)).withSlot(this.selectedSlot);
+                    break;
+                case MotionMagicDutyCycle:
+                    this.currentControlRequest = (new MotionMagicDutyCycle(0.0)).withSlot(this.selectedSlot);
+                    break;
+                case MotionMagicVoltage:
+                    this.currentControlRequest = (new MotionMagicVoltage(0.0)).withSlot(this.selectedSlot);
+                    break;
+                case CoastOut:
+                    this.currentControlRequest = new CoastOut();
+                    break;
+                case StaticBrake:
+                    this.currentControlRequest = new StaticBrake();
+                    break;
+
+                default:
+                case NeutralOut:
+                    this.currentControlRequest = new NeutralOut();
+                    break;
+            }
+        }
     }
 
     public void setSensorType(TalonXFeedbackDevice feedbackDevice)
@@ -90,111 +368,273 @@ public class TalonFXWrapper implements ITalonFX
             return;
         }
 
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configSelectedFeedbackSensor(device, TalonFXWrapper.pidIdx, 0),
             "TalonFX.configSelectedFeedbackSensor");
     }
 
-    public void setGeneralFramePeriod(int periodMS)
+    public void setGeneralFramePeriod(double frequencyHz)
     {
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, periodMS, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, periodMS, TalonFXWrapper.timeoutSecs),
             "TalonFX.setGeneralFramePeriod");
     }
 
-    public void setFeedbackFramePeriod(int periodMS)
+    public void setFeedbackUpdateRate(double frequencyHz)
     {
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, periodMS, TalonFXWrapper.timeoutMS),
-            "TalonFX.setFeedbackFramePeriod");
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.getPosition().setUpdateFrequency(frequencyHz, TalonFXWrapper.timeoutSecs),
+            "TalonFX.setFeedbackUpdateRate-Position");
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.getVelocity().setUpdateFrequency(0frequencyHz, TalonFXWrapper.timeoutSecs),
+            "TalonFX.setFeedbackFramePeriod-Velocity");
     }
 
     public void setPIDFFramePeriod(int periodMS)
     {
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, periodMS, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, periodMS, TalonFXWrapper.timeoutSecs),
             "TalonFX.setPIDFFramePeriod");
     }
 
     public void configureVelocityMeasurements(int periodMS, int windowSize)
     {
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.configVelocityMeasurementPeriod(SensorVelocityMeasPeriod.valueOf(periodMS), TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.configVelocityMeasurementPeriod(SensorVelocityMeasPeriod.valueOf(periodMS), TalonFXWrapper.timeoutSecs),
             "TalonFX.configureVelocityMeasurementPeriod");
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.configVelocityMeasurementWindow(windowSize, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.configVelocityMeasurementWindow(windowSize, TalonFXWrapper.timeoutSecs),
             "TalonFX.configureVelocityMeasurementWindow");
     }
 
     public void configureAllowableClosedloopError(int slotId, int error)
     {
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.configAllowableClosedloopError(slotId, error, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.configAllowableClosedloopError(slotId, error, TalonFXWrapper.timeoutSecs),
             "TalonFX.configureAllowableClosedloopError");
     }
 
     public void setSelectedSlot(int slotId)
     {
-        this.wrappedObject.selectProfileSlot(slotId, TalonFXWrapper.pidIdx);
+        this.selectedSlot = slotId;
+        switch (this.controlMode)
+        {
+            case PositionDutyCycle:
+                PositionDutyCycle pdcRequest;
+                if (this.currentControlRequest instanceof PositionDutyCycle)
+                {
+                    pdcRequest = (PositionDutyCycle)this.currentControlRequest;
+                }
+                else
+                {
+                    pdcRequest = new PositionDutyCycle(0.0);
+                    this.currentControlRequest = pdcRequest;
+                }
+
+                pdcRequest.withSlot(slotId);
+                break;
+
+            case PositionVoltage:
+                PositionVoltage pvRequest;
+                if (this.currentControlRequest instanceof PositionVoltage)
+                {
+                    pvRequest = (PositionVoltage)this.currentControlRequest;
+                }
+                else
+                {
+                    pvRequest = new PositionVoltage(0.0);
+                    this.currentControlRequest = pvRequest;
+                }
+
+                pvRequest.withSlot(slotId);
+                break;
+
+            case VelocityDutyCycle:
+                VelocityDutyCycle vvdcRequest;
+                if (this.currentControlRequest instanceof VelocityDutyCycle)
+                {
+                    vvdcRequest = (VelocityDutyCycle)this.currentControlRequest;
+                }
+                else
+                {
+                    vvdcRequest = new VelocityDutyCycle(0.0);
+                    this.currentControlRequest = vvdcRequest;
+                }
+
+                vvdcRequest.withSlot(slotId);
+                break;
+
+            case VelocityVoltage:
+                VelocityVoltage vvRequest;
+                if (this.currentControlRequest instanceof VelocityVoltage)
+                {
+                    vvRequest = (VelocityVoltage)this.currentControlRequest;
+                }
+                else
+                {
+                    vvRequest = new VelocityVoltage(0.0);
+                    this.currentControlRequest = vvRequest;
+                }
+
+                vvRequest.withSlot(slotId);
+                break;
+
+            case MotionMagicDutyCycle:
+                MotionMagicDutyCycle mmdcRequest;
+                if (this.currentControlRequest instanceof MotionMagicDutyCycle)
+                {
+                    mmdcRequest = (MotionMagicDutyCycle)this.currentControlRequest;
+                }
+                else
+                {
+                    mmdcRequest = new MotionMagicDutyCycle(0.0);
+                    this.currentControlRequest = mmdcRequest;
+                }
+
+                mmdcRequest.withSlot(slotId);
+                break;
+
+            case MotionMagicVoltage:
+                MotionMagicVoltage mmvRequest;
+                if (this.currentControlRequest instanceof MotionMagicVoltage)
+                {
+                    mmvRequest = (MotionMagicVoltage)this.currentControlRequest;
+                }
+                else
+                {
+                    mmvRequest = new MotionMagicVoltage(0.0);
+                    this.currentControlRequest = mmvRequest;
+                }
+
+                mmvRequest.withSlot(slotId);
+                break;
+
+            default:
+                // no relevant slot for other scenarios...
+                break;
+        }
     }
 
     public void setPIDF(double p, double i, double d, double f, int slotId)
     {
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.config_kP(slotId, p, TalonFXWrapper.timeoutMS),
-            "TalonFX.setPIDF_kP");
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.config_kI(slotId, i, TalonFXWrapper.timeoutMS),
-            "TalonFX.setPIDF_kI");
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.config_kD(slotId, d, TalonFXWrapper.timeoutMS),
-            "TalonFX.setPIDF_kD");
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.config_kF(slotId, f, TalonFXWrapper.timeoutMS),
-            "TalonFX.setPIDF_kF");
+        if (slotId == 0)
+        {
+            Slot0Configs slot0Configs = new Slot0Configs();
+            slot0Configs.kP = p;
+            slot0Configs.kI = i;
+            slot0Configs.kD = d;
+            slot0Configs.kV = f;
+            this.wrappedObject.getConfigurator().apply(slot0Configs, TalonFXWrapper.timeoutSecs);
+        }
+        else if (slotId == 1)
+        {
+            Slot1Configs slot1Configs = new Slot1Configs();
+            slot1Configs.kP = p;
+            slot1Configs.kI = i;
+            slot1Configs.kD = d;
+            slot1Configs.kV = f;
+            this.wrappedObject.getConfigurator().apply(slot1Configs, TalonFXWrapper.timeoutSecs);
+        }
+        else // if (slotId == 2)
+        {
+            Slot2Configs slot2Configs = new Slot2Configs();
+            slot2Configs.kP = p;
+            slot2Configs.kI = i;
+            slot2Configs.kD = d;
+            slot2Configs.kV = f;
+            this.wrappedObject.getConfigurator().apply(slot2Configs, TalonFXWrapper.timeoutSecs);
+        }
     }
 
     public void setMotionMagicPIDF(double p, double i, double d, double f, double velocity, double acceleration, int slotId)
     {
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.config_kP(slotId, p, TalonFXWrapper.timeoutMS),
+
+        TalonFXConfiguration talonFXConfigs = this.wrappedObject.get;
+
+        // set slot 0 gains
+        var slot0Configs = talonFXConfigs.Slot0Configs;
+        slot0Configs.kS = 0.24; // add 0.24 V to overcome friction
+        slot0Configs.kV = 0.12; // apply 12 V for a target velocity of 100 rps
+        // PID runs on position
+        slot0Configs.kP = 4.8;
+        slot0Configs.kI = 0;
+        slot0Configs.kD = 0.1;
+        
+        // set Motion Magic settings
+        var motionMagicConfigs = talonFXConfigs.MotionMagicConfigs;
+        motionMagicConfigs.MotionMagicCruiseVelocity = 80; // 80 rps cruise velocity
+        motionMagicConfigs.MotionMagicAcceleration = 160; // 160 rps/s acceleration (0.5 seconds)
+        motionMagicConfigs.MotionMagicJerk = 1600; // 1600 rps/s^2 jerk (0.1 seconds)
+
+        m_talonFX.getConfigurator().apply(talonFXConfigs, 0.050);
+
+
+        if (slotId == 0)
+        {
+            Slot0Configs slot0Configs = new Slot0Configs();
+            slot0Configs.kP = p;
+            slot0Configs.kI = i;
+            slot0Configs.kD = d;
+            slot0Configs.kV = f;
+            this.wrappedObject.getConfigurator().apply(slot0Configs, TalonFXWrapper.timeoutSecs);
+        }
+        else if (slotId == 1)
+        {
+            Slot1Configs slot1Configs = new Slot1Configs();
+            slot1Configs.kP = p;
+            slot1Configs.kI = i;
+            slot1Configs.kD = d;
+            slot1Configs.kV = f;
+            this.wrappedObject.getConfigurator().apply(slot1Configs, TalonFXWrapper.timeoutSecs);
+        }
+        else // if (slotId == 2)
+        {
+            Slot2Configs slot2Configs = new Slot2Configs();
+            slot2Configs.kP = p;
+            slot2Configs.kI = i;
+            slot2Configs.kD = d;
+            slot2Configs.kV = f;
+            this.wrappedObject.getConfigurator().apply(slot2Configs, TalonFXWrapper.timeoutSecs);
+        }
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.config_kP(slotId, p, TalonFXWrapper.timeoutSecs),
             "TalonFX.setMotionMagicPIDF_kP");
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.config_kI(slotId, i, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.config_kI(slotId, i, TalonFXWrapper.timeoutSecs),
             "TalonFX.setMotionMagicPIDF_kI");
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.config_kD(slotId, d, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.config_kD(slotId, d, TalonFXWrapper.timeoutSecs),
             "TalonFX.setMotionMagicPIDF_kD");
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.config_kF(slotId, f, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.config_kF(slotId, f, TalonFXWrapper.timeoutSecs),
             "TalonFX.setMotionMagicPIDF_kF");
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.configMotionCruiseVelocity(velocity, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.configMotionCruiseVelocity(velocity, TalonFXWrapper.timeoutSecs),
             "TalonFX.setMotionMagicPIDF_CruiseVelocity");
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.configMotionAcceleration(acceleration, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.configMotionAcceleration(acceleration, TalonFXWrapper.timeoutSecs),
             "TalonFX.setMotionMagicPIDF_Acceleration");
     }
 
     public void setPIDF(double p, double i, double d, double f, int izone, double closeLoopRampRate, int slotId)
     {
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.config_kP(slotId, p, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.config_kP(slotId, p, TalonFXWrapper.timeoutSecs),
             "TalonFX.setPIDF_kP");
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.config_kI(slotId, i, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.config_kI(slotId, i, TalonFXWrapper.timeoutSecs),
             "TalonFX.setPIDF_kI");
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.config_kD(slotId, d, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.config_kD(slotId, d, TalonFXWrapper.timeoutSecs),
             "TalonFX.setPIDF_kD");
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.config_kF(slotId, f, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.config_kF(slotId, f, TalonFXWrapper.timeoutSecs),
             "TalonFX.setPIDF_kF");
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.config_IntegralZone(slotId, izone, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.config_IntegralZone(slotId, izone, TalonFXWrapper.timeoutSecs),
             "TalonFX.setPIDF_IntegralZone");
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.configClosedloopRamp(closeLoopRampRate, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.configClosedloopRamp(closeLoopRampRate, TalonFXWrapper.timeoutSecs),
             "TalonFX.setPIDF_CloosedloopRamp");
     }
 
@@ -212,11 +652,11 @@ public class TalonFXWrapper implements ITalonFX
             type = LimitSwitchNormal.NormallyOpen;
         }
 
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configForwardLimitSwitchSource(
                 source,
                 type,
-                TalonFXWrapper.timeoutMS),
+                TalonFXWrapper.timeoutSecs),
             "TalonFX.setForwardLimitSwitch");
     }
 
@@ -234,11 +674,11 @@ public class TalonFXWrapper implements ITalonFX
             type = LimitSwitchNormal.NormallyOpen;
         }
 
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configReverseLimitSwitchSource(
                 source,
                 type,
-                TalonFXWrapper.timeoutMS),
+                TalonFXWrapper.timeoutSecs),
             "TalonFX.setReverseLimitSwitch");
     }
 
@@ -295,8 +735,8 @@ public class TalonFXWrapper implements ITalonFX
 
     public void setVoltageCompensation(boolean enabled, double maxVoltage)
     {
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.configVoltageCompSaturation(maxVoltage, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.configVoltageCompSaturation(maxVoltage, TalonFXWrapper.timeoutSecs),
             "TalonFX.setVoltageCompensationSaturation");
         this.wrappedObject.enableVoltageCompensation(enabled);
     }
@@ -304,7 +744,7 @@ public class TalonFXWrapper implements ITalonFX
     public void setSupplyCurrentLimit(boolean enabled, double currentLimit, double triggerThresholdCurrent, double triggerThresholdTime)
     {
         SupplyCurrentLimitConfiguration config = new SupplyCurrentLimitConfiguration(enabled, currentLimit, triggerThresholdCurrent, triggerThresholdTime);
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configSupplyCurrentLimit(config),
             "TalonFX.setSupplyCurrentLimit");
     }
@@ -316,15 +756,15 @@ public class TalonFXWrapper implements ITalonFX
 
     public void setPosition(double position)
     {
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.setSelectedSensorPosition(position, TalonFXWrapper.pidIdx, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.setSelectedSensorPosition(position, TalonFXWrapper.pidIdx, TalonFXWrapper.timeoutSecs),
             "TalonFX.setPosition");
     }
 
     public void reset()
     {
-        CTREErrorCodeHelper.printError(
-            this.wrappedObject.setSelectedSensorPosition(0.0, TalonFXWrapper.pidIdx, TalonFXWrapper.timeoutMS),
+        CTREStatusCodeHelper.printError(
+            this.wrappedObject.setSelectedSensorPosition(0.0, TalonFXWrapper.pidIdx, TalonFXWrapper.timeoutSecs),
             "TalonFX.reset");
     }
 

@@ -18,35 +18,35 @@ public class Pigeon2Wrapper implements IPigeon2
 
     public void getYawPitchRoll(double[] ypr_deg)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.getYawPitchRoll(ypr_deg),
             "Pigeon2.getYawPitchRoll");
     }
 
     public void getRawGyro(double[] xyz_dps)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.getRawGyro(xyz_dps),
             "Pigeon2.getRawGyro");
     }
 
     public void setYaw(double angleDeg)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.setYaw(angleDeg),
             "Pigeon2.setYaw");
     }
 
     public void setYPRUpdatePeriod(int timeoutMs)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_9_SixDeg_YPR, timeoutMs),
             "Pigeon2.setYPRUpdatePeriod");
     }
 
     public void setGyroUpdatePeriod(int timeoutMs)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.setStatusFramePeriod(PigeonIMU_StatusFrame.BiasedStatus_2_Gyro, timeoutMs),
             "Pigeon2.setGyroUpdatePeriod");
     }

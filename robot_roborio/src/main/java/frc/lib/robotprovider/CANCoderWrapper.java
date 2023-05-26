@@ -33,28 +33,28 @@ public class CANCoderWrapper implements ICANCoder
 
     public void setPosition(double newPosition)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.setPosition(newPosition),
             "CANCoder.setPosition");
     }
 
     public void configSensorDirection(boolean clockwisePositive)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configSensorDirection(clockwisePositive),
             "CANCoder.configSensorDirection");
     }
 
     public void configAbsoluteRange(boolean useZeroToThreeSixty)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configAbsoluteSensorRange(useZeroToThreeSixty ? AbsoluteSensorRange.Unsigned_0_to_360 : AbsoluteSensorRange.Signed_PlusMinus180),
             "CANCoder.configAbsoluteRange");
     }
 
     public void configMagnetOffset(double offsetDegrees)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configMagnetOffset(offsetDegrees),
             "CANCoder.configMagnetOffset");
     }

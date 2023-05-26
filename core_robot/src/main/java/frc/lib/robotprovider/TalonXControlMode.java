@@ -2,12 +2,17 @@ package frc.lib.robotprovider;
 
 public enum TalonXControlMode
 {
-    Required,
-    PercentOutput,
-    Disabled,
+    DutyCycleOut,
+    VoltageOut,
+    PositionDutyCycle,
+    PositionVoltage,
+    VelocityDutyCycle,
+    VelocityVoltage,
+    MotionMagicDutyCycle,
+    MotionMagicVoltage,
+    CoastOut,
+    StaticBrake,
+    NeutralOut,
     Follower,
-    Position,
-    MotionMagicPosition,
-    Velocity,
-    Current;
+    StrictFollower;
 }

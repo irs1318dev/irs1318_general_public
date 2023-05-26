@@ -258,7 +258,7 @@ public class DriveTrainMechanism implements IMechanism
                 TuningConstants.DRIVETRAIN_STEER_SUPPLY_TRIGGER_DURATION);
             //Why is setFeedbackFramePeriod used twice?
             this.steerMotors[i].setFeedbackFramePeriod(TuningConstants.DRIVETRAIN_SENSOR_FRAME_PERIOD_MS);
-            this.steerMotors[i].setFeedbackFramePeriod(TuningConstants.DRIVETRAIN_PID_FRAME_PERIOD_MS);
+            this.steerMotors[i].setPIDFFramePeriod(TuningConstants.DRIVETRAIN_PID_FRAME_PERIOD_MS);
             if (TuningConstants.DRIVETRAIN_STEER_MOTORS_USE_MOTION_MAGIC)
             {
                 this.steerMotors[i].setControlMode(TalonXControlMode.MotionMagicPosition);

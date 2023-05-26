@@ -21,10 +21,20 @@ public class HardwareConstants
     public static final TalonFXInvertType DRIVETRAIN_STEER_MOTOR3_INVERT = TalonFXInvertType.Clockwise;
     public static final TalonFXInvertType DRIVETRAIN_STEER_MOTOR4_INVERT = TalonFXInvertType.Clockwise;
 
+    public static final boolean DRIVETRAIN_STEER_MOTOR1_INVERT_OUTPUT = true;
+    public static final boolean DRIVETRAIN_STEER_MOTOR2_INVERT_OUTPUT = true;
+    public static final boolean DRIVETRAIN_STEER_MOTOR3_INVERT_OUTPUT = true;
+    public static final boolean DRIVETRAIN_STEER_MOTOR4_INVERT_OUTPUT = true;
+
     public static final TalonFXInvertType DRIVETRAIN_DRIVE_MOTOR1_INVERT = TalonFXInvertType.CounterClockwise;
     public static final TalonFXInvertType DRIVETRAIN_DRIVE_MOTOR2_INVERT = TalonFXInvertType.CounterClockwise;
     public static final TalonFXInvertType DRIVETRAIN_DRIVE_MOTOR3_INVERT = TalonFXInvertType.CounterClockwise;
     public static final TalonFXInvertType DRIVETRAIN_DRIVE_MOTOR4_INVERT = TalonFXInvertType.CounterClockwise;
+
+    public static final boolean DRIVETRAIN_DRIVE_MOTOR1_INVERT_OUTPUT = false;
+    public static final boolean DRIVETRAIN_DRIVE_MOTOR2_INVERT_OUTPUT = false;
+    public static final boolean DRIVETRAIN_DRIVE_MOTOR3_INVERT_OUTPUT = false;
+    public static final boolean DRIVETRAIN_DRIVE_MOTOR4_INVERT_OUTPUT = false;
 
     public static final double DRIVETRAIN_STEER_TICKS_PER_REVOLUTION = 2048.0;
     public static final double DRIVETRAIN_STEER_GEAR_RATIO = 150.0 / 7.0; // According to SDS Mk4i code: (50.0 / 14.0) * (60.0 / 10.0) == ~21.43 : 1

@@ -86,9 +86,9 @@ public class DriveTrainMechanismNeo implements IMechanism {
         this.imuManager = imuManager;
         this.powerManager = powerManager;
 
-        this.steerMotors = new ISparkMax[DriveTrainMechanism.NUM_DRIVE_MODULES];
-        this.driveMotors = new ISparkMax[DriveTrainMechanism.NUM_DRIVE_MODULES];
-        this.absoluteEncoders = new ICANCoder[DriveTrainMechanism.NUM_DRIVE_MODULES];
+        this.steerMotors = new ISparkMax[NUM_DRIVE_MODULES];
+        this.driveMotors = new ISparkMax[NUM_DRIVE_MODULES];
+        this.absoluteEncoders = new ICANCoder[NUM_DRIVE_MODULES];
 
         this.moduleOffsetX =
         new double[]
@@ -144,27 +144,89 @@ public class DriveTrainMechanismNeo implements IMechanism {
                 ElectronicsConstants.DRIVETRAIN_ABSOLUTE_ENCODER_4_CAN_ID
             };
 
-
-        //Change Types
-        TalonFXInvertType[] driveMotorInvert =
-            new TalonFXInvertType[]
+        Boolean[] driveMotorInvert =
+            new Boolean[]
             {
-                HardwareConstants.DRIVETRAIN_DRIVE_MOTOR1_INVERT,
-                HardwareConstants.DRIVETRAIN_DRIVE_MOTOR2_INVERT,
-                HardwareConstants.DRIVETRAIN_DRIVE_MOTOR3_INVERT,
-                HardwareConstants.DRIVETRAIN_DRIVE_MOTOR4_INVERT
+                HardwareConstants.DRIVETRAIN_DRIVE_MOTOR1_INVERT_OUTPUT,
+                HardwareConstants.DRIVETRAIN_DRIVE_MOTOR2_INVERT_OUTPUT,
+                HardwareConstants.DRIVETRAIN_DRIVE_MOTOR3_INVERT_OUTPUT,
+                HardwareConstants.DRIVETRAIN_DRIVE_MOTOR4_INVERT_OUTPUT
+            };
+        
+        Boolean[] steerMotorInvert =
+            new Boolean[]
+            {
+                HardwareConstants.DRIVETRAIN_STEER_MOTOR1_INVERT_OUTPUT,
+                HardwareConstants.DRIVETRAIN_STEER_MOTOR2_INVERT_OUTPUT,
+                HardwareConstants.DRIVETRAIN_STEER_MOTOR3_INVERT_OUTPUT,
+                HardwareConstants.DRIVETRAIN_STEER_MOTOR4_INVERT_OUTPUT
             };
 
-        TalonFXInvertType[] steerMotorInvert =
-            new TalonFXInvertType[]
+
+
+        for (int i = 0; i < NUM_DRIVE_MODULES; i++)
+        {
+            this.driveMotors[i] = provider.getSparkMax(driveMotorCanIds[i], SparkMaxMotorType.Brushless);
+            this.driveMotors[i].setNeutralMode(MotorNeutralMode.Brake);
+            this.driveMotors[i].setInvertOutput(driveMotorInvert[i]);
+            this.driveMotors[i].setPIDF(
+                TuningConstants.DRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KP, 
+                TuningConstants.DRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KI,
+                TuningConstants.DRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KD,
+                TuningConstants.DRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KF,
+                DefaultPidSlotId);
+            this.driveMotors[i].setPIDF(
+                TuningConstants.DRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KP,
+                TuningConstants.DRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KI,
+                TuningConstants.DRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KD,
+                TuningConstants.DRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KF,
+                MMPidSlotId);
+            //need to add voltage limiting
+            this.driveMotors[i].setControlMode(SparkMaxControlMode.Velocity);
+            //set the selected PID slot
+
+            this.steerMotors[i] = provider.getSparkMax(steerMotorCanIds[i], SparkMaxMotorType.Brushless);
+            this.steerMotors[i].setNeutralMode(MotorNeutralMode.Brake);
+            this.steerMotors[i].setInvertOutput(steerMotorInvert[i]);
+            this.steerMotors[i].setPIDF(
+                TuningConstants.DRIVETRAIN_STEER_MOTORS_POSITION_PID_KP,
+                TuningConstants.DRIVETRAIN_STEER_MOTORS_POSITION_PID_KI,
+                TuningConstants.DRIVETRAIN_STEER_MOTORS_POSITION_PID_KD,
+                TuningConstants.DRIVETRAIN_STEER_MOTORS_POSITION_PID_KF,
+                DefaultPidSlotId);
+            this.steerMotors[i].setPIDFSmartMotion(
+                TuningConstants.DRIVETRAIN_STEER_MOTORS_MM_PID_KP,
+                TuningConstants.DRIVETRAIN_STEER_MOTORS_MM_PID_KI,
+                TuningConstants.DRIVETRAIN_STEER_MOTORS_MM_PID_KD,
+                TuningConstants.DRIVETRAIN_STEER_MOTORS_MM_PID_KF,
+                0,
+                TuningConstants.DRIVETRAIN_STEER_MOTORS_MM_PID_CRUISE_VELOC,
+                TuningConstants.DRIVETRAIN_STEER_MOTORS_MM_PID_ACCEL,
+                MMPidSlotId);
+            
+            this.steerMotors[i].setControlMode(SparkMaxControlMode.Position);
+
+            if (TuningConstants.DRIVETRAIN_STEER_MOTORS_USE_MOTION_MAGIC)
             {
-                HardwareConstants.DRIVETRAIN_STEER_MOTOR1_INVERT,
-                HardwareConstants.DRIVETRAIN_STEER_MOTOR2_INVERT,
-                HardwareConstants.DRIVETRAIN_STEER_MOTOR3_INVERT,
-                HardwareConstants.DRIVETRAIN_STEER_MOTOR4_INVERT
-            };
+                //Set motors to motion magic slot
+            }
+            else
+            {
+                //Set motors to positional pid slot
+            }
+        }
 
+        this.driveVelocities = new double[NUM_DRIVE_MODULES];
+        this.drivePositions = new double[NUM_DRIVE_MODULES];
+        this.driveErrors = new double[NUM_DRIVE_MODULES];
+        this.steerVelocities = new double[NUM_DRIVE_MODULES];
+        this.steerPositions = new double[NUM_DRIVE_MODULES];
+        this.steerAngles = new double[NUM_DRIVE_MODULES];
+        this.steerErrors = new double[NUM_DRIVE_MODULES];
+        this.encoderAngles = new double[NUM_DRIVE_MODULES];
 
+        this.isDirectionSwapped = new boolean[NUM_DRIVE_MODULES];
+        this.driveSlotIds = new int[NUM_DRIVE_MODULES];
 
     }
 

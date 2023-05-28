@@ -212,27 +212,27 @@ public class TuningConstants
     // Position PID (angle) per-module
     public static final double DRIVETRAIN_STEER_MOTOR_POSITION_PID_KS = HardwareConstants.DRIVETRAIN_STEER_TICKS_PER_DEGREE;
 
-    public static final double DRIVETRAIN_STEER_MOTORS_POSITION_PID_KP = 0.5;
+    public static final double DRIVETRAIN_STEER_MOTORS_POSITION_PID_KP = 11.0; // 0.5
     public static final double DRIVETRAIN_STEER_MOTORS_POSITION_PID_KI = 0.0;
     public static final double DRIVETRAIN_STEER_MOTORS_POSITION_PID_KD = 0.0;
     public static final double DRIVETRAIN_STEER_MOTORS_POSITION_PID_KF = 0.0;
 
-    public static final double DRIVETRAIN_STEER_MOTORS_MM_PID_KP = 0.5;
+    public static final double DRIVETRAIN_STEER_MOTORS_MM_PID_KP = 1.1010752688172043;
     public static final double DRIVETRAIN_STEER_MOTORS_MM_PID_KI = 0.0;
     public static final double DRIVETRAIN_STEER_MOTORS_MM_PID_KD = 0.0;
-    public static final double DRIVETRAIN_STEER_MOTORS_MM_PID_KF = 0.34; // 1023 over max speed (3000 ticks per 100ms)
-    public static final int DRIVETRAIN_STEER_MOTORS_MM_PID_CRUISE_VELOC = 48000;
-    public static final int DRIVETRAIN_STEER_MOTORS_MM_PID_ACCEL = 48000;
+    public static final double DRIVETRAIN_STEER_MOTORS_MM_PID_KF = 0.748731182795699;
+    public static final double DRIVETRAIN_STEER_MOTORS_MM_PID_CRUISE_VELOC = 234.375;
+    public static final double DRIVETRAIN_STEER_MOTORS_MM_PID_ACCEL = 234.375;
 
     // Velocity PID (drive) per-module
-    public static final double DRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS = 16000.0; // 20000 was highest speed at full throttle FF on blocks. this is #ticks / 100ms
+    public static final double DRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS = 78.125; // RPM ~98.0 was highest speed at full throttle FF on blocks
 
-    public static final double DRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KP = 0.1;
+    public static final double DRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KP = 0.22021505376344086;
     public static final double DRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KI = 0.0;
     public static final double DRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KD = 0.0;
-    public static final double DRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KF = 0.05115; // .05115 ==> ~ 1023 / 20000 (100% control authority)
+    public static final double DRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KF = 0.11264;
 
-    public static final double DRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KP = 1.0;
+    public static final double DRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KP = 22.0;
     public static final double DRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KI = 0.0;
     public static final double DRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KD = 0.0;
     public static final double DRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KF = 0.0;
@@ -287,8 +287,8 @@ public class TuningConstants
     public static final double DRIVETRAIN_STEER_SUPPLY_TRIGGER_CURRENT = 30.0;
     public static final double DRIVETRAIN_STEER_SUPPLY_TRIGGER_DURATION = 0.1;
 
-    public static final int DRIVETRAIN_SENSOR_FRAME_PERIOD_MS = 10;
-    public static final int DRIVETRAIN_PID_FRAME_PERIOD_MS = 100;
+    public static final int DRIVETRAIN_FEEDBACK_UPDATE_RATE_HZ = 100;
+    public static final int DRIVETRAIN_ERROR_UPDATE_RATE_HZ = 10;
 
     public static final boolean DRIVETRAIN_SKIP_ANGLE_ON_ZERO_VELOCITY = true;
     public static final double DRIVETRAIN_SKIP_ANGLE_ON_ZERO_DELTA = 0.001;

@@ -4,6 +4,5 @@ public enum TalonSRXFeedbackDevice
 {
     None,
     QuadEncoder,
-    PulseWidthEncodedPosition,
-    IntegratedSensor;
+    PulseWidthEncodedPosition;
 }

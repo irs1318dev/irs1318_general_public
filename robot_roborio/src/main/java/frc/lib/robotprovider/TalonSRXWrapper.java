@@ -9,7 +9,6 @@ import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.SensorVelocityMeasPeriod;
-import com.ctre.phoenix6.signals.ControlModeValue;
 
 import frc.lib.helpers.ExceptionHelpers;
 
@@ -37,7 +36,7 @@ public class TalonSRXWrapper implements ITalonSRX
         this.wrappedObject.set(this.controlMode, value);
     }
 
-    public void set(TalonXControlMode mode, double value)
+    public void set(TalonSRXControlMode mode, double value)
     {
         this.wrappedObject.set(TalonSRXWrapper.getControlMode(mode), value);
     }
@@ -52,20 +51,20 @@ public class TalonSRXWrapper implements ITalonSRX
         this.wrappedObject.follow(((VictorSPXWrapper)victorSPX).wrappedObject);
     }
 
-    public void setControlMode(TalonXControlMode mode)
+    public void setControlMode(TalonSRXControlMode mode)
     {
-        this.controlModeRequired = (mode == TalonXControlMode.Required);
+        this.controlModeRequired = (mode == TalonSRXControlMode.Required);
         this.controlMode = TalonSRXWrapper.getControlMode(mode);
     }
 
-    public void setSensorType(TalonXFeedbackDevice feedbackDevice)
+    public void setSensorType(TalonSRXFeedbackDevice feedbackDevice)
     {
         FeedbackDevice device;
-        if (feedbackDevice == TalonXFeedbackDevice.QuadEncoder)
+        if (feedbackDevice == TalonSRXFeedbackDevice.QuadEncoder)
         {
             device = FeedbackDevice.QuadEncoder;
         }
-        else if (feedbackDevice == TalonXFeedbackDevice.PulseWidthEncodedPosition)
+        else if (feedbackDevice == TalonSRXFeedbackDevice.PulseWidthEncodedPosition)
         {
             device = FeedbackDevice.PulseWidthEncodedPosition;
         }
@@ -182,61 +181,24 @@ public class TalonSRXWrapper implements ITalonSRX
             "TalonSRX.setPIDF_ClosedloopRamp");
     }
 
-    public void setForwardLimitSwitch(boolean enabled, boolean normallyOpen)
+    public void updateLimitSwitchConfig(boolean forwardEnabled, boolean forwardNormallyOpen, boolean reverseEnabled, boolean reverseNormallyOpen)
     {
-        LimitSwitchSource source = LimitSwitchSource.Deactivated;
-        if (enabled)
-        {
-            source = LimitSwitchSource.FeedbackConnector;
-        }
-
-        LimitSwitchNormal type = LimitSwitchNormal.NormallyClosed;
-        if (normallyOpen)
-        {
-            type = LimitSwitchNormal.NormallyOpen;
-        }
-
         CTREStatusCodeHelper.printError(
             this.wrappedObject.configForwardLimitSwitchSource(
-                source,
-                type,
+                forwardEnabled ? LimitSwitchSource.FeedbackConnector : LimitSwitchSource.Deactivated,
+                forwardNormallyOpen ? LimitSwitchNormal.NormallyOpen : LimitSwitchNormal.NormallyClosed,
                 TalonSRXWrapper.timeoutMS),
-            "TalonSRX.setForwardLimitSwitch");
-    }
-
-    public void setReverseLimitSwitch(boolean enabled, boolean normallyOpen)
-    {
-        LimitSwitchSource source = LimitSwitchSource.Deactivated;
-        if (enabled)
-        {
-            source = LimitSwitchSource.FeedbackConnector;
-        }
-
-        LimitSwitchNormal type = LimitSwitchNormal.NormallyClosed;
-        if (normallyOpen)
-        {
-            type = LimitSwitchNormal.NormallyOpen;
-        }
+            "TalonSRX.updateLimitSwitchConfig-forward");
 
         CTREStatusCodeHelper.printError(
             this.wrappedObject.configReverseLimitSwitchSource(
-                source,
-                type,
+                reverseEnabled ? LimitSwitchSource.FeedbackConnector : LimitSwitchSource.Deactivated,
+                reverseNormallyOpen ? LimitSwitchNormal.NormallyOpen : LimitSwitchNormal.NormallyClosed,
                 TalonSRXWrapper.timeoutMS),
-            "TalonSRX.setReverseLimitSwitch");
+            "TalonSRX.updateLimitSwitchConfig-reverse");
     }
 
-    public void setInvertOutput(boolean invert)
-    {
-        this.wrappedObject.setInverted(invert);
-    }
-
-    public void setInvertSensor(boolean invert)
-    {
-        this.wrappedObject.setSensorPhase(invert);
-    }
-
-    public void setNeutralMode(MotorNeutralMode neutralMode)
+    public void setMotorOutputSettings(boolean invert, MotorNeutralMode neutralMode)
     {
         NeutralMode mode;
         if (neutralMode == MotorNeutralMode.Brake)
@@ -249,6 +211,12 @@ public class TalonSRXWrapper implements ITalonSRX
         }
 
         this.wrappedObject.setNeutralMode(mode);
+        this.wrappedObject.setInverted(invert);
+    }
+
+    public void setInvertSensor(boolean invert)
+    {
+        this.wrappedObject.setSensorPhase(invert);
     }
 
     public void setVoltageCompensation(boolean enabled, double maxVoltage)
@@ -302,43 +270,37 @@ public class TalonSRXWrapper implements ITalonSRX
             collection.isRevLimitSwitchClosed());
     }
 
-    static ControlModeValue getControlMode(TalonXControlMode mode)
+    static ControlMode getControlMode(TalonSRXControlMode mode)
     {
-        switch (mode)
+        if (mode == TalonSRXControlMode.PercentOutput)
         {
-            case DutyCycleOut:
-                return ControlModeValue.DutyCycleOut;
-
-            case VoltageOut:
-                return ControlModeValue.VoltageOut;
-
-            case PositionDutyCycle:
-                return ControlModeValue.PositionDutyCycle;
-
-            case PositionVoltage:
-                return ControlModeValue.PositionVoltage;
-
-            case VelocityDutyCycle:
-                return ControlModeValue.VelocityDutyCycle;
-
-            case VelocityVoltage:
-                return ControlModeValue.VelocityVoltage;
-
-            case MotionMagicDutyCycle:
-                return ControlModeValue.MotionMagicDutyCycle;
-
-            case MotionMagicVoltage:
-                return ControlModeValue.MotionMagicVoltage;
-
-            case CoastOut:
-                return ControlModeValue.CoastOut;
-
-            case StaticBrake:
-                return ControlModeValue.StaticBrake;
-
-            default:
-            case NeutralOut:
-                return ControlModeValue.NeutralOut;
+            return ControlMode.PercentOutput;
         }
+        else if (mode == TalonSRXControlMode.Disabled)
+        {
+            return ControlMode.Disabled;
+        }
+        else if (mode == TalonSRXControlMode.Follower)
+        {
+            return ControlMode.Follower;
+        }
+        else if (mode == TalonSRXControlMode.Position)
+        {
+            return ControlMode.Position;
+        }
+        else if (mode == TalonSRXControlMode.MotionMagicPosition)
+        {
+            return ControlMode.MotionMagic;
+        }
+        else if (mode == TalonSRXControlMode.Velocity)
+        {
+            return ControlMode.Velocity;
+        }
+        else if (mode == TalonSRXControlMode.Current)
+        {
+            return ControlMode.Current;
+        }
+
+        return ControlMode.PercentOutput;
     }
 }

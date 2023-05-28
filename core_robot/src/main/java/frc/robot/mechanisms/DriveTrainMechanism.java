@@ -12,7 +12,6 @@
 package frc.robot.mechanisms;
 
 import frc.robot.*;
-import frc.lib.*;
 import frc.lib.controllers.PIDHandler;
 import frc.lib.driver.*;
 import frc.lib.filters.*;
@@ -177,8 +176,8 @@ public class DriveTrainMechanism implements IMechanism
                 ElectronicsConstants.DRIVETRAIN_ABSOLUTE_ENCODER_4_CAN_ID
             };
 
-        TalonFXInvertType[] driveMotorInvert =
-            new TalonFXInvertType[]
+        boolean[] driveMotorInvert =
+            new boolean[]
             {
                 HardwareConstants.DRIVETRAIN_DRIVE_MOTOR1_INVERT,
                 HardwareConstants.DRIVETRAIN_DRIVE_MOTOR2_INVERT,
@@ -186,8 +185,8 @@ public class DriveTrainMechanism implements IMechanism
                 HardwareConstants.DRIVETRAIN_DRIVE_MOTOR4_INVERT
             };
 
-        TalonFXInvertType[] steerMotorInvert =
-            new TalonFXInvertType[]
+        boolean[] steerMotorInvert =
+            new boolean[]
             {
                 HardwareConstants.DRIVETRAIN_STEER_MOTOR1_INVERT,
                 HardwareConstants.DRIVETRAIN_STEER_MOTOR2_INVERT,
@@ -198,12 +197,9 @@ public class DriveTrainMechanism implements IMechanism
         for (int i = 0; i < DriveTrainMechanism.NUM_MODULES; i++)
         {
             this.driveMotors[i] = provider.getTalonFX(driveMotorCanIds[i], ElectronicsConstants.CANIVORE_NAME);
-            this.driveMotors[i].setNeutralMode(MotorNeutralMode.Brake);
-            this.driveMotors[i].setSensorType(TalonSRXFeedbackDevice.IntegratedSensor);
-            this.driveMotors[i].setFeedbackFramePeriod(TuningConstants.DRIVETRAIN_SENSOR_FRAME_PERIOD_MS);
-            this.driveMotors[i].setPIDFFramePeriod(TuningConstants.DRIVETRAIN_PID_FRAME_PERIOD_MS);
-            this.driveMotors[i].setInvert(driveMotorInvert[i]);
-            this.driveMotors[i].configureVelocityMeasurements(10, 32);
+            this.driveMotors[i].setMotorOutputSettings(driveMotorInvert[i], MotorNeutralMode.Brake);
+            this.driveMotors[i].setFeedbackUpdateRate(TuningConstants.DRIVETRAIN_FEEDBACK_UPDATE_RATE_HZ);
+            this.driveMotors[i].setErrorUpdateRate(TuningConstants.DRIVETRAIN_ERROR_UPDATE_RATE_HZ);
             this.driveMotors[i].setPIDF(
                 TuningConstants.DRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KP,
                 TuningConstants.DRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KI,
@@ -224,13 +220,11 @@ public class DriveTrainMechanism implements IMechanism
                 TuningConstants.DRIVETRAIN_DRIVE_SUPPLY_CURRENT_MAX,
                 TuningConstants.DRIVETRAIN_DRIVE_SUPPLY_TRIGGER_CURRENT,
                 TuningConstants.DRIVETRAIN_DRIVE_SUPPLY_TRIGGER_DURATION);
-            this.driveMotors[i].setControlMode(TalonXControlMode.Velocity);
+            this.driveMotors[i].setControlMode(TalonFXControlMode.Velocity);
             this.driveMotors[i].setSelectedSlot(DriveTrainMechanism.defaultPidSlotId);
 
             this.steerMotors[i] = provider.getTalonFX(steerMotorCanIds[i], ElectronicsConstants.CANIVORE_NAME);
-            this.steerMotors[i].setInvert(steerMotorInvert[i]);
-            this.steerMotors[i].setNeutralMode(MotorNeutralMode.Brake);
-            this.steerMotors[i].setSensorType(TalonSRXFeedbackDevice.IntegratedSensor);
+            this.steerMotors[i].setMotorOutputSettings(steerMotorInvert[i], MotorNeutralMode.Brake);
             this.steerMotors[i].setPIDF(
                 TuningConstants.DRIVETRAIN_STEER_MOTORS_POSITION_PID_KP,
                 TuningConstants.DRIVETRAIN_STEER_MOTORS_POSITION_PID_KI,
@@ -253,21 +247,20 @@ public class DriveTrainMechanism implements IMechanism
                 TuningConstants.DRIVETRAIN_STEER_SUPPLY_CURRENT_MAX,
                 TuningConstants.DRIVETRAIN_STEER_SUPPLY_TRIGGER_CURRENT,
                 TuningConstants.DRIVETRAIN_STEER_SUPPLY_TRIGGER_DURATION);
-            this.steerMotors[i].setFeedbackFramePeriod(TuningConstants.DRIVETRAIN_SENSOR_FRAME_PERIOD_MS);
-            this.steerMotors[i].setFeedbackFramePeriod(TuningConstants.DRIVETRAIN_PID_FRAME_PERIOD_MS);
+                this.driveMotors[i].setFeedbackUpdateRate(TuningConstants.DRIVETRAIN_FEEDBACK_UPDATE_RATE_HZ);
+                this.driveMotors[i].setErrorUpdateRate(TuningConstants.DRIVETRAIN_ERROR_UPDATE_RATE_HZ);
             if (TuningConstants.DRIVETRAIN_STEER_MOTORS_USE_MOTION_MAGIC)
             {
-                this.steerMotors[i].setControlMode(TalonXControlMode.MotionMagicPosition);
+                this.steerMotors[i].setControlMode(TalonFXControlMode.MotionMagicPosition);
                 this.steerMotors[i].setSelectedSlot(DriveTrainMechanism.secondaryPidSlotId);
             }
             else
             {
-                this.steerMotors[i].setControlMode(TalonXControlMode.Position);
+                this.steerMotors[i].setControlMode(TalonFXControlMode.Position);
                 this.steerMotors[i].setSelectedSlot(DriveTrainMechanism.defaultPidSlotId);
             }
 
             this.absoluteEncoders[i] = provider.getCANCoder(absoluteEncoderCanIds[i], ElectronicsConstants.CANIVORE_NAME);
-            this.absoluteEncoders[i].configAbsoluteRange(false);
         }
 
         this.driveVelocities = new double[DriveTrainMechanism.NUM_MODULES];
@@ -492,25 +485,25 @@ public class DriveTrainMechanism implements IMechanism
             Double driveVelocitySetpoint = current.driveVelocity;
             Double drivePositionSetpoint = current.drivePosition;
 
-            TalonXControlMode driveControlMode = TalonXControlMode.Disabled;
+            TalonFXControlMode driveControlMode = TalonFXControlMode.Neutral;
             int driveDesiredPidSlotId = DriveTrainMechanism.defaultPidSlotId;
             double driveSetpoint = 0.0;
             if (driveVelocitySetpoint != null)
             {
                 driveSetpoint = driveVelocitySetpoint;
-                driveControlMode = TalonXControlMode.Velocity;
+                driveControlMode = TalonFXControlMode.Velocity;
                 driveDesiredPidSlotId = DriveTrainMechanism.defaultPidSlotId;
             }
             else if (drivePositionSetpoint != null)
             {
                 driveSetpoint = drivePositionSetpoint;
-                driveControlMode = TalonXControlMode.Position;
+                driveControlMode = TalonFXControlMode.Position;
                 driveDesiredPidSlotId = DriveTrainMechanism.secondaryPidSlotId;
             }
 
             this.logger.logNumber(DriveTrainMechanism.DRIVE_GOAL_LOGGING_KEYS[i], driveSetpoint);
             this.driveMotors[i].setControlMode(driveControlMode);
-            if (driveControlMode != TalonXControlMode.Disabled)
+            if (driveControlMode != TalonFXControlMode.Neutral)
             {
                 this.driveMotors[i].set(driveSetpoint);
 

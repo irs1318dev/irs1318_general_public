@@ -1,61 +1,77 @@
 package frc.lib.robotprovider;
 
-import com.ctre.phoenix.sensors.*;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.hardware.CANcoder;
 
 public class CANCoderWrapper implements ICANCoder
 {
-    private final CANCoder wrappedObject;
+    private static final double timeoutSecs = 0.025;
+
+    private final CANcoder wrappedObject;
+
+    private boolean reverse;
+
+    private StatusSignal<Double> position;
+    private StatusSignal<Double> absolutePosition;
+    private StatusSignal<Double> velocity;
 
     public CANCoderWrapper(int deviceNumber)
     {
-        this.wrappedObject = new CANCoder(deviceNumber);
+        this.wrappedObject = new CANcoder(deviceNumber);
+        this.reverse = false;
     }
 
     public CANCoderWrapper(int deviceNumber, String canbus)
     {
-        this.wrappedObject = new CANCoder(deviceNumber, canbus);
+        this.wrappedObject = new CANcoder(deviceNumber, canbus);
+        this.reverse = false;
     }
 
     public double getPosition()
     {
-        return this.wrappedObject.getPosition();
+        if (this.position == null)
+        {
+            this.position = this.wrappedObject.getPosition();
+        }
+
+        this.position.refresh();
+        CTREStatusCodeHelper.printError(this.position.getError(), "CANCoderWrapper.getPosition");
+        return reverse ? -this.position.getValue() : this.position.getValue();
     }
 
     public double getVelocity()
     {
-        return this.wrappedObject.getVelocity();
+        if (this.velocity == null)
+        {
+            this.velocity = this.wrappedObject.getVelocity();
+        }
+
+        this.velocity.refresh();
+        CTREStatusCodeHelper.printError(this.velocity.getError(), "CANCoderWrapper.getVelocity");
+        return reverse ? -this.velocity.getValue() : this.velocity.getValue();
     }
 
     public double getAbsolutePosition()
     {
-        return this.wrappedObject.getAbsolutePosition();
+        if (this.absolutePosition == null)
+        {
+            this.absolutePosition = this.wrappedObject.getAbsolutePosition();
+        }
+
+        this.absolutePosition.refresh();
+        CTREStatusCodeHelper.printError(this.absolutePosition.getError(), "CANCoderWrapper.getAbsolutePosition");
+        return reverse ? -this.absolutePosition.getValue() : this.absolutePosition.getValue();
     }
 
     public void setPosition(double newPosition)
     {
         CTREStatusCodeHelper.printError(
-            this.wrappedObject.setPosition(newPosition),
-            "CANCoder.setPosition");
+            this.wrappedObject.setPosition(newPosition, CANCoderWrapper.timeoutSecs),
+            "CANCoderWrapper.setPosition");
     }
 
     public void configSensorDirection(boolean clockwisePositive)
     {
-        CTREStatusCodeHelper.printError(
-            this.wrappedObject.configSensorDirection(clockwisePositive),
-            "CANCoder.configSensorDirection");
-    }
-
-    public void configAbsoluteRange(boolean useZeroToThreeSixty)
-    {
-        CTREStatusCodeHelper.printError(
-            this.wrappedObject.configAbsoluteSensorRange(useZeroToThreeSixty ? AbsoluteSensorRange.Unsigned_0_to_360 : AbsoluteSensorRange.Signed_PlusMinus180),
-            "CANCoder.configAbsoluteRange");
-    }
-
-    public void configMagnetOffset(double offsetDegrees)
-    {
-        CTREStatusCodeHelper.printError(
-            this.wrappedObject.configMagnetOffset(offsetDegrees),
-            "CANCoder.configMagnetOffset");
+        this.reverse = clockwisePositive;
     }
 }

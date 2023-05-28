@@ -228,6 +228,65 @@ public class DriveTrainMechanismNeo implements IMechanism {
         this.isDirectionSwapped = new boolean[NUM_DRIVE_MODULES];
         this.driveSlotIds = new int[NUM_DRIVE_MODULES];
 
+        double prevYaw = this.robotYaw;
+        double prevTime = this.time;
+        this.robotYaw = this.imuManager.getYaw();
+        this.time = this.timer.get();
+
+        this.deltaT = this.time - prevTime;
+        if (this.deltaT <= 0.0)
+        {
+            this.deltaT = 0.001;
+        }
+
+        this.omegaPID = new PIDHandler(
+            TuningConstants.DRIVETRAIN_OMEGA_POSITION_PID_KP,
+            TuningConstants.DRIVETRAIN_OMEGA_POSITION_PID_KI,
+            TuningConstants.DRIVETRAIN_OMEGA_POSITION_PID_KD,
+            TuningConstants.DRIVETRAIN_OMEGA_POSITION_PID_KF,
+            TuningConstants.DRIVETRAIN_OMEGA_POSITION_PID_KS,
+            TuningConstants.DRIVETRAIN_OMEGA_MIN_OUTPUT,
+            TuningConstants.DRIVETRAIN_OMEGA_MAX_OUTPUT,
+            this.timer);
+
+        this.pathOmegaPID = new PIDHandler(
+            TuningConstants.DRIVETRAIN_PATH_OMEGA_POSITION_PID_KP,
+            TuningConstants.DRIVETRAIN_PATH_OMEGA_POSITION_PID_KI,
+            TuningConstants.DRIVETRAIN_PATH_OMEGA_POSITION_PID_KD,
+            TuningConstants.DRIVETRAIN_PATH_OMEGA_POSITION_PID_KF,
+            TuningConstants.DRIVETRAIN_PATH_OMEGA_POSITION_PID_KS,
+            TuningConstants.DRIVETRAIN_PATH_OMEGA_MIN_OUTPUT,
+            TuningConstants.DRIVETRAIN_PATH_OMEGA_MAX_OUTPUT,
+            this.timer);
+
+        this.pathXOffsetPID = new PIDHandler(
+            TuningConstants.DRIVETRAIN_PATH_X_POSITION_PID_KP,
+            TuningConstants.DRIVETRAIN_PATH_X_POSITION_PID_KI,
+            TuningConstants.DRIVETRAIN_PATH_X_POSITION_PID_KD,
+            TuningConstants.DRIVETRAIN_PATH_X_POSITION_PID_KF,
+            TuningConstants.DRIVETRAIN_PATH_X_POSITION_PID_KS,
+            TuningConstants.DRIVETRAIN_PATH_X_MIN_OUTPUT,
+            TuningConstants.DRIVETRAIN_PATH_X_MAX_OUTPUT,
+            this.timer);
+
+        this.pathYOffsetPID = new PIDHandler(
+            TuningConstants.DRIVETRAIN_PATH_Y_POSITION_PID_KP,
+            TuningConstants.DRIVETRAIN_PATH_Y_POSITION_PID_KI,
+            TuningConstants.DRIVETRAIN_PATH_Y_POSITION_PID_KD,
+            TuningConstants.DRIVETRAIN_PATH_Y_POSITION_PID_KF,
+            TuningConstants.DRIVETRAIN_PATH_Y_POSITION_PID_KS,
+            TuningConstants.DRIVETRAIN_PATH_Y_MIN_OUTPUT,
+            TuningConstants.DRIVETRAIN_PATH_Y_MAX_OUTPUT,
+            this.timer);
+
+        if (TuningConstants.DRIVETRAIN_USE_ODOMETRY)
+        {
+            double deltaImuYaw = (this.robotYaw - prevYaw) / this.deltaT;
+            this.calculateOdometry(deltaImuYaw);
+            this.logger.logNumber(LoggingKey.DriveTrainXPosition, this.xPosition);
+            this.logger.logNumber(LoggingKey.DriveTrainYPosition, this.yPosition);
+            this.logger.logNumber(LoggingKey.DriveTrainAngle, this.angle);
+        }
     }
 
     @Override
@@ -247,15 +306,16 @@ public class DriveTrainMechanismNeo implements IMechanism {
         // TODO Auto-generated method stub
         
     }
-}
 
-private class Setpoint()
-{
-    public Double angle;
-    public Double driveVelocity;
-    public Double drivePosition;
-
-    public Setpoint()
+    private void calculateOdometry(double deltaImuYaw)
     {
+
+    }
+
+    private class Setpoint
+    {
+        public Setpoint()
+        {
+        }
     }
 }

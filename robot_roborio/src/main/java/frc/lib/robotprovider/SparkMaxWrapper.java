@@ -15,6 +15,7 @@ public class SparkMaxWrapper implements ISparkMax
     private SparkMaxLimitSwitch wrappedRevLimitSwitch;
 
     private SparkMaxControlMode currentMode;
+    private int selectedSlot;
 
     public SparkMaxWrapper(int deviceID, SparkMaxMotorType motorType)
     {
@@ -41,8 +42,13 @@ public class SparkMaxWrapper implements ISparkMax
 
     public void set(double value)
     {
-        if (this.currentMode != SparkMaxControlMode.PercentOutput &&
-            this.pidController == null)
+        if (this.currentMode == SparkMaxControlMode.PercentOutput)
+        {
+            this.wrappedObject.set(value);
+            return;
+        }
+
+        if (this.pidController == null)
         {
             this.pidController = this.wrappedObject.getPIDController();
         }
@@ -50,10 +56,6 @@ public class SparkMaxWrapper implements ISparkMax
         CANSparkMax.ControlType controlType;
         switch (this.currentMode)
         {
-            case PercentOutput:
-                this.wrappedObject.set(value);
-                return;
-
             case Position:
                 controlType = CANSparkMax.ControlType.kPosition;
                 break;
@@ -67,15 +69,20 @@ public class SparkMaxWrapper implements ISparkMax
                 break;
 
             default:
+            case PercentOutput:
                 throw new RuntimeException("unexpected control mode " + this.currentMode);
         }
 
-        this.pidController.setReference(value, controlType);
+        RevErrorCodeHelper.printError(
+            this.pidController.setReference(value, controlType, this.selectedSlot),
+            "SparkMaxWrapper.set");
     }
 
     public void follow(ISparkMax sparkMax)
     {
-        this.wrappedObject.follow(((SparkMaxWrapper)sparkMax).wrappedObject);
+        RevErrorCodeHelper.printError(
+            this.wrappedObject.follow(((SparkMaxWrapper)sparkMax).wrappedObject),
+            "SparkMaxWrapper.follow");
     }
 
     public void setFeedbackFramePeriod(SparkMaxPeriodicFrameType frameType, int periodMS)
@@ -94,13 +101,24 @@ public class SparkMaxWrapper implements ISparkMax
                 break;
         }
 
-        this.wrappedObject.setPeriodicFramePeriod(type, periodMS);
+        RevErrorCodeHelper.printError(
+            this.wrappedObject.setPeriodicFramePeriod(type, periodMS),
+            "SparkMaxWrapper.setFeedbackFramePeriod");
     }
 
     public void setVelocityMeasurements(int periodMS, int windowSize)
     {
-        this.wrappedEncoder.setAverageDepth(windowSize);
-        this.wrappedEncoder.setMeasurementPeriod(periodMS);
+        RevErrorCodeHelper.printError(
+            this.wrappedEncoder.setAverageDepth(windowSize),
+            "SparkMaxWrapper.setVelocityMeasurements-setAverageDepth");
+        RevErrorCodeHelper.printError(
+            this.wrappedEncoder.setMeasurementPeriod(periodMS),
+            "SparkMaxWrapper.setVelocityMeasurements-setMeasurementPeriod");
+    }
+
+    public void setSelectedSlot(int slotId)
+    {
+        this.selectedSlot = slotId;
     }
 
     public void setPIDF(double p, double i, double d, double f, int slotId)
@@ -110,10 +128,18 @@ public class SparkMaxWrapper implements ISparkMax
             this.pidController = this.wrappedObject.getPIDController();
         }
 
-        this.pidController.setP(p, slotId);
-        this.pidController.setI(i, slotId);
-        this.pidController.setD(d, slotId);
-        this.pidController.setFF(f, slotId);
+        RevErrorCodeHelper.printError(
+            this.pidController.setP(p, slotId),
+            "SparkMaxWrapper.setPIDF-p");
+        RevErrorCodeHelper.printError(
+            this.pidController.setI(i, slotId),
+            "SparkMaxWrapper.setPIDF-i");
+        RevErrorCodeHelper.printError(
+            this.pidController.setD(d, slotId),
+            "SparkMaxWrapper.setPIDF-d");
+        RevErrorCodeHelper.printError(
+            this.pidController.setFF(f, slotId),
+            "SparkMaxWrapper.setPIDF-f");
     }
 
     public void setPIDF(double p, double i, double d, double f, double minOutput, double maxOutput, int slotId)
@@ -123,11 +149,21 @@ public class SparkMaxWrapper implements ISparkMax
             this.pidController = this.wrappedObject.getPIDController();
         }
 
-        this.pidController.setP(p, slotId);
-        this.pidController.setI(i, slotId);
-        this.pidController.setD(d, slotId);
-        this.pidController.setFF(f, slotId);
-        this.pidController.setOutputRange(minOutput, maxOutput);
+        RevErrorCodeHelper.printError(
+            this.pidController.setP(p, slotId),
+            "SparkMaxWrapper.setPIDF-p");
+        RevErrorCodeHelper.printError(
+            this.pidController.setI(i, slotId),
+            "SparkMaxWrapper.setPIDF-i");
+        RevErrorCodeHelper.printError(
+            this.pidController.setD(d, slotId),
+            "SparkMaxWrapper.setPIDF-d");
+        RevErrorCodeHelper.printError(
+            this.pidController.setFF(f, slotId),
+            "SparkMaxWrapper.setPIDF-f");
+        RevErrorCodeHelper.printError(
+            this.pidController.setOutputRange(minOutput, maxOutput),
+            "SparkMaxWrapper.setPIDF-output");
     }
 
     public void setPIDF(double p, double i, double d, double f, int izone, int slotId)
@@ -137,11 +173,21 @@ public class SparkMaxWrapper implements ISparkMax
             this.pidController = this.wrappedObject.getPIDController();
         }
 
-        this.pidController.setP(p, slotId);
-        this.pidController.setI(i, slotId);
-        this.pidController.setD(d, slotId);
-        this.pidController.setFF(f, slotId);
-        this.pidController.setIZone(izone, slotId);
+        RevErrorCodeHelper.printError(
+            this.pidController.setP(p, slotId),
+            "SparkMaxWrapper.setPIDF-p");
+        RevErrorCodeHelper.printError(
+            this.pidController.setI(i, slotId),
+            "SparkMaxWrapper.setPIDF-i");
+        RevErrorCodeHelper.printError(
+            this.pidController.setD(d, slotId),
+            "SparkMaxWrapper.setPIDF-d");
+        RevErrorCodeHelper.printError(
+            this.pidController.setFF(f, slotId),
+            "SparkMaxWrapper.setPIDF-f");
+        RevErrorCodeHelper.printError(
+            this.pidController.setIZone(izone, slotId),
+            "SparkMaxWrapper.setPIDF-izone");
     }
 
     public void setPIDF(double p, double i, double d, double f, int izone, double minOutput, double maxOutput, int slotId)
@@ -151,12 +197,24 @@ public class SparkMaxWrapper implements ISparkMax
             this.pidController = this.wrappedObject.getPIDController();
         }
 
-        this.pidController.setP(p, slotId);
-        this.pidController.setI(i, slotId);
-        this.pidController.setD(d, slotId);
-        this.pidController.setFF(f, slotId);
-        this.pidController.setIZone(izone, slotId);
-        this.pidController.setOutputRange(minOutput, maxOutput);
+        RevErrorCodeHelper.printError(
+            this.pidController.setP(p, slotId),
+            "SparkMaxWrapper.setPIDF-p");
+        RevErrorCodeHelper.printError(
+            this.pidController.setI(i, slotId),
+            "SparkMaxWrapper.setPIDF-i");
+        RevErrorCodeHelper.printError(
+            this.pidController.setD(d, slotId),
+            "SparkMaxWrapper.setPIDF-d");
+        RevErrorCodeHelper.printError(
+            this.pidController.setFF(f, slotId),
+            "SparkMaxWrapper.setPIDF-f");
+        RevErrorCodeHelper.printError(
+            this.pidController.setIZone(izone, slotId),
+            "SparkMaxWrapper.setPIDF-izone");
+        RevErrorCodeHelper.printError(
+            this.pidController.setOutputRange(minOutput, maxOutput),
+            "SparkMaxWrapper.setPIDF-output");
     }
 
     public void setPIDFSmartMotion(double p, double i, double d, double f, int izone, int velocity, int acceleration, int slotId)
@@ -166,13 +224,27 @@ public class SparkMaxWrapper implements ISparkMax
             this.pidController = this.wrappedObject.getPIDController();
         }
 
-        this.pidController.setP(p, slotId);
-        this.pidController.setI(i, slotId);
-        this.pidController.setD(d, slotId);
-        this.pidController.setFF(f, slotId);
-        this.pidController.setIZone(izone, slotId);
-        this.pidController.setSmartMotionMaxVelocity(velocity, slotId);
-        this.pidController.setSmartMotionMaxAccel(acceleration, slotId);
+        RevErrorCodeHelper.printError(
+            this.pidController.setP(p, slotId),
+            "SparkMaxWrapper.setPIDFSmartMotion-p");
+        RevErrorCodeHelper.printError(
+            this.pidController.setI(i, slotId),
+            "SparkMaxWrapper.setPIDFSmartMotion-i");
+        RevErrorCodeHelper.printError(
+            this.pidController.setD(d, slotId),
+            "SparkMaxWrapper.setPIDFSmartMotion-d");
+        RevErrorCodeHelper.printError(
+            this.pidController.setFF(f, slotId),
+            "SparkMaxWrapper.setPIDFSmartMotion-f");
+        RevErrorCodeHelper.printError(
+            this.pidController.setIZone(izone, slotId),
+            "SparkMaxWrapper.setPIDFSmartMotion-izone");
+        RevErrorCodeHelper.printError(
+            this.pidController.setSmartMotionMaxVelocity(velocity, slotId),
+            "SparkMaxWrapper.setPIDFSmartMotion-maxvelocity");
+        RevErrorCodeHelper.printError(
+            this.pidController.setSmartMotionMaxAccel(acceleration, slotId),
+            "SparkMaxWrapper.setPIDFSmartMotion-maxaccel");
     }
 
     public void setPIDFSmartMotion(double p, double i, double d, double f, int izone, int velocity, int acceleration, double minOutput, double maxOutput, int slotId)
@@ -182,14 +254,30 @@ public class SparkMaxWrapper implements ISparkMax
             this.pidController = this.wrappedObject.getPIDController();
         }
 
-        this.pidController.setP(p, slotId);
-        this.pidController.setI(i, slotId);
-        this.pidController.setD(d, slotId);
-        this.pidController.setFF(f, slotId);
-        this.pidController.setIZone(izone, slotId);
-        this.pidController.setSmartMotionMaxVelocity(velocity, slotId);
-        this.pidController.setSmartMotionMaxAccel(acceleration, slotId);
-        this.pidController.setOutputRange(minOutput, maxOutput);
+        RevErrorCodeHelper.printError(
+            this.pidController.setP(p, slotId),
+            "SparkMaxWrapper.setPIDFSmartMotion-p");
+        RevErrorCodeHelper.printError(
+            this.pidController.setI(i, slotId),
+            "SparkMaxWrapper.setPIDFSmartMotion-i");
+        RevErrorCodeHelper.printError(
+            this.pidController.setD(d, slotId),
+            "SparkMaxWrapper.setPIDFSmartMotion-d");
+        RevErrorCodeHelper.printError(
+            this.pidController.setFF(f, slotId),
+            "SparkMaxWrapper.setPIDFSmartMotion-f");
+        RevErrorCodeHelper.printError(
+            this.pidController.setIZone(izone, slotId),
+            "SparkMaxWrapper.setPIDFSmartMotion-izone");
+        RevErrorCodeHelper.printError(
+            this.pidController.setSmartMotionMaxVelocity(velocity, slotId),
+            "SparkMaxWrapper.setPIDFSmartMotion-maxvelocity");
+        RevErrorCodeHelper.printError(
+            this.pidController.setSmartMotionMaxAccel(acceleration, slotId),
+            "SparkMaxWrapper.setPIDFSmartMotion-maxaccel");
+        RevErrorCodeHelper.printError(
+            this.pidController.setOutputRange(minOutput, maxOutput),
+            "SparkMaxWrapper.setPIDFSmartMotion-output");
     }
 
     public void setForwardLimitSwitch(boolean enabled, boolean normallyOpen)
@@ -201,7 +289,9 @@ public class SparkMaxWrapper implements ISparkMax
         }
 
         this.wrappedFwdLimitSwitch = this.wrappedObject.getForwardLimitSwitch(polarity);
-        this.wrappedFwdLimitSwitch.enableLimitSwitch(enabled);
+        RevErrorCodeHelper.printError(
+            this.wrappedFwdLimitSwitch.enableLimitSwitch(enabled),
+            "SparkMaxWrapper.setForwardLimitSwitch");
     }
 
     public void setReverseLimitSwitch(boolean enabled, boolean normallyOpen)
@@ -213,7 +303,9 @@ public class SparkMaxWrapper implements ISparkMax
         }
 
         this.wrappedRevLimitSwitch = this.wrappedObject.getForwardLimitSwitch(polarity);
-        this.wrappedRevLimitSwitch.enableLimitSwitch(enabled);
+        RevErrorCodeHelper.printError(
+            this.wrappedRevLimitSwitch.enableLimitSwitch(enabled),
+            "SparkMaxWrapper.setReverseLimitSwitch");
     }
 
     public void setInvertOutput(boolean invert)
@@ -223,7 +315,9 @@ public class SparkMaxWrapper implements ISparkMax
 
     public void setInvertSensor(boolean invert)
     {
-        this.wrappedEncoder.setInverted(invert);
+        RevErrorCodeHelper.printError(
+            this.wrappedEncoder.setInverted(invert),
+            "SparkMaxWrapper.setInvertSensor");
     }
 
     public void setNeutralMode(MotorNeutralMode neutralMode)
@@ -238,7 +332,16 @@ public class SparkMaxWrapper implements ISparkMax
             mode = IdleMode.kCoast;
         }
 
-        this.wrappedObject.setIdleMode(mode);
+        RevErrorCodeHelper.printError(
+            this.wrappedObject.setIdleMode(mode),
+            "SparkMaxWrapper.setNeutralMode");
+    }
+
+    public void setCurrentLimit(int stallLimit, int freeLimit, int limitRPM)
+    {
+        RevErrorCodeHelper.printError(
+            this.wrappedObject.setSmartCurrentLimit(stallLimit, freeLimit, limitRPM),
+            "SparkMaxWrapper.setCurrentLimit");
     }
 
     public void stop()
@@ -257,7 +360,9 @@ public class SparkMaxWrapper implements ISparkMax
             }
         }
 
-        this.wrappedEncoder.setPosition(position);
+        RevErrorCodeHelper.printError(
+            this.wrappedEncoder.setPosition(position),
+            "SparkMaxWrapper.setPosition");
     }
 
     public void reset()

@@ -35,6 +35,10 @@ public class FauxbotSparkMax extends FauxbotAdvancedMotorBase implements ISparkM
     {
     }
 
+    public void setSelectedSlot(int slotId)
+    {
+    }
+
     public void setPIDF(double p, double i, double d, double f, int slotId)
     {
         this.kp = p;
@@ -126,7 +130,7 @@ public class FauxbotSparkMax extends FauxbotAdvancedMotorBase implements ISparkM
     {
     }
 
-    public void setVoltageCompensation(boolean enabled, double maxVoltage)
+    public void setCurrentLimit(int stallLimit, int freeLimit, int limitRPM)
     {
     }
 

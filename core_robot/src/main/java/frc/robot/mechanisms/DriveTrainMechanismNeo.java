@@ -23,6 +23,17 @@ public class DriveTrainMechanismNeo implements IMechanism {
     private static final int DefaultPidSlotId = 0;
     private static final int MMPidSlotId = 1;
 
+    private static final LoggingKey[] ENCODER_ANGLE_LOGGING_KEYS = { LoggingKey.DriveTrainAbsoluteEncoderAngle1, LoggingKey.DriveTrainAbsoluteEncoderAngle2, LoggingKey.DriveTrainAbsoluteEncoderAngle3, LoggingKey.DriveTrainAbsoluteEncoderAngle4 };
+    private static final LoggingKey[] DRIVE_VELOCITY_LOGGING_KEYS = { LoggingKey.DriveTrainDriveVelocity1, LoggingKey.DriveTrainDriveVelocity2, LoggingKey.DriveTrainDriveVelocity3, LoggingKey.DriveTrainDriveVelocity4 };
+    private static final LoggingKey[] DRIVE_POSITION_LOGGING_KEYS = { LoggingKey.DriveTrainDrivePosition1, LoggingKey.DriveTrainDrivePosition2, LoggingKey.DriveTrainDrivePosition3, LoggingKey.DriveTrainDrivePosition4 };
+    private static final LoggingKey[] DRIVE_ERROR_LOGGING_KEYS = { LoggingKey.DriveTrainDriveError1, LoggingKey.DriveTrainDriveError2, LoggingKey.DriveTrainDriveError3, LoggingKey.DriveTrainDriveError4 };
+    private static final LoggingKey[] STEER_VELOCITY_LOGGING_KEYS = { LoggingKey.DriveTrainSteerVelocity1, LoggingKey.DriveTrainSteerVelocity2, LoggingKey.DriveTrainSteerVelocity3, LoggingKey.DriveTrainSteerVelocity4 };
+    private static final LoggingKey[] STEER_POSITION_LOGGING_KEYS = { LoggingKey.DriveTrainSteerPosition1, LoggingKey.DriveTrainSteerPosition2, LoggingKey.DriveTrainSteerPosition3, LoggingKey.DriveTrainSteerPosition4 };
+    private static final LoggingKey[] STEER_ANGLE_LOGGING_KEYS = { LoggingKey.DriveTrainSteerAngle1, LoggingKey.DriveTrainSteerAngle2, LoggingKey.DriveTrainSteerAngle3, LoggingKey.DriveTrainSteerAngle4 };
+    private static final LoggingKey[] STEER_ERROR_LOGGING_KEYS = { LoggingKey.DriveTrainSteerError1, LoggingKey.DriveTrainSteerError2, LoggingKey.DriveTrainSteerError3, LoggingKey.DriveTrainSteerError4 };
+    private static final LoggingKey[] DRIVE_GOAL_LOGGING_KEYS = { LoggingKey.DriveTrainDriveVelocityGoal1, LoggingKey.DriveTrainDriveVelocityGoal2, LoggingKey.DriveTrainDriveVelocityGoal3, LoggingKey.DriveTrainDriveVelocityGoal4 };
+    private static final LoggingKey[] STEER_GOAL_LOGGING_KEYS = { LoggingKey.DriveTrainSteerPositionGoal1, LoggingKey.DriveTrainSteerPositionGoal2, LoggingKey.DriveTrainSteerPositionGoal3, LoggingKey.DriveTrainSteerPositionGoal4 };
+
     // the x offsets of the swerve modules from the default center of rotation
     private final double[] moduleOffsetX;
 
@@ -279,6 +290,54 @@ public class DriveTrainMechanismNeo implements IMechanism {
             TuningConstants.DRIVETRAIN_PATH_Y_MAX_OUTPUT,
             this.timer);
 
+        this.time = 0.0;
+        this.angle = 0.0;
+        this.xPosition = 0.0;
+        this.yPosition = 0.0;
+
+        this.firstRun = TuningConstants.DRIVETRAIN_RESET_ON_ROBOT_START;
+        this.fieldOriented = TuningConstants.DRIVETRAIN_FIELD_ORIENTED_ON_ROBOT_START;
+        this.maintainOrientation = TuningConstants.DRIVETRAIN_MAINTAIN_ORIENTATION_ON_ROBOT_START;
+    }
+
+    @Override
+    public void readSensors() {
+        // TODO Auto-generated method stub
+
+        for (int i = 0; i < NUM_DRIVE_MODULES; i++)
+        {
+            this.driveVelocities[i] = this.driveMotors[i].getVelocity();
+            this.drivePositions[i] = this.driveMotors[i].getPosition();
+            this.driveErrors[i] = this.driveMotors[i].get
+            this.steerVelocities[i] = this.steerMotors[i].getVelocity();
+            this.steerPositions[i] = this.steerMotors[i].getPosition();
+            this.steerAngles[i] = Helpers.updateAngleRange(this.steerPositions[i] * HardwareConstants.DRIVETRAIN_STEER_TICK_DISTANCE);
+            this.steerErrors[i] = this.steerMotors[i].
+            this.encoderAngles[i] = this.absoluteEncoders[i].getAbsolutePosition();
+
+            this.logger.logNumber(DRIVE_VELOCITY_LOGGING_KEYS[i], this.driveVelocities[i]);
+            this.logger.logNumber(DRIVE_POSITION_LOGGING_KEYS[i], this.drivePositions[i]);
+            this.logger.logNumber(DRIVE_ERROR_LOGGING_KEYS[i], this.driveErrors[i]);
+            this.logger.logNumber(STEER_VELOCITY_LOGGING_KEYS[i], this.steerVelocities[i]);
+            this.logger.logNumber(STEER_POSITION_LOGGING_KEYS[i], this.steerPositions[i]);
+            this.logger.logNumber(STEER_ANGLE_LOGGING_KEYS[i], this.steerAngles[i]);
+            this.logger.logNumber(STEER_ERROR_LOGGING_KEYS[i], this.steerErrors[i]);
+            this.logger.logNumber(ENCODER_ANGLE_LOGGING_KEYS[i], this.encoderAngles[i]);
+        }
+        
+        double prevYaw = this.robotYaw;
+        double prevTime = this.time;
+        this.robotYaw = this.imuManager.getYaw();
+        this.time = this.timer.get();
+
+        //Why keep this postive?
+        this.deltaT = this.time - prevTime;
+        if (this.deltaT <= 0.0)
+        {
+            // keep this positive...
+            this.deltaT = 0.001;
+        }
+
         if (TuningConstants.DRIVETRAIN_USE_ODOMETRY)
         {
             double deltaImuYaw = (this.robotYaw - prevYaw) / this.deltaT;
@@ -290,15 +349,56 @@ public class DriveTrainMechanismNeo implements IMechanism {
     }
 
     @Override
-    public void readSensors() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
     public void update() {
         // TODO Auto-generated method stub
         
+        if (this.driver.getDigital(DigitalOperation.DriveTrainEnableFieldOrientation))
+        {
+            this.fieldOriented = true;
+            this.desiredYaw = this.robotYaw;
+        }
+
+        if (this.driver.getDigital(DigitalOperation.DriveTrainDisableFieldOrientation) ||
+            !this.imuManager.getIsConnected())
+        {
+            this.fieldOriented = false;
+        }
+
+        boolean useFieldOriented = this.fieldOriented && !this.driver.getDigital(DigitalOperation.DriveTrainUseRobotOrientation);
+
+        if (this.driver.getDigital(DigitalOperation.DriveTrainEnableMaintainDirectionMode))
+        {
+            this.maintainOrientation = true;
+        }
+
+        if (this.driver.getDigital(DigitalOperation.DriveTrainDisableMaintainDirectionMode) ||
+            !this.imuManager.getIsConnected())
+        {
+            this.maintainOrientation = false;
+        }
+
+        this.logger.logBoolean(LoggingKey.DriveTrainFieldOriented, useFieldOriented);
+        this.logger.logBoolean(LoggingKey.DriveTrainMaintainOrientation, this.maintainOrientation);
+
+        if (this.driver.getDigital(DigitalOperation.PositionResetFieldOrientation))
+        {
+            this.robotYaw = this.imuManager.getYaw();
+            this.desiredYaw = this.robotYaw;
+            this.angle = 0.0;
+        }
+
+        if (this.driver.getDigital(DigitalOperation.DriveTrainResetXYPosition))
+        {
+            this.xPosition = this.driver.getAnalog(AnalogOperation.DriveTrainStartingXPosition);
+            this.yPosition = this.driver.getAnalog(AnalogOperation.DriveTrainStartingYPosition);
+        }
+
+        double startingAngle = this.driver.getAnalog(AnalogOperation.PositionStartingAngle);
+        if (startingAngle != TuningConstants.ZERO)
+        {
+            this.angle = startingAngle;
+        }
+
     }
 
     @Override

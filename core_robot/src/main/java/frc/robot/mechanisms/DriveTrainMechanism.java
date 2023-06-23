@@ -177,7 +177,6 @@ public class DriveTrainMechanism implements IMechanism
                 ElectronicsConstants.DRIVETRAIN_ABSOLUTE_ENCODER_4_CAN_ID
             };
 
-        //What are the invert types used for?
         TalonFXInvertType[] driveMotorInvert =
             new TalonFXInvertType[]
             {
@@ -405,11 +404,9 @@ public class DriveTrainMechanism implements IMechanism
         this.robotYaw = this.imuManager.getYaw();
         this.time = this.timer.get();
 
-        //Why keep this postive?
         this.deltaT = this.time - prevTime;
         if (this.deltaT <= 0.0)
         {
-            // keep this positive...
             this.deltaT = 0.001;
         }
 

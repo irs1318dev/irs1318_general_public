@@ -361,11 +361,9 @@ public class DriveTrainMechanismNeo implements IMechanism
         this.robotYaw = this.imuManager.getYaw();
         this.time = this.timer.get();
 
-        //Why keep this postive?
         this.deltaT = this.time - prevTime;
         if (this.deltaT <= 0.0)
         {
-            // keep this positive...
             this.deltaT = 0.001;
         }
 
@@ -454,7 +452,7 @@ public class DriveTrainMechanismNeo implements IMechanism
             Double driveVelocitySetpoint = current.driveVelocity;
             Double drivePositionSetpoint = current.drivePosition;
 
-            SparkMaxControlMode driveControlMode = SparkMaxControlMode.Disabled; // Disabled doesn't exist for SparkMax
+            SparkMaxControlMode driveControlMode = SparkMaxControlMode.PercentOutput; // Disabled doesn't exist for SparkMax
             int driveDesiredPidSlotId = DefaultPidSlotId;
             double driveSetpoint = 0.0;
             if (driveVelocitySetpoint != null)
@@ -472,7 +470,7 @@ public class DriveTrainMechanismNeo implements IMechanism
 
             this.logger.logNumber(DRIVE_GOAL_LOGGING_KEYS[i], driveSetpoint);
             this.driveMotors[i].setControlMode(driveControlMode);
-            if (driveControlMode != SparkMaxControlMode.Disabled)
+            if (driveControlMode != SparkMaxControlMode.PercentOutput)
             {
                 this.driveMotors[i].set(driveSetpoint);
 
@@ -581,6 +579,250 @@ public class DriveTrainMechanismNeo implements IMechanism
             }
 
             return;
+        }
+
+        // calculate center velocity and turn velocity based on our current control mode:
+        double rotationCenterA;
+        double rotationCenterB;
+
+        // robot center velocity, in inches/sec
+        double centerVelocityRight;
+        double centerVelocityForward;
+
+        // robot turn velocity, in rad/sec
+        double omega;
+        if (this.driver.getDigital(DigitalOperation.DriveTrainPathMode))
+        {
+            // path mode doesn't support rotation centers besides the robot center
+            rotationCenterA = 0.0;
+            rotationCenterB = 0.0;
+
+            // Note: using the right-hand rule, "x" is forward, "y" is left, and "angle" is 0 straight ahead and increases counter-clockwise
+            double xGoal = this.driver.getAnalog(AnalogOperation.DriveTrainPathXGoal);
+            double yGoal = this.driver.getAnalog(AnalogOperation.DriveTrainPathYGoal);
+            double angleGoal = this.driver.getAnalog(AnalogOperation.DriveTrainTurnAngleGoal);
+            double xVelocityGoal = this.driver.getAnalog(AnalogOperation.DriveTrainPathXVelocityGoal);
+            double yVelocityGoal = this.driver.getAnalog(AnalogOperation.DriveTrainPathYVelocityGoal);
+            double angleVelocityGoal = this.driver.getAnalog(AnalogOperation.DriveTrainPathAngleVelocityGoal);
+
+            omega = angleVelocityGoal * Helpers.DEGREES_TO_RADIANS;
+            if (useFieldOriented)
+            {
+                // add correction for x/y drift
+                xVelocityGoal += this.pathXOffsetPID.calculatePosition(xGoal, this.xPosition);
+                yVelocityGoal += this.pathYOffsetPID.calculatePosition(yGoal, this.yPosition);
+
+                this.logger.logNumber(LoggingKey.DriveTrainXPositionGoal, xGoal);
+                this.logger.logNumber(LoggingKey.DriveTrainYPositionGoal, yGoal);
+                this.logger.logNumber(LoggingKey.DriveTrainAngleGoal, angleGoal);
+
+                this.logger.logNumber(LoggingKey.DriveTrainXVelocityGoal, xVelocityGoal);
+                this.logger.logNumber(LoggingKey.DriveTrainYVelocityGoal, yVelocityGoal);
+                this.logger.logNumber(LoggingKey.DriveTrainAngleVelocityGoal, angleVelocityGoal);
+
+                // convert velocity to be robot-oriented
+                centerVelocityRight = -Helpers.cosd(this.robotYaw) * yVelocityGoal + Helpers.sind(this.robotYaw) * xVelocityGoal;
+                centerVelocityForward = Helpers.cosd(this.robotYaw) * xVelocityGoal + Helpers.sind(this.robotYaw) * yVelocityGoal;
+
+                // add correction for angle drift
+                AnglePair anglePair = AnglePair.getClosestAngle(angleGoal, this.robotYaw, false);
+                this.desiredYaw = anglePair.getAngle();
+
+                this.logger.logNumber(LoggingKey.DriveTrainDesiredAngle, this.desiredYaw);
+                omega += this.pathOmegaPID.calculatePosition(this.desiredYaw, this.robotYaw);
+            }
+            else
+            {
+                centerVelocityRight = xVelocityGoal;
+                centerVelocityForward = yVelocityGoal;
+            }
+        }
+        else
+        {
+            // get the center of rotation modifying control values
+            rotationCenterA = this.driver.getAnalog(AnalogOperation.DriveTrainRotationA);
+            rotationCenterB = this.driver.getAnalog(AnalogOperation.DriveTrainRotationB);
+
+            boolean useSlowMode = this.driver.getDigital(DigitalOperation.DriveTrainSlowMode);
+
+            // get the center velocity control values (could be field-oriented or robot-oriented center velocity)
+            double centerVelocityRightRaw = this.driver.getAnalog(AnalogOperation.DriveTrainMoveRight);
+            double centerVelocityForwardRaw = this.driver.getAnalog(AnalogOperation.DriveTrainMoveForward);
+            if (useSlowMode)
+            {
+                centerVelocityRightRaw *= TuningConstants.DRIVETRAIN_SLOW_MODE_MAX_VELOCITY;
+                centerVelocityForwardRaw *= TuningConstants.DRIVETRAIN_SLOW_MODE_MAX_VELOCITY;
+            }
+            else
+            {
+                centerVelocityRightRaw *= TuningConstants.DRIVETRAIN_MAX_VELOCITY;
+                centerVelocityForwardRaw *= TuningConstants.DRIVETRAIN_MAX_VELOCITY;
+            }
+
+            if (useFieldOriented)
+            {
+                centerVelocityRight = Helpers.cosd(this.robotYaw) * centerVelocityRightRaw + Helpers.sind(this.robotYaw) * centerVelocityForwardRaw;
+                centerVelocityForward = Helpers.cosd(this.robotYaw) * centerVelocityForwardRaw - Helpers.sind(this.robotYaw) * centerVelocityRightRaw;
+            }
+            else
+            {
+                centerVelocityRight = centerVelocityRightRaw;
+                centerVelocityForward = centerVelocityForwardRaw;
+            }
+
+            boolean ignoreSlewRateLimiting = this.driver.getDigital(DigitalOperation.DriveTrainIgnoreSlewRateLimitingMode);
+            if (this.xVelocityLimiter != null)
+            {
+                double rateLimitedCenterVelocityForward = this.xVelocityLimiter.update(centerVelocityForward);
+                if (!ignoreSlewRateLimiting)
+                {
+                    centerVelocityForward = rateLimitedCenterVelocityForward;
+                }
+            }
+
+            if (this.yVelocityLimiter != null)
+            {
+                double rateLimitedCenterVelocityRight = this.yVelocityLimiter.update(centerVelocityRight);
+                if (!ignoreSlewRateLimiting)
+                {
+                    centerVelocityRight = rateLimitedCenterVelocityRight;
+                }
+            }
+
+            omega = 0.0;
+            double forcedOmega = this.driver.getAnalog(AnalogOperation.DriveTrainSpinLeft) + this.driver.getAnalog(AnalogOperation.DriveTrainSpinRight);
+            if (forcedOmega != TuningConstants.ZERO)
+            {
+                this.desiredYaw = this.robotYaw;
+                omega = forcedOmega;
+                if (useSlowMode)
+                {
+                    omega *= TuningConstants.DRIVETRAIN_SLOW_MODE_TURN_SCALE;
+                }
+                else
+                {
+                    omega *= TuningConstants.DRIVETRAIN_TURN_SCALE;
+                }
+
+                if (this.angularVelocityLimiter != null)
+                {
+                    double rateLimitedAngularVelocity = this.angularVelocityLimiter.update(omega);
+                    if (!ignoreSlewRateLimiting)
+                    {
+                        omega = rateLimitedAngularVelocity;
+                    }
+                }
+            }
+            else if (useFieldOriented)
+            {
+                boolean updatedOrientation = false;
+                double yawGoal = this.driver.getAnalog(AnalogOperation.DriveTrainTurnAngleGoal);
+                if (yawGoal != TuningConstants.MAGIC_NULL_VALUE)
+                {
+                    updatedOrientation = true;
+
+                    AnglePair anglePair = AnglePair.getClosestAngle(yawGoal, this.robotYaw, false);
+                    this.desiredYaw = anglePair.getAngle();
+                }
+
+                if (this.maintainOrientation || updatedOrientation)
+                {
+                    boolean skipTurn = false;
+                    if (!updatedOrientation)
+                    {
+                        if (Math.abs(centerVelocityForward) + Math.abs(centerVelocityRight) < TuningConstants.DRIVETRAIN_STATIONARY_VELOCITY)
+                        {
+                            skipTurn = TuningConstants.DRIVETRAIN_TURN_APPROXIMATION_STATIONARY != 0.0 && Helpers.WithinDelta(this.desiredYaw, this.robotYaw, TuningConstants.DRIVETRAIN_TURN_APPROXIMATION_STATIONARY);
+                        }
+                        else
+                        {
+                            skipTurn = TuningConstants.DRIVETRAIN_TURN_APPROXIMATION != 0.0 && Helpers.WithinDelta(this.desiredYaw, this.robotYaw, TuningConstants.DRIVETRAIN_TURN_APPROXIMATION);
+                        }
+                    }
+
+                    // don't turn aggressively if we are within a very small delta from our goal angle
+                    if (!skipTurn)
+                    {
+                        this.logger.logNumber(LoggingKey.DriveTrainDesiredAngle, this.desiredYaw);
+                        omega = this.omegaPID.calculatePosition(this.desiredYaw, this.robotYaw);
+                    }
+                }
+            }
+        }
+
+        double maxModuleDriveVelocityGoal = 0.0;
+        for (int i = 0; i < DriveTrainMechanismNeo.NUM_DRIVE_MODULES; i++)
+        {
+            double moduleVelocityRight = centerVelocityRight + omega * (this.moduleOffsetY[i] + rotationCenterB);
+            double moduleVelocityForward = centerVelocityForward - omega * (this.moduleOffsetX[i] + rotationCenterA);
+
+            Double moduleSteerPositionGoal;
+            double moduleDriveVelocityGoal;
+            if (TuningConstants.DRIVETRAIN_SKIP_ANGLE_ON_ZERO_VELOCITY
+                    && Helpers.WithinDelta(moduleVelocityRight, 0.0, TuningConstants.DRIVETRAIN_SKIP_ANGLE_ON_ZERO_DELTA)
+                    && Helpers.WithinDelta(moduleVelocityForward, 0.0, TuningConstants.DRIVETRAIN_SKIP_ANGLE_ON_ZERO_DELTA))
+            {
+                moduleDriveVelocityGoal = 0.0;
+                moduleSteerPositionGoal = null;
+            }
+            else
+            {
+                moduleDriveVelocityGoal = Math.sqrt(moduleVelocityRight * moduleVelocityRight + moduleVelocityForward * moduleVelocityForward);
+
+                moduleSteerPositionGoal = Helpers.atan2d(-moduleVelocityRight, moduleVelocityForward);
+                double currentAngle = this.steerPositions[i] * HardwareConstants.DRIVETRAIN_STEER_TICK_DISTANCE;
+                AnglePair anglePair = AnglePair.getClosestAngle(moduleSteerPositionGoal, currentAngle, true);
+                moduleSteerPositionGoal = anglePair.getAngle() * TuningConstants.DRIVETRAIN_STEER_MOTOR_POSITION_PID_KS;
+                this.isDirectionSwapped[i] = anglePair.getSwapDirection();
+
+                if (maxModuleDriveVelocityGoal < moduleDriveVelocityGoal)
+                {
+                    maxModuleDriveVelocityGoal = moduleDriveVelocityGoal;
+                }
+
+                moduleDriveVelocityGoal *= HardwareConstants.DRIVETRAIN_DRIVE_INCHES_PER_SECOND_TO_MOTOR_VELOCITY;
+                if (this.isDirectionSwapped[i])
+                {
+                    moduleDriveVelocityGoal *= -1.0;
+                }
+            }
+
+            this.result[i].driveVelocity = moduleDriveVelocityGoal;
+            this.result[i].drivePosition = null;
+            this.result[i].angle = moduleSteerPositionGoal;
+        }
+
+        // rescale velocities based on max velocity percentage, if max velocity is exceeded for any module
+        if (maxModuleDriveVelocityGoal > TuningConstants.DRIVETRAIN_MAX_VELOCITY)
+        {
+            // divide by percentage is interchangeable with multiply by inverse-percentage
+            double invPercentage = TuningConstants.DRIVETRAIN_MAX_VELOCITY / maxModuleDriveVelocityGoal;
+            for (int i = 0; i < NUM_DRIVE_MODULES; i++)
+            {
+                this.result[i].driveVelocity *= invPercentage;
+            }
+        }
+
+        if (TuningConstants.DRIVETRAIN_USE_OVERCURRENT_ADJUSTMENT)
+        {
+            CurrentLimiting value = this.powerManager.getCurrentLimitingValue();
+            if (value != CurrentLimiting.Normal)
+            {
+                double currentLimitingMultiplier;
+                if (value == CurrentLimiting.OverCurrent)
+                {
+                    currentLimitingMultiplier = TuningConstants.DRIVETRAIN_OVERCURRENT_ADJUSTMENT;
+                }
+                else // if (value == CurrentLimiting.OverCurrentHigh)
+                {
+                    currentLimitingMultiplier = TuningConstants.DRIVETRAIN_OVERCURRENT_HIGH_ADJUSTMENT;
+                }
+
+                for (int i = 0; i < NUM_DRIVE_MODULES; i++)
+                {
+                    this.result[i].driveVelocity *= currentLimitingMultiplier;
+                }
+            }
         }
     }
 

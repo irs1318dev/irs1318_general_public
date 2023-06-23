@@ -16,8 +16,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class DriveTrainMechanismNeo implements IMechanism {
-
+public class DriveTrainMechanismNeo implements IMechanism
+{
     private static final int NUM_DRIVE_MODULES = 4;
 
     private static final int DefaultPidSlotId = 0;
@@ -26,11 +26,11 @@ public class DriveTrainMechanismNeo implements IMechanism {
     private static final LoggingKey[] ENCODER_ANGLE_LOGGING_KEYS = { LoggingKey.DriveTrainAbsoluteEncoderAngle1, LoggingKey.DriveTrainAbsoluteEncoderAngle2, LoggingKey.DriveTrainAbsoluteEncoderAngle3, LoggingKey.DriveTrainAbsoluteEncoderAngle4 };
     private static final LoggingKey[] DRIVE_VELOCITY_LOGGING_KEYS = { LoggingKey.DriveTrainDriveVelocity1, LoggingKey.DriveTrainDriveVelocity2, LoggingKey.DriveTrainDriveVelocity3, LoggingKey.DriveTrainDriveVelocity4 };
     private static final LoggingKey[] DRIVE_POSITION_LOGGING_KEYS = { LoggingKey.DriveTrainDrivePosition1, LoggingKey.DriveTrainDrivePosition2, LoggingKey.DriveTrainDrivePosition3, LoggingKey.DriveTrainDrivePosition4 };
-    private static final LoggingKey[] DRIVE_ERROR_LOGGING_KEYS = { LoggingKey.DriveTrainDriveError1, LoggingKey.DriveTrainDriveError2, LoggingKey.DriveTrainDriveError3, LoggingKey.DriveTrainDriveError4 };
+    // private static final LoggingKey[] DRIVE_ERROR_LOGGING_KEYS = { LoggingKey.DriveTrainDriveError1, LoggingKey.DriveTrainDriveError2, LoggingKey.DriveTrainDriveError3, LoggingKey.DriveTrainDriveError4 };
     private static final LoggingKey[] STEER_VELOCITY_LOGGING_KEYS = { LoggingKey.DriveTrainSteerVelocity1, LoggingKey.DriveTrainSteerVelocity2, LoggingKey.DriveTrainSteerVelocity3, LoggingKey.DriveTrainSteerVelocity4 };
     private static final LoggingKey[] STEER_POSITION_LOGGING_KEYS = { LoggingKey.DriveTrainSteerPosition1, LoggingKey.DriveTrainSteerPosition2, LoggingKey.DriveTrainSteerPosition3, LoggingKey.DriveTrainSteerPosition4 };
     private static final LoggingKey[] STEER_ANGLE_LOGGING_KEYS = { LoggingKey.DriveTrainSteerAngle1, LoggingKey.DriveTrainSteerAngle2, LoggingKey.DriveTrainSteerAngle3, LoggingKey.DriveTrainSteerAngle4 };
-    private static final LoggingKey[] STEER_ERROR_LOGGING_KEYS = { LoggingKey.DriveTrainSteerError1, LoggingKey.DriveTrainSteerError2, LoggingKey.DriveTrainSteerError3, LoggingKey.DriveTrainSteerError4 };
+    // private static final LoggingKey[] STEER_ERROR_LOGGING_KEYS = { LoggingKey.DriveTrainSteerError1, LoggingKey.DriveTrainSteerError2, LoggingKey.DriveTrainSteerError3, LoggingKey.DriveTrainSteerError4 };
     private static final LoggingKey[] DRIVE_GOAL_LOGGING_KEYS = { LoggingKey.DriveTrainDriveVelocityGoal1, LoggingKey.DriveTrainDriveVelocityGoal2, LoggingKey.DriveTrainDriveVelocityGoal3, LoggingKey.DriveTrainDriveVelocityGoal4 };
     private static final LoggingKey[] STEER_GOAL_LOGGING_KEYS = { LoggingKey.DriveTrainSteerPositionGoal1, LoggingKey.DriveTrainSteerPositionGoal2, LoggingKey.DriveTrainSteerPositionGoal3, LoggingKey.DriveTrainSteerPositionGoal4 };
 
@@ -65,11 +65,9 @@ public class DriveTrainMechanismNeo implements IMechanism {
 
     private final double[] driveVelocities;
     private final double[] drivePositions;
-    private final double[] driveErrors;
     private final double[] steerVelocities;
     private final double[] steerPositions;
     private final double[] steerAngles;
-    private final double[] steerErrors;
     private final double[] encoderAngles;
 
     private final Setpoint[] result;
@@ -92,7 +90,8 @@ public class DriveTrainMechanismNeo implements IMechanism {
 
     private double robotYaw;
 
-    DriveTrainMechanismNeo(IDriver driver, LoggingManager logger, IRobotProvider provider, PigeonManager imuManager, PowerManager powerManager, ITimer timer)
+    @Inject
+    public DriveTrainMechanismNeo(IDriver driver, LoggingManager logger, IRobotProvider provider, PigeonManager imuManager, PowerManager powerManager, ITimer timer)
     {
         this.driver = driver;
         this.logger = logger;
@@ -100,27 +99,27 @@ public class DriveTrainMechanismNeo implements IMechanism {
         this.imuManager = imuManager;
         this.powerManager = powerManager;
 
-        this.steerMotors = new ISparkMax[NUM_DRIVE_MODULES];
-        this.driveMotors = new ISparkMax[NUM_DRIVE_MODULES];
-        this.absoluteEncoders = new ICANCoder[NUM_DRIVE_MODULES];
+        this.steerMotors = new ISparkMax[DriveTrainMechanismNeo.NUM_DRIVE_MODULES];
+        this.driveMotors = new ISparkMax[DriveTrainMechanismNeo.NUM_DRIVE_MODULES];
+        this.absoluteEncoders = new ICANCoder[DriveTrainMechanismNeo.NUM_DRIVE_MODULES];
 
         this.moduleOffsetX =
-        new double[]
-        {
-            -HardwareConstants.DRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, //Module 1: front-right
-            HardwareConstants.DRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // Module 2: front-left
-            HardwareConstants.DRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // Module 3: back-left
-            -HardwareConstants.DRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // Module 4: back-right
-        };
+            new double[]
+            {
+                -HardwareConstants.DRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // Module 1: front-right
+                HardwareConstants.DRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // Module 2: front-left
+                HardwareConstants.DRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // Module 3: back-left
+                -HardwareConstants.DRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // Module 4: back-right
+            };
 
         this.moduleOffsetY =
-        new double[]
-        {
-            -HardwareConstants.DRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // front-right
-            -HardwareConstants.DRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // front-left
-            HardwareConstants.DRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // back-left
-            HardwareConstants.DRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // back-right
-        };
+            new double[]
+            {
+                -HardwareConstants.DRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // front-right
+                -HardwareConstants.DRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // front-left
+                HardwareConstants.DRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // back-left
+                HardwareConstants.DRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // back-right
+            };
 
         this.drivetrainSteerMotorAbsoluteOffsets =
             new double[]
@@ -158,8 +157,8 @@ public class DriveTrainMechanismNeo implements IMechanism {
                 ElectronicsConstants.DRIVETRAIN_ABSOLUTE_ENCODER_4_CAN_ID
             };
 
-        Boolean[] driveMotorInvert =
-            new Boolean[]
+        boolean[] driveMotorInvert =
+            new boolean[]
             {
                 HardwareConstants.DRIVETRAIN_DRIVE_MOTOR1_INVERT_OUTPUT,
                 HardwareConstants.DRIVETRAIN_DRIVE_MOTOR2_INVERT_OUTPUT,
@@ -167,8 +166,8 @@ public class DriveTrainMechanismNeo implements IMechanism {
                 HardwareConstants.DRIVETRAIN_DRIVE_MOTOR4_INVERT_OUTPUT
             };
         
-        Boolean[] steerMotorInvert =
-            new Boolean[]
+        boolean[] steerMotorInvert =
+            new boolean[]
             {
                 HardwareConstants.DRIVETRAIN_STEER_MOTOR1_INVERT_OUTPUT,
                 HardwareConstants.DRIVETRAIN_STEER_MOTOR2_INVERT_OUTPUT,
@@ -176,9 +175,7 @@ public class DriveTrainMechanismNeo implements IMechanism {
                 HardwareConstants.DRIVETRAIN_STEER_MOTOR4_INVERT_OUTPUT
             };
 
-
-
-        for (int i = 0; i < NUM_DRIVE_MODULES; i++)
+        for (int i = 0; i < DriveTrainMechanismNeo.NUM_DRIVE_MODULES; i++)
         {
             this.driveMotors[i] = provider.getSparkMax(driveMotorCanIds[i], SparkMaxMotorType.Brushless);
             this.driveMotors[i].setNeutralMode(MotorNeutralMode.Brake);
@@ -188,16 +185,16 @@ public class DriveTrainMechanismNeo implements IMechanism {
                 TuningConstants.DRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KI,
                 TuningConstants.DRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KD,
                 TuningConstants.DRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KF,
-                DefaultPidSlotId);
+                DriveTrainMechanismNeo.DefaultPidSlotId);
             this.driveMotors[i].setPIDF(
                 TuningConstants.DRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KP,
                 TuningConstants.DRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KI,
                 TuningConstants.DRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KD,
                 TuningConstants.DRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KF,
-                MMPidSlotId);
+                DriveTrainMechanismNeo.MMPidSlotId);
             //need to add voltage limiting
             this.driveMotors[i].setControlMode(SparkMaxControlMode.Velocity);
-            //set the selected PID slot
+            this.driveMotors[i].setSelectedSlot(DriveTrainMechanismNeo.DefaultPidSlotId);
 
             this.steerMotors[i] = provider.getSparkMax(steerMotorCanIds[i], SparkMaxMotorType.Brushless);
             this.steerMotors[i].setNeutralMode(MotorNeutralMode.Brake);
@@ -207,7 +204,7 @@ public class DriveTrainMechanismNeo implements IMechanism {
                 TuningConstants.DRIVETRAIN_STEER_MOTORS_POSITION_PID_KI,
                 TuningConstants.DRIVETRAIN_STEER_MOTORS_POSITION_PID_KD,
                 TuningConstants.DRIVETRAIN_STEER_MOTORS_POSITION_PID_KF,
-                DefaultPidSlotId);
+                DriveTrainMechanismNeo.DefaultPidSlotId);
             this.steerMotors[i].setPIDFSmartMotion(
                 TuningConstants.DRIVETRAIN_STEER_MOTORS_MM_PID_KP,
                 TuningConstants.DRIVETRAIN_STEER_MOTORS_MM_PID_KI,
@@ -216,31 +213,28 @@ public class DriveTrainMechanismNeo implements IMechanism {
                 0,
                 TuningConstants.DRIVETRAIN_STEER_MOTORS_MM_PID_CRUISE_VELOC,
                 TuningConstants.DRIVETRAIN_STEER_MOTORS_MM_PID_ACCEL,
-                MMPidSlotId);
-            
+                DriveTrainMechanismNeo.MMPidSlotId);
             this.steerMotors[i].setControlMode(SparkMaxControlMode.Position);
 
             if (TuningConstants.DRIVETRAIN_STEER_MOTORS_USE_MOTION_MAGIC)
             {
-                //Set motors to motion magic slot
+                this.steerMotors[i].setSelectedSlot(DriveTrainMechanismNeo.MMPidSlotId);
             }
             else
             {
-                //Set motors to positional pid slot
+                this.steerMotors[i].setSelectedSlot(DriveTrainMechanismNeo.DefaultPidSlotId);
             }
         }
 
-        this.driveVelocities = new double[NUM_DRIVE_MODULES];
-        this.drivePositions = new double[NUM_DRIVE_MODULES];
-        this.driveErrors = new double[NUM_DRIVE_MODULES];
-        this.steerVelocities = new double[NUM_DRIVE_MODULES];
-        this.steerPositions = new double[NUM_DRIVE_MODULES];
-        this.steerAngles = new double[NUM_DRIVE_MODULES];
-        this.steerErrors = new double[NUM_DRIVE_MODULES];
-        this.encoderAngles = new double[NUM_DRIVE_MODULES];
+        this.driveVelocities = new double[DriveTrainMechanismNeo.NUM_DRIVE_MODULES];
+        this.drivePositions = new double[DriveTrainMechanismNeo.NUM_DRIVE_MODULES];
+        this.steerVelocities = new double[DriveTrainMechanismNeo.NUM_DRIVE_MODULES];
+        this.steerPositions = new double[DriveTrainMechanismNeo.NUM_DRIVE_MODULES];
+        this.steerAngles = new double[DriveTrainMechanismNeo.NUM_DRIVE_MODULES];
+        this.encoderAngles = new double[DriveTrainMechanismNeo.NUM_DRIVE_MODULES];
 
-        this.isDirectionSwapped = new boolean[NUM_DRIVE_MODULES];
-        this.driveSlotIds = new int[NUM_DRIVE_MODULES];
+        this.isDirectionSwapped = new boolean[DriveTrainMechanismNeo.NUM_DRIVE_MODULES];
+        this.driveSlotIds = new int[DriveTrainMechanismNeo.NUM_DRIVE_MODULES];
 
         double prevYaw = this.robotYaw;
         double prevTime = this.time;
@@ -293,6 +287,45 @@ public class DriveTrainMechanismNeo implements IMechanism {
             TuningConstants.DRIVETRAIN_PATH_Y_MAX_OUTPUT,
             this.timer);
 
+        this.result = new Setpoint[DriveTrainMechanismNeo.NUM_DRIVE_MODULES];
+        for (int i = 0; i < DriveTrainMechanismNeo.NUM_DRIVE_MODULES; i++)
+        {
+            this.result[i] = new Setpoint();
+        }
+
+        if (TuningConstants.DRIVETRAIN_USE_TRANSLATIONAL_RATE_LIMITING)
+        {
+            this.xVelocityLimiter = new SlewRateLimiter(
+                this.timer,
+                TuningConstants.DRIVETRAIN_TRANSLATIONAL_VELOCITY_MAX_NEGATIVE_RATE,
+                TuningConstants.DRIVETRAIN_TRANSLATIONAL_VELOCITY_MAX_POSITIVE_RATE,
+                0.0);
+
+            this.yVelocityLimiter = new SlewRateLimiter(
+                this.timer,
+                TuningConstants.DRIVETRAIN_TRANSLATIONAL_VELOCITY_MAX_NEGATIVE_RATE,
+                TuningConstants.DRIVETRAIN_TRANSLATIONAL_VELOCITY_MAX_POSITIVE_RATE,
+                0.0);
+        }
+        else
+        {
+            this.xVelocityLimiter = null;
+            this.yVelocityLimiter = null;
+        }
+
+        if (TuningConstants.DRIVETRAIN_USE_ROTATIONAL_RATE_LIMITING)
+        {
+            this.angularVelocityLimiter = new SlewRateLimiter(
+                this.timer,
+                TuningConstants.DRIVETRAIN_ROTATIONAL_VELOCITY_MAX_NEGATIVE_RATE,
+                TuningConstants.DRIVETRAIN_ROTATIONAL_VELOCITY_MAX_POSITIVE_RATE,
+                0.0);
+        }
+        else
+        {
+            this.angularVelocityLimiter = null;
+        }
+
         this.time = 0.0;
         this.angle = 0.0;
         this.xPosition = 0.0;
@@ -304,27 +337,23 @@ public class DriveTrainMechanismNeo implements IMechanism {
     }
 
     @Override
-    public void readSensors() {
-
-        for (int i = 0; i < NUM_DRIVE_MODULES; i++)
+    public void readSensors()
+    {
+        for (int i = 0; i < DriveTrainMechanismNeo.NUM_DRIVE_MODULES; i++)
         {
             this.driveVelocities[i] = this.driveMotors[i].getVelocity();
             this.drivePositions[i] = this.driveMotors[i].getPosition();
-            //this.driveErrors[i] = this.driveMotors[i].
             this.steerVelocities[i] = this.steerMotors[i].getVelocity();
             this.steerPositions[i] = this.steerMotors[i].getPosition();
             this.steerAngles[i] = Helpers.updateAngleRange(this.steerPositions[i] * HardwareConstants.DRIVETRAIN_STEER_TICK_DISTANCE);
-            //this.steerErrors[i] = this.steerMotors[i].
             this.encoderAngles[i] = this.absoluteEncoders[i].getAbsolutePosition();
 
-            this.logger.logNumber(DRIVE_VELOCITY_LOGGING_KEYS[i], this.driveVelocities[i]);
-            this.logger.logNumber(DRIVE_POSITION_LOGGING_KEYS[i], this.drivePositions[i]);
-            this.logger.logNumber(DRIVE_ERROR_LOGGING_KEYS[i], this.driveErrors[i]);
-            this.logger.logNumber(STEER_VELOCITY_LOGGING_KEYS[i], this.steerVelocities[i]);
-            this.logger.logNumber(STEER_POSITION_LOGGING_KEYS[i], this.steerPositions[i]);
-            this.logger.logNumber(STEER_ANGLE_LOGGING_KEYS[i], this.steerAngles[i]);
-            this.logger.logNumber(STEER_ERROR_LOGGING_KEYS[i], this.steerErrors[i]);
-            this.logger.logNumber(ENCODER_ANGLE_LOGGING_KEYS[i], this.encoderAngles[i]);
+            this.logger.logNumber(DriveTrainMechanismNeo.DRIVE_VELOCITY_LOGGING_KEYS[i], this.driveVelocities[i]);
+            this.logger.logNumber(DriveTrainMechanismNeo.DRIVE_POSITION_LOGGING_KEYS[i], this.drivePositions[i]);
+            this.logger.logNumber(DriveTrainMechanismNeo.STEER_VELOCITY_LOGGING_KEYS[i], this.steerVelocities[i]);
+            this.logger.logNumber(DriveTrainMechanismNeo.STEER_POSITION_LOGGING_KEYS[i], this.steerPositions[i]);
+            this.logger.logNumber(DriveTrainMechanismNeo.STEER_ANGLE_LOGGING_KEYS[i], this.steerAngles[i]);
+            this.logger.logNumber(DriveTrainMechanismNeo.ENCODER_ANGLE_LOGGING_KEYS[i], this.encoderAngles[i]);
         }
         
         double prevYaw = this.robotYaw;
@@ -402,7 +431,7 @@ public class DriveTrainMechanismNeo implements IMechanism {
 
         if (this.firstRun || this.driver.getDigital(DigitalOperation.DriveTrainReset))
         {
-            for (int i = 0; i < NUM_DRIVE_MODULES; i++)
+            for (int i = 0; i < DriveTrainMechanismNeo.NUM_DRIVE_MODULES; i++)
             {
                 this.driveMotors[i].setPosition(0);
                 double angleDifference = (this.encoderAngles[i] - this.drivetrainSteerMotorAbsoluteOffsets[i]);
@@ -464,7 +493,6 @@ public class DriveTrainMechanismNeo implements IMechanism {
                 this.steerMotors[i].set(steerSetpoint);
             }
         }
-
     }
 
     @Override
@@ -474,7 +502,7 @@ public class DriveTrainMechanismNeo implements IMechanism {
         this.pathOmegaPID.reset();
         this.pathXOffsetPID.reset();
         this.pathYOffsetPID.reset();
-        for (int i = 0; i < NUM_DRIVE_MODULES; i++)
+        for (int i = 0; i < DriveTrainMechanismNeo.NUM_DRIVE_MODULES; i++)
         {
             this.driveMotors[i].stop();
             this.steerMotors[i].stop();
@@ -554,6 +582,7 @@ public class DriveTrainMechanismNeo implements IMechanism {
 
             return;
         }
+    }
 
     private void calculateOdometry(double deltaImuYaw)
     {
@@ -619,10 +648,8 @@ public class DriveTrainMechanismNeo implements IMechanism {
         return this.xPosition;
     }
 
-    public double getPositionY() 
-    { 
-
-        return this.yPosition; 
-
-    } 
+    public double getPositionY()
+    {
+        return this.yPosition;
+    }
 }

@@ -8,7 +8,7 @@ import frc.lib.robotprovider.ITimer;
 import frc.robot.TuningConstants;
 import frc.robot.driver.AnalogOperation;
 import frc.robot.driver.DigitalOperation;
-import frc.robot.mechanisms.DriveTrainMechanism;
+import frc.robot.mechanisms.IDriveTrainMechanism;
 import frc.robot.mechanisms.OffboardVisionManager;
 
 @Singleton
@@ -43,7 +43,7 @@ public class VisionAprilTagTranslateTask extends ControlTaskBase
     private double visionOffset;
 
     private OffboardVisionManager vision;
-    private DriveTrainMechanism driveTrain;
+    private IDriveTrainMechanism driveTrain;
     private PIDHandler xHandler;
     private PIDHandler yHandler;
 
@@ -61,7 +61,7 @@ public class VisionAprilTagTranslateTask extends ControlTaskBase
     @Override
     public void begin()
     {
-        this.driveTrain = this.getInjector().getInstance(DriveTrainMechanism.class);
+        this.driveTrain = this.getInjector().getInstance(IDriveTrainMechanism.class);
         this.vision = this.getInjector().getInstance(OffboardVisionManager.class);
 
         ITimer timer = this.getInjector().getInstance(ITimer.class);
@@ -89,7 +89,7 @@ public class VisionAprilTagTranslateTask extends ControlTaskBase
         this.tagsFound = 0;
         this.tagsMissed = 0;
         this.startingDriveTrainX = this.driveTrain.getPositionX();
-        this.startingDriveTrainY = this.driveTrain.getPositionY();
+        this.startingDriveTrainY = this.driveTrain.getPositionX();
         this.xAprilTagDistanceSamples = new double[TuningConstants.TAGS_FOUND_THRESHOLD];
         this.yAprilTagDistanceSamples = new double[TuningConstants.TAGS_FOUND_THRESHOLD];
 
@@ -100,7 +100,7 @@ public class VisionAprilTagTranslateTask extends ControlTaskBase
     public void update()
     {
         double currXPosition = this.driveTrain.getPositionX();
-        double currYPosition = this.driveTrain.getPositionY();
+        double currYPosition = this.driveTrain.getPositionX();
         if (this.currentState == TranslateState.FindAprilTags)
         {
             Double xOffset = this.vision.getAprilTagXOffset();

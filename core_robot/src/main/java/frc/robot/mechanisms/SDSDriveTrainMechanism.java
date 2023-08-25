@@ -1,3 +1,14 @@
+/**
+ * SDSDriveTrainMechanism
+ * 
+ * authors: Will, Vanshika, Arushi
+ * 
+ * Started idk sometime in september
+ * 
+ * dO yOu ReMeMbEr
+ * tHe 21sT nIgHt oF sEpTeMbEr
+**/
+
 package frc.robot.mechanisms;
 
 import frc.robot.*;
@@ -16,30 +27,34 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class DriveTrainMechanismNeo implements IMechanism
+public class SDSDriveTrainMechanism implements IDriveTrainMechanism
 {
     private static final int NUM_MODULES = 4;
 
-    private static final int DefaultPidSlotId = 0;
-    private static final int SMPidSlotId = 1;
+    private static final int defaultPidSlotId = 0;
+    private static final int secondaryPidSlotId = 1;
 
+    private static final LoggingKey[] ENCODER_ANGLE_LOGGING_KEYS = { LoggingKey.DriveTrainAbsoluteEncoderAngle1, LoggingKey.DriveTrainAbsoluteEncoderAngle2, LoggingKey.DriveTrainAbsoluteEncoderAngle3, LoggingKey.DriveTrainAbsoluteEncoderAngle4 };
     private static final LoggingKey[] DRIVE_VELOCITY_LOGGING_KEYS = { LoggingKey.DriveTrainDriveVelocity1, LoggingKey.DriveTrainDriveVelocity2, LoggingKey.DriveTrainDriveVelocity3, LoggingKey.DriveTrainDriveVelocity4 };
     private static final LoggingKey[] DRIVE_POSITION_LOGGING_KEYS = { LoggingKey.DriveTrainDrivePosition1, LoggingKey.DriveTrainDrivePosition2, LoggingKey.DriveTrainDrivePosition3, LoggingKey.DriveTrainDrivePosition4 };
+    private static final LoggingKey[] DRIVE_ERROR_LOGGING_KEYS = { LoggingKey.DriveTrainDriveError1, LoggingKey.DriveTrainDriveError2, LoggingKey.DriveTrainDriveError3, LoggingKey.DriveTrainDriveError4 };
     private static final LoggingKey[] STEER_VELOCITY_LOGGING_KEYS = { LoggingKey.DriveTrainSteerVelocity1, LoggingKey.DriveTrainSteerVelocity2, LoggingKey.DriveTrainSteerVelocity3, LoggingKey.DriveTrainSteerVelocity4 };
+    private static final LoggingKey[] STEER_POSITION_LOGGING_KEYS = { LoggingKey.DriveTrainSteerPosition1, LoggingKey.DriveTrainSteerPosition2, LoggingKey.DriveTrainSteerPosition3, LoggingKey.DriveTrainSteerPosition4 };
     private static final LoggingKey[] STEER_ANGLE_LOGGING_KEYS = { LoggingKey.DriveTrainSteerAngle1, LoggingKey.DriveTrainSteerAngle2, LoggingKey.DriveTrainSteerAngle3, LoggingKey.DriveTrainSteerAngle4 };
+    private static final LoggingKey[] STEER_ERROR_LOGGING_KEYS = { LoggingKey.DriveTrainSteerError1, LoggingKey.DriveTrainSteerError2, LoggingKey.DriveTrainSteerError3, LoggingKey.DriveTrainSteerError4 };
     private static final LoggingKey[] DRIVE_GOAL_LOGGING_KEYS = { LoggingKey.DriveTrainDriveVelocityGoal1, LoggingKey.DriveTrainDriveVelocityGoal2, LoggingKey.DriveTrainDriveVelocityGoal3, LoggingKey.DriveTrainDriveVelocityGoal4 };
     private static final LoggingKey[] STEER_GOAL_LOGGING_KEYS = { LoggingKey.DriveTrainSteerPositionGoal1, LoggingKey.DriveTrainSteerPositionGoal2, LoggingKey.DriveTrainSteerPositionGoal3, LoggingKey.DriveTrainSteerPositionGoal4 };
 
     private static final AnalogOperation[] STEER_SETPOINT_OPERATIONS = new AnalogOperation[] { AnalogOperation.DriveTrainPositionSteer1, AnalogOperation.DriveTrainPositionSteer2, AnalogOperation.DriveTrainPositionSteer3, AnalogOperation.DriveTrainPositionSteer4 };
     private static final AnalogOperation[] DRIVE_SETPOINT_OPERATIONS = new AnalogOperation[] { AnalogOperation.DriveTrainPositionDrive1, AnalogOperation.DriveTrainPositionDrive2, AnalogOperation.DriveTrainPositionDrive3, AnalogOperation.DriveTrainPositionDrive4 };
 
-    private static final double[] STEER_ABSOLUTE_OFFSETS = { TuningConstants.DRIVETRAINNEO_STEER_MOTOR1_ABSOLUTE_OFFSET, TuningConstants.DRIVETRAINNEO_STEER_MOTOR2_ABSOLUTE_OFFSET, TuningConstants.DRIVETRAINNEO_STEER_MOTOR3_ABSOLUTE_OFFSET, TuningConstants.DRIVETRAINNEO_STEER_MOTOR4_ABSOLUTE_OFFSET };
-
     // the x offsets of the swerve modules from the default center of rotation
     private final double[] moduleOffsetX;
 
     // the y offsets of the swerve modules from the default center of rotation
     private final double[] moduleOffsetY;
+
+    private final double[] drivetrainSteerMotorAbsoluteOffsets;
 
     private final IDriver driver;
     private final ILogger logger;
@@ -48,8 +63,9 @@ public class DriveTrainMechanismNeo implements IMechanism
     private final PigeonManager imuManager;
     private final PowerManager powerManager;
 
-    private final ISparkMax[] steerMotors;
-    private final ISparkMax[] driveMotors;
+    private final ITalonFX[] steerMotors;
+    private final ITalonFX[] driveMotors;
+    private final ICANCoder[] absoluteEncoders;
 
     private final PIDHandler omegaPID;
     private final boolean[] isDirectionSwapped;
@@ -60,8 +76,12 @@ public class DriveTrainMechanismNeo implements IMechanism
 
     private final double[] driveVelocities;
     private final double[] drivePositions;
+    private final double[] driveErrors;
     private final double[] steerVelocities;
+    private final double[] steerPositions;
     private final double[] steerAngles;
+    private final double[] steerErrors;
+    private final double[] encoderAngles;
 
     private final Setpoint[] result;
 
@@ -84,7 +104,7 @@ public class DriveTrainMechanismNeo implements IMechanism
     private double robotYaw;
 
     @Inject
-    public DriveTrainMechanismNeo(
+    public SDSDriveTrainMechanism(
         IDriver driver,
         LoggingManager logger,
         IRobotProvider provider,
@@ -95,223 +115,235 @@ public class DriveTrainMechanismNeo implements IMechanism
         this.driver = driver;
         this.logger = logger;
         this.timer = timer;
+
         this.imuManager = imuManager;
         this.powerManager = powerManager;
 
-        this.steerMotors = new ISparkMax[DriveTrainMechanismNeo.NUM_MODULES];
-        this.driveMotors = new ISparkMax[DriveTrainMechanismNeo.NUM_MODULES];
+        this.steerMotors = new ITalonFX[SDSDriveTrainMechanism.NUM_MODULES];
+        this.driveMotors = new ITalonFX[SDSDriveTrainMechanism.NUM_MODULES];
+        this.absoluteEncoders = new ICANCoder[SDSDriveTrainMechanism.NUM_MODULES];
 
         this.moduleOffsetX =
             new double[]
             {
-                -HardwareConstants.DRIVETRAINNEO_HORIZONTAL_WHEEL_CENTER_DISTANCE, // module 1 (front-right)
-                HardwareConstants.DRIVETRAINNEO_HORIZONTAL_WHEEL_CENTER_DISTANCE, // module 2 (front-left)
-                HardwareConstants.DRIVETRAINNEO_HORIZONTAL_WHEEL_CENTER_DISTANCE, // module 3 (back-left)
-                -HardwareConstants.DRIVETRAINNEO_HORIZONTAL_WHEEL_CENTER_DISTANCE, // module 4 (back-right)
+                -HardwareConstants.SDSDRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // module 1 (front-right)
+                HardwareConstants.SDSDRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // module 2 (front-left)
+                HardwareConstants.SDSDRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // module 3 (back-left)
+                -HardwareConstants.SDSDRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // module 4 (back-right)
             };
 
         this.moduleOffsetY =
             new double[]
             {
-                -HardwareConstants.DRIVETRAINNEO_VERTICAL_WHEEL_CENTER_DISTANCE, // module 1 (front-right)
-                -HardwareConstants.DRIVETRAINNEO_VERTICAL_WHEEL_CENTER_DISTANCE, // module 2 (front-left)
-                HardwareConstants.DRIVETRAINNEO_VERTICAL_WHEEL_CENTER_DISTANCE, // module 3 (back-left)
-                HardwareConstants.DRIVETRAINNEO_VERTICAL_WHEEL_CENTER_DISTANCE, // module 4 (back-right)
+                -HardwareConstants.SDSDRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // module 1 (front-right)
+                -HardwareConstants.SDSDRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // module 2 (front-left)
+                HardwareConstants.SDSDRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // module 3 (back-left)
+                HardwareConstants.SDSDRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // module 4 (back-right)
+            };
+
+        this.drivetrainSteerMotorAbsoluteOffsets =
+            new double[]
+            {
+                TuningConstants.SDSDRIVETRAIN_STEER_MOTOR1_ABSOLUTE_OFFSET,
+                TuningConstants.SDSDRIVETRAIN_STEER_MOTOR2_ABSOLUTE_OFFSET,
+                TuningConstants.SDSDRIVETRAIN_STEER_MOTOR3_ABSOLUTE_OFFSET,
+                TuningConstants.SDSDRIVETRAIN_STEER_MOTOR4_ABSOLUTE_OFFSET,
             };
 
         int[] driveMotorCanIds =
             new int[]
             {
-                ElectronicsConstants.DRIVETRAINNEO_DRIVE_MOTOR_1_CAN_ID,
-                ElectronicsConstants.DRIVETRAINNEO_DRIVE_MOTOR_2_CAN_ID,
-                ElectronicsConstants.DRIVETRAINNEO_DRIVE_MOTOR_3_CAN_ID,
-                ElectronicsConstants.DRIVETRAINNEO_DRIVE_MOTOR_4_CAN_ID
+                ElectronicsConstants.SDSDRIVETRAIN_DRIVE_MOTOR_1_CAN_ID,
+                ElectronicsConstants.SDSDRIVETRAIN_DRIVE_MOTOR_2_CAN_ID,
+                ElectronicsConstants.SDSDRIVETRAIN_DRIVE_MOTOR_3_CAN_ID,
+                ElectronicsConstants.SDSDRIVETRAIN_DRIVE_MOTOR_4_CAN_ID
             };
 
         int[] steerMotorCanIds =
             new int[]
             {
-                ElectronicsConstants.DRIVETRAINNEO_STEER_MOTOR_1_CAN_ID,
-                ElectronicsConstants.DRIVETRAINNEO_STEER_MOTOR_2_CAN_ID,
-                ElectronicsConstants.DRIVETRAINNEO_STEER_MOTOR_3_CAN_ID,
-                ElectronicsConstants.DRIVETRAINNEO_STEER_MOTOR_4_CAN_ID
+                ElectronicsConstants.SDSDRIVETRAIN_STEER_MOTOR_1_CAN_ID,
+                ElectronicsConstants.SDSDRIVETRAIN_STEER_MOTOR_2_CAN_ID,
+                ElectronicsConstants.SDSDRIVETRAIN_STEER_MOTOR_3_CAN_ID,
+                ElectronicsConstants.SDSDRIVETRAIN_STEER_MOTOR_4_CAN_ID
             };
 
-        boolean[] driveMotorInvertOutput =
-            new boolean[]
+        int[] absoluteEncoderCanIds =
+            new int[]
             {
-                HardwareConstants.DRIVETRAINNEO_DRIVE_MOTOR1_INVERT_OUTPUT,
-                HardwareConstants.DRIVETRAINNEO_DRIVE_MOTOR2_INVERT_OUTPUT,
-                HardwareConstants.DRIVETRAINNEO_DRIVE_MOTOR3_INVERT_OUTPUT,
-                HardwareConstants.DRIVETRAINNEO_DRIVE_MOTOR4_INVERT_OUTPUT
+                ElectronicsConstants.SDSDRIVETRAIN_ABSOLUTE_ENCODER_1_CAN_ID,
+                ElectronicsConstants.SDSDRIVETRAIN_ABSOLUTE_ENCODER_2_CAN_ID,
+                ElectronicsConstants.SDSDRIVETRAIN_ABSOLUTE_ENCODER_3_CAN_ID,
+                ElectronicsConstants.SDSDRIVETRAIN_ABSOLUTE_ENCODER_4_CAN_ID
             };
 
-        boolean[] driveMotorInvertSensor =
-            new boolean[]
+        TalonFXInvertType[] driveMotorInvert =
+            new TalonFXInvertType[]
             {
-                HardwareConstants.DRIVETRAINNEO_DRIVE_MOTOR1_INVERT_SENSOR,
-                HardwareConstants.DRIVETRAINNEO_DRIVE_MOTOR2_INVERT_SENSOR,
-                HardwareConstants.DRIVETRAINNEO_DRIVE_MOTOR3_INVERT_SENSOR,
-                HardwareConstants.DRIVETRAINNEO_DRIVE_MOTOR4_INVERT_SENSOR
+                HardwareConstants.SDSDRIVETRAIN_DRIVE_MOTOR1_INVERT,
+                HardwareConstants.SDSDRIVETRAIN_DRIVE_MOTOR2_INVERT,
+                HardwareConstants.SDSDRIVETRAIN_DRIVE_MOTOR3_INVERT,
+                HardwareConstants.SDSDRIVETRAIN_DRIVE_MOTOR4_INVERT
             };
 
-        boolean[] steerMotorInvertOutput =
-            new boolean[]
+        TalonFXInvertType[] steerMotorInvert =
+            new TalonFXInvertType[]
             {
-                HardwareConstants.DRIVETRAINNEO_STEER_MOTOR1_INVERT_OUTPUT,
-                HardwareConstants.DRIVETRAINNEO_STEER_MOTOR2_INVERT_OUTPUT,
-                HardwareConstants.DRIVETRAINNEO_STEER_MOTOR3_INVERT_OUTPUT,
-                HardwareConstants.DRIVETRAINNEO_STEER_MOTOR4_INVERT_OUTPUT
+                HardwareConstants.SDSDRIVETRAIN_STEER_MOTOR1_INVERT,
+                HardwareConstants.SDSDRIVETRAIN_STEER_MOTOR2_INVERT,
+                HardwareConstants.SDSDRIVETRAIN_STEER_MOTOR3_INVERT,
+                HardwareConstants.SDSDRIVETRAIN_STEER_MOTOR4_INVERT
             };
 
-        boolean[] steerMotorInvertSensor =
-            new boolean[]
-            {
-                HardwareConstants.DRIVETRAINNEO_STEER_MOTOR1_INVERT_SENSOR,
-                HardwareConstants.DRIVETRAINNEO_STEER_MOTOR2_INVERT_SENSOR,
-                HardwareConstants.DRIVETRAINNEO_STEER_MOTOR3_INVERT_SENSOR,
-                HardwareConstants.DRIVETRAINNEO_STEER_MOTOR4_INVERT_SENSOR
-            };
-
-        for (int i = 0; i < DriveTrainMechanismNeo.NUM_MODULES; i++)
+        for (int i = 0; i < SDSDriveTrainMechanism.NUM_MODULES; i++)
         {
-            this.driveMotors[i] = provider.getSparkMax(driveMotorCanIds[i], SparkMaxMotorType.Brushless);
-            this.driveMotors[i].setRelativeEncoder();
-            this.driveMotors[i].setInvertSensor(driveMotorInvertSensor[i]);
-            this.driveMotors[i].setPositionConversionFactor(HardwareConstants.DRIVETRAINNEO_DRIVE_TICK_DISTANCE);
-            this.driveMotors[i].setVelocityConversionFactor(HardwareConstants.DRIVETRAINNEO_DRIVE_MOTOR_VELOCITY_TO_INCHES_PER_SECOND);
+            this.driveMotors[i] = provider.getTalonFX(driveMotorCanIds[i], ElectronicsConstants.CANIVORE_NAME);
             this.driveMotors[i].setNeutralMode(MotorNeutralMode.Brake);
-            this.driveMotors[i].setInvertOutput(driveMotorInvertOutput[i]);
-            this.driveMotors[i].setCurrentLimit(
-                TuningConstants.DRIVETRAINNEO_DRIVE_CURRENT_STALL_LIMIT,
-                TuningConstants.DRIVETRAINNEO_DRIVE_CURRENT_FREE_LIMIT,
-                TuningConstants.DRIVETRAINNEO_DRIVE_CURRENT_LIMIT_RPM);
+            //What is setSensorType used for?
+            this.driveMotors[i].setSensorType(TalonXFeedbackDevice.IntegratedSensor);
+            this.driveMotors[i].setFeedbackFramePeriod(TuningConstants.SDSDRIVETRAIN_SENSOR_FRAME_PERIOD_MS);
+            this.driveMotors[i].setPIDFFramePeriod(TuningConstants.SDSDRIVETRAIN_PID_FRAME_PERIOD_MS);
+            this.driveMotors[i].setInvert(driveMotorInvert[i]);
+            //What does configureVelocityMeasurements do?
+            this.driveMotors[i].configureVelocityMeasurements(10, 32);
             this.driveMotors[i].setPIDF(
-                TuningConstants.DRIVETRAINNEO_DRIVE_MOTORS_VELOCITY_PID_KP, 
-                TuningConstants.DRIVETRAINNEO_DRIVE_MOTORS_VELOCITY_PID_KI,
-                TuningConstants.DRIVETRAINNEO_DRIVE_MOTORS_VELOCITY_PID_KD,
-                TuningConstants.DRIVETRAINNEO_DRIVE_MOTORS_VELOCITY_PID_KF,
-                DriveTrainMechanismNeo.DefaultPidSlotId);
+                TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KP,
+                TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KI,
+                TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KD,
+                TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KF,
+                SDSDriveTrainMechanism.defaultPidSlotId);
             this.driveMotors[i].setPIDF(
-                TuningConstants.DRIVETRAINNEO_DRIVE_MOTORS_POSITION_PID_KP,
-                TuningConstants.DRIVETRAINNEO_DRIVE_MOTORS_POSITION_PID_KI,
-                TuningConstants.DRIVETRAINNEO_DRIVE_MOTORS_POSITION_PID_KD,
-                TuningConstants.DRIVETRAINNEO_DRIVE_MOTORS_POSITION_PID_KF,
-                DriveTrainMechanismNeo.SMPidSlotId);
-            this.driveMotors[i].setControlMode(SparkMaxControlMode.Velocity);
-            this.driveMotors[i].setSelectedSlot(DriveTrainMechanismNeo.DefaultPidSlotId);
-            this.driveMotors[i].burnFlash();
+                TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KP,
+                TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KI,
+                TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KD,
+                TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KF,
+                SDSDriveTrainMechanism.secondaryPidSlotId);
+            this.driveMotors[i].setVoltageCompensation(
+                TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED,
+                TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION);
+            this.driveMotors[i].setSupplyCurrentLimit(
+                TuningConstants.SDSDRIVETRAIN_DRIVE_SUPPLY_CURRENT_LIMITING_ENABLED,
+                TuningConstants.SDSDRIVETRAIN_DRIVE_SUPPLY_CURRENT_MAX,
+                TuningConstants.SDSDRIVETRAIN_DRIVE_SUPPLY_TRIGGER_CURRENT,
+                TuningConstants.SDSDRIVETRAIN_DRIVE_SUPPLY_TRIGGER_DURATION);
+            this.driveMotors[i].setControlMode(TalonXControlMode.Velocity);
+            this.driveMotors[i].setSelectedSlot(SDSDriveTrainMechanism.defaultPidSlotId);
 
-            this.steerMotors[i] = provider.getSparkMax(steerMotorCanIds[i], SparkMaxMotorType.Brushless);
-            this.steerMotors[i].setAbsoluteEncoder();
-            this.steerMotors[i].setInvertSensor(steerMotorInvertSensor[i]);
-            this.steerMotors[i].setPositionConversionFactor(HardwareConstants.DRIVETRAINNEO_STEER_TICK_DISTANCE);
-            this.steerMotors[i].setVelocityConversionFactor(HardwareConstants.DRIVETRAINNEO_STEER_MOTOR_VELOCITY_TO_DEGREES_PER_SECOND);
-            this.steerMotors[i].setAbsoluteOffset(DriveTrainMechanismNeo.STEER_ABSOLUTE_OFFSETS[i]);
+            this.steerMotors[i] = provider.getTalonFX(steerMotorCanIds[i], ElectronicsConstants.CANIVORE_NAME);
+            this.steerMotors[i].setInvert(steerMotorInvert[i]);
             this.steerMotors[i].setNeutralMode(MotorNeutralMode.Brake);
-            this.steerMotors[i].setInvertOutput(steerMotorInvertOutput[i]);
-            this.steerMotors[i].setCurrentLimit(
-                TuningConstants.DRIVETRAINNEO_STEER_CURRENT_STALL_LIMIT,
-                TuningConstants.DRIVETRAINNEO_STEER_CURRENT_FREE_LIMIT,
-                TuningConstants.DRIVETRAINNEO_STEER_CURRENT_LIMIT_RPM);
+            this.steerMotors[i].setSensorType(TalonXFeedbackDevice.IntegratedSensor);
             this.steerMotors[i].setPIDF(
-                TuningConstants.DRIVETRAINNEO_STEER_MOTORS_POSITION_PID_KP,
-                TuningConstants.DRIVETRAINNEO_STEER_MOTORS_POSITION_PID_KI,
-                TuningConstants.DRIVETRAINNEO_STEER_MOTORS_POSITION_PID_KD,
-                TuningConstants.DRIVETRAINNEO_STEER_MOTORS_POSITION_PID_KF,
-                DriveTrainMechanismNeo.DefaultPidSlotId);
-            this.steerMotors[i].setPIDFSmartMotion(
-                TuningConstants.DRIVETRAINNEO_STEER_MOTORS_SM_PID_KP,
-                TuningConstants.DRIVETRAINNEO_STEER_MOTORS_SM_PID_KI,
-                TuningConstants.DRIVETRAINNEO_STEER_MOTORS_SM_PID_KD,
-                TuningConstants.DRIVETRAINNEO_STEER_MOTORS_SM_PID_KF,
-                TuningConstants.DRIVETRAINNEO_STEER_MOTORS_SM_PID_IZONE,
-                TuningConstants.DRIVETRAINNEO_STEER_MOTORS_SM_PID_CRUISE_VELOC,
-                TuningConstants.DRIVETRAINNEO_STEER_MOTORS_SM_PID_ACCEL,
-                DriveTrainMechanismNeo.SMPidSlotId);
-            this.steerMotors[i].setPositionPIDWrappingSettings(
-                TuningConstants.DRIVETRAINNEO_STEER_MOTORS_POSITION_PID_WRAPPING_ENABLED,
-                TuningConstants.DRIVETRAINNEO_STEER_MOTORS_POSITION_PID_WRAPPING_MIN,
-                TuningConstants.DRIVETRAINNEO_STEER_MOTORS_POSITION_PID_WRAPPING_MAX);
-            this.steerMotors[i].setControlMode(SparkMaxControlMode.Position);
-            this.steerMotors[i].burnFlash();
-
-            if (TuningConstants.DRIVETRAINNEO_STEER_MOTORS_USE_SMART_MOTION)
+                TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_POSITION_PID_KP,
+                TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_POSITION_PID_KI,
+                TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_POSITION_PID_KD,
+                TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_POSITION_PID_KF,
+                SDSDriveTrainMechanism.defaultPidSlotId);
+            this.steerMotors[i].setMotionMagicPIDF(
+                TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_MM_PID_KP,
+                TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_MM_PID_KI,
+                TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_MM_PID_KD,
+                TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_MM_PID_KF,
+                TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_MM_PID_CRUISE_VELOC,
+                TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_MM_PID_ACCEL,
+                SDSDriveTrainMechanism.secondaryPidSlotId);
+            this.steerMotors[i].setVoltageCompensation(
+                TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED,
+                TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION);
+            this.steerMotors[i].setSupplyCurrentLimit(
+                TuningConstants.SDSDRIVETRAIN_STEER_SUPPLY_CURRENT_LIMITING_ENABLED,
+                TuningConstants.SDSDRIVETRAIN_STEER_SUPPLY_CURRENT_MAX,
+                TuningConstants.SDSDRIVETRAIN_STEER_SUPPLY_TRIGGER_CURRENT,
+                TuningConstants.SDSDRIVETRAIN_STEER_SUPPLY_TRIGGER_DURATION);
+            //Why is setFeedbackFramePeriod used twice?
+            this.steerMotors[i].setFeedbackFramePeriod(TuningConstants.SDSDRIVETRAIN_SENSOR_FRAME_PERIOD_MS);
+            this.steerMotors[i].setPIDFFramePeriod(TuningConstants.SDSDRIVETRAIN_PID_FRAME_PERIOD_MS);
+            if (TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_USE_MOTION_MAGIC)
             {
-                this.steerMotors[i].setSelectedSlot(DriveTrainMechanismNeo.SMPidSlotId);
+                this.steerMotors[i].setControlMode(TalonXControlMode.MotionMagicPosition);
+                this.steerMotors[i].setSelectedSlot(SDSDriveTrainMechanism.secondaryPidSlotId);
             }
             else
             {
-                this.steerMotors[i].setSelectedSlot(DriveTrainMechanismNeo.DefaultPidSlotId);
+                this.steerMotors[i].setControlMode(TalonXControlMode.Position);
+                this.steerMotors[i].setSelectedSlot(SDSDriveTrainMechanism.defaultPidSlotId);
             }
+
+            this.absoluteEncoders[i] = provider.getCANCoder(absoluteEncoderCanIds[i], ElectronicsConstants.CANIVORE_NAME);
+            this.absoluteEncoders[i].configAbsoluteRange(false);
         }
 
-        this.driveVelocities = new double[DriveTrainMechanismNeo.NUM_MODULES];
-        this.drivePositions = new double[DriveTrainMechanismNeo.NUM_MODULES];
-        this.steerVelocities = new double[DriveTrainMechanismNeo.NUM_MODULES];
-        this.steerAngles = new double[DriveTrainMechanismNeo.NUM_MODULES];
+        //What does this do? Next few lines?
+        this.driveVelocities = new double[SDSDriveTrainMechanism.NUM_MODULES];
+        this.drivePositions = new double[SDSDriveTrainMechanism.NUM_MODULES];
+        this.driveErrors = new double[SDSDriveTrainMechanism.NUM_MODULES];
+        this.steerVelocities = new double[SDSDriveTrainMechanism.NUM_MODULES];
+        this.steerPositions = new double[SDSDriveTrainMechanism.NUM_MODULES];
+        this.steerAngles = new double[SDSDriveTrainMechanism.NUM_MODULES];
+        this.steerErrors = new double[SDSDriveTrainMechanism.NUM_MODULES];
+        this.encoderAngles = new double[SDSDriveTrainMechanism.NUM_MODULES];
 
-        this.isDirectionSwapped = new boolean[DriveTrainMechanismNeo.NUM_MODULES];
-        this.driveSlotIds = new int[DriveTrainMechanismNeo.NUM_MODULES];
+        this.isDirectionSwapped = new boolean[SDSDriveTrainMechanism.NUM_MODULES];
+        this.driveSlotIds = new int[SDSDriveTrainMechanism.NUM_MODULES];
 
         this.omegaPID = new PIDHandler(
-            TuningConstants.DRIVETRAINNEO_OMEGA_POSITION_PID_KP,
-            TuningConstants.DRIVETRAINNEO_OMEGA_POSITION_PID_KI,
-            TuningConstants.DRIVETRAINNEO_OMEGA_POSITION_PID_KD,
-            TuningConstants.DRIVETRAINNEO_OMEGA_POSITION_PID_KF,
-            TuningConstants.DRIVETRAINNEO_OMEGA_POSITION_PID_KS,
-            TuningConstants.DRIVETRAINNEO_OMEGA_MIN_OUTPUT,
-            TuningConstants.DRIVETRAINNEO_OMEGA_MAX_OUTPUT,
+            TuningConstants.SDSDRIVETRAIN_OMEGA_POSITION_PID_KP,
+            TuningConstants.SDSDRIVETRAIN_OMEGA_POSITION_PID_KI,
+            TuningConstants.SDSDRIVETRAIN_OMEGA_POSITION_PID_KD,
+            TuningConstants.SDSDRIVETRAIN_OMEGA_POSITION_PID_KF,
+            TuningConstants.SDSDRIVETRAIN_OMEGA_POSITION_PID_KS,
+            TuningConstants.SDSDRIVETRAIN_OMEGA_MIN_OUTPUT,
+            TuningConstants.SDSDRIVETRAIN_OMEGA_MAX_OUTPUT,
             this.timer);
 
         this.pathOmegaPID = new PIDHandler(
-            TuningConstants.DRIVETRAINNEO_PATH_OMEGA_POSITION_PID_KP,
-            TuningConstants.DRIVETRAINNEO_PATH_OMEGA_POSITION_PID_KI,
-            TuningConstants.DRIVETRAINNEO_PATH_OMEGA_POSITION_PID_KD,
-            TuningConstants.DRIVETRAINNEO_PATH_OMEGA_POSITION_PID_KF,
-            TuningConstants.DRIVETRAINNEO_PATH_OMEGA_POSITION_PID_KS,
-            TuningConstants.DRIVETRAINNEO_PATH_OMEGA_MIN_OUTPUT,
-            TuningConstants.DRIVETRAINNEO_PATH_OMEGA_MAX_OUTPUT,
+            TuningConstants.SDSDRIVETRAIN_PATH_OMEGA_POSITION_PID_KP,
+            TuningConstants.SDSDRIVETRAIN_PATH_OMEGA_POSITION_PID_KI,
+            TuningConstants.SDSDRIVETRAIN_PATH_OMEGA_POSITION_PID_KD,
+            TuningConstants.SDSDRIVETRAIN_PATH_OMEGA_POSITION_PID_KF,
+            TuningConstants.SDSDRIVETRAIN_PATH_OMEGA_POSITION_PID_KS,
+            TuningConstants.SDSDRIVETRAIN_PATH_OMEGA_MIN_OUTPUT,
+            TuningConstants.SDSDRIVETRAIN_PATH_OMEGA_MAX_OUTPUT,
             this.timer);
 
         this.pathXOffsetPID = new PIDHandler(
-            TuningConstants.DRIVETRAINNEO_PATH_X_POSITION_PID_KP,
-            TuningConstants.DRIVETRAINNEO_PATH_X_POSITION_PID_KI,
-            TuningConstants.DRIVETRAINNEO_PATH_X_POSITION_PID_KD,
-            TuningConstants.DRIVETRAINNEO_PATH_X_POSITION_PID_KF,
-            TuningConstants.DRIVETRAINNEO_PATH_X_POSITION_PID_KS,
-            TuningConstants.DRIVETRAINNEO_PATH_X_MIN_OUTPUT,
-            TuningConstants.DRIVETRAINNEO_PATH_X_MAX_OUTPUT,
+            TuningConstants.SDSDRIVETRAIN_PATH_X_POSITION_PID_KP,
+            TuningConstants.SDSDRIVETRAIN_PATH_X_POSITION_PID_KI,
+            TuningConstants.SDSDRIVETRAIN_PATH_X_POSITION_PID_KD,
+            TuningConstants.SDSDRIVETRAIN_PATH_X_POSITION_PID_KF,
+            TuningConstants.SDSDRIVETRAIN_PATH_X_POSITION_PID_KS,
+            TuningConstants.SDSDRIVETRAIN_PATH_X_MIN_OUTPUT,
+            TuningConstants.SDSDRIVETRAIN_PATH_X_MAX_OUTPUT,
             this.timer);
 
         this.pathYOffsetPID = new PIDHandler(
-            TuningConstants.DRIVETRAINNEO_PATH_Y_POSITION_PID_KP,
-            TuningConstants.DRIVETRAINNEO_PATH_Y_POSITION_PID_KI,
-            TuningConstants.DRIVETRAINNEO_PATH_Y_POSITION_PID_KD,
-            TuningConstants.DRIVETRAINNEO_PATH_Y_POSITION_PID_KF,
-            TuningConstants.DRIVETRAINNEO_PATH_Y_POSITION_PID_KS,
-            TuningConstants.DRIVETRAINNEO_PATH_Y_MIN_OUTPUT,
-            TuningConstants.DRIVETRAINNEO_PATH_Y_MAX_OUTPUT,
+            TuningConstants.SDSDRIVETRAIN_PATH_Y_POSITION_PID_KP,
+            TuningConstants.SDSDRIVETRAIN_PATH_Y_POSITION_PID_KI,
+            TuningConstants.SDSDRIVETRAIN_PATH_Y_POSITION_PID_KD,
+            TuningConstants.SDSDRIVETRAIN_PATH_Y_POSITION_PID_KF,
+            TuningConstants.SDSDRIVETRAIN_PATH_Y_POSITION_PID_KS,
+            TuningConstants.SDSDRIVETRAIN_PATH_Y_MIN_OUTPUT,
+            TuningConstants.SDSDRIVETRAIN_PATH_Y_MAX_OUTPUT,
             this.timer);
 
-        this.result = new Setpoint[DriveTrainMechanismNeo.NUM_MODULES];
-        for (int i = 0; i < DriveTrainMechanismNeo.NUM_MODULES; i++)
+        this.result = new Setpoint[SDSDriveTrainMechanism.NUM_MODULES];
+        for (int i = 0; i < SDSDriveTrainMechanism.NUM_MODULES; i++)
         {
             this.result[i] = new Setpoint();
         }
 
-        if (TuningConstants.DRIVETRAINNEO_USE_TRANSLATIONAL_RATE_LIMITING)
+        if (TuningConstants.SDSDRIVETRAIN_USE_TRANSLATIONAL_RATE_LIMITING)
         {
             this.xVelocityLimiter = new SlewRateLimiter(
                 this.timer,
-                TuningConstants.DRIVETRAINNEO_TRANSLATIONAL_VELOCITY_MAX_NEGATIVE_RATE,
-                TuningConstants.DRIVETRAINNEO_TRANSLATIONAL_VELOCITY_MAX_POSITIVE_RATE,
+                TuningConstants.SDSDRIVETRAIN_TRANSLATIONAL_VELOCITY_MAX_NEGATIVE_RATE,
+                TuningConstants.SDSDRIVETRAIN_TRANSLATIONAL_VELOCITY_MAX_POSITIVE_RATE,
                 0.0);
 
             this.yVelocityLimiter = new SlewRateLimiter(
                 this.timer,
-                TuningConstants.DRIVETRAINNEO_TRANSLATIONAL_VELOCITY_MAX_NEGATIVE_RATE,
-                TuningConstants.DRIVETRAINNEO_TRANSLATIONAL_VELOCITY_MAX_POSITIVE_RATE,
+                TuningConstants.SDSDRIVETRAIN_TRANSLATIONAL_VELOCITY_MAX_NEGATIVE_RATE,
+                TuningConstants.SDSDRIVETRAIN_TRANSLATIONAL_VELOCITY_MAX_POSITIVE_RATE,
                 0.0);
         }
         else
@@ -320,12 +352,12 @@ public class DriveTrainMechanismNeo implements IMechanism
             this.yVelocityLimiter = null;
         }
 
-        if (TuningConstants.DRIVETRAINNEO_USE_ROTATIONAL_RATE_LIMITING)
+        if (TuningConstants.SDSDRIVETRAIN_USE_ROTATIONAL_RATE_LIMITING)
         {
             this.angularVelocityLimiter = new SlewRateLimiter(
                 this.timer,
-                TuningConstants.DRIVETRAINNEO_ROTATIONAL_VELOCITY_MAX_NEGATIVE_RATE,
-                TuningConstants.DRIVETRAINNEO_ROTATIONAL_VELOCITY_MAX_POSITIVE_RATE,
+                TuningConstants.SDSDRIVETRAIN_ROTATIONAL_VELOCITY_MAX_NEGATIVE_RATE,
+                TuningConstants.SDSDRIVETRAIN_ROTATIONAL_VELOCITY_MAX_POSITIVE_RATE,
                 0.0);
         }
         else
@@ -338,25 +370,33 @@ public class DriveTrainMechanismNeo implements IMechanism
         this.xPosition = 0.0;
         this.yPosition = 0.0;
 
-        this.firstRun = TuningConstants.DRIVETRAINNEO_RESET_ON_ROBOT_START;
-        this.fieldOriented = TuningConstants.DRIVETRAINNEO_FIELD_ORIENTED_ON_ROBOT_START;
-        this.maintainOrientation = TuningConstants.DRIVETRAINNEO_MAINTAIN_ORIENTATION_ON_ROBOT_START;
+        this.firstRun = TuningConstants.SDSDRIVETRAIN_RESET_ON_ROBOT_START;
+        this.fieldOriented = TuningConstants.SDSDRIVETRAIN_FIELD_ORIENTED_ON_ROBOT_START;
+        this.maintainOrientation = TuningConstants.SDSDRIVETRAIN_MAINTAIN_ORIENTATION_ON_ROBOT_START;
     }
 
     @Override
     public void readSensors()
     {
-        for (int i = 0; i < DriveTrainMechanismNeo.NUM_MODULES; i++)
+        for (int i = 0; i < SDSDriveTrainMechanism.NUM_MODULES; i++)
         {
             this.driveVelocities[i] = this.driveMotors[i].getVelocity();
             this.drivePositions[i] = this.driveMotors[i].getPosition();
+            this.driveErrors[i] = this.driveMotors[i].getError();
             this.steerVelocities[i] = this.steerMotors[i].getVelocity();
-            this.steerAngles[i] = this.steerMotors[i].getPosition();
+            this.steerPositions[i] = this.steerMotors[i].getPosition();
+            this.steerAngles[i] = Helpers.updateAngleRange(this.steerPositions[i] * HardwareConstants.SDSDRIVETRAIN_STEER_TICK_DISTANCE);
+            this.steerErrors[i] = this.steerMotors[i].getError();
+            this.encoderAngles[i] = this.absoluteEncoders[i].getAbsolutePosition();
 
-            this.logger.logNumber(DriveTrainMechanismNeo.DRIVE_VELOCITY_LOGGING_KEYS[i], this.driveVelocities[i]);
-            this.logger.logNumber(DriveTrainMechanismNeo.DRIVE_POSITION_LOGGING_KEYS[i], this.drivePositions[i]);
-            this.logger.logNumber(DriveTrainMechanismNeo.STEER_VELOCITY_LOGGING_KEYS[i], this.steerVelocities[i]);
-            this.logger.logNumber(DriveTrainMechanismNeo.STEER_ANGLE_LOGGING_KEYS[i], this.steerAngles[i]);
+            this.logger.logNumber(SDSDriveTrainMechanism.DRIVE_VELOCITY_LOGGING_KEYS[i], this.driveVelocities[i]);
+            this.logger.logNumber(SDSDriveTrainMechanism.DRIVE_POSITION_LOGGING_KEYS[i], this.drivePositions[i]);
+            this.logger.logNumber(SDSDriveTrainMechanism.DRIVE_ERROR_LOGGING_KEYS[i], this.driveErrors[i]);
+            this.logger.logNumber(SDSDriveTrainMechanism.STEER_VELOCITY_LOGGING_KEYS[i], this.steerVelocities[i]);
+            this.logger.logNumber(SDSDriveTrainMechanism.STEER_POSITION_LOGGING_KEYS[i], this.steerPositions[i]);
+            this.logger.logNumber(SDSDriveTrainMechanism.STEER_ANGLE_LOGGING_KEYS[i], this.steerAngles[i]);
+            this.logger.logNumber(SDSDriveTrainMechanism.STEER_ERROR_LOGGING_KEYS[i], this.steerErrors[i]);
+            this.logger.logNumber(SDSDriveTrainMechanism.ENCODER_ANGLE_LOGGING_KEYS[i], this.encoderAngles[i]);
         }
 
         double prevYaw = this.robotYaw;
@@ -370,7 +410,7 @@ public class DriveTrainMechanismNeo implements IMechanism
             this.deltaT = 0.001;
         }
 
-        if (TuningConstants.DRIVETRAINNEO_USE_ODOMETRY)
+        if (TuningConstants.SDSDRIVETRAIN_USE_ODOMETRY)
         {
             double deltaImuYaw = (this.robotYaw - prevYaw) / this.deltaT;
             this.calculateOdometry(deltaImuYaw);
@@ -432,43 +472,48 @@ public class DriveTrainMechanismNeo implements IMechanism
 
         if (this.firstRun || this.driver.getDigital(DigitalOperation.DriveTrainReset))
         {
-            for (int i = 0; i < DriveTrainMechanismNeo.NUM_MODULES; i++)
+            for (int i = 0; i < SDSDriveTrainMechanism.NUM_MODULES; i++)
             {
                 this.driveMotors[i].setPosition(0);
-                this.drivePositions[i] = 0.0;
-                this.driveVelocities[i] = 0.0;
+                double angleDifference = (this.encoderAngles[i] - this.drivetrainSteerMotorAbsoluteOffsets[i]);
+                double tickDifference = angleDifference * HardwareConstants.SDSDRIVETRAIN_STEER_TICKS_PER_DEGREE;
+                this.steerMotors[i].setPosition((int)tickDifference);
+
+                this.drivePositions[i] = 0;
+                this.steerPositions[i] = (int)tickDifference;
+                this.steerAngles[i] = angleDifference % 360.0;
             }
 
             this.firstRun = false;
         }
 
         this.calculateSetpoints(useFieldOriented);
-        for (int i = 0; i < DriveTrainMechanismNeo.NUM_MODULES; i++)
+        for (int i = 0; i < SDSDriveTrainMechanism.NUM_MODULES; i++)
         {
             Setpoint current = this.result[i];
             Double steerSetpoint = current.angle;
             Double driveVelocitySetpoint = current.driveVelocity;
             Double drivePositionSetpoint = current.drivePosition;
 
-            SparkMaxControlMode driveControlMode = SparkMaxControlMode.PercentOutput; // Disabled doesn't exist for SparkMax
-            int driveDesiredPidSlotId = DriveTrainMechanismNeo.DefaultPidSlotId;
+            TalonXControlMode driveControlMode = TalonXControlMode.Disabled;
+            int driveDesiredPidSlotId = SDSDriveTrainMechanism.defaultPidSlotId;
             double driveSetpoint = 0.0;
             if (driveVelocitySetpoint != null)
             {
                 driveSetpoint = driveVelocitySetpoint;
-                driveControlMode = SparkMaxControlMode.Velocity;
-                driveDesiredPidSlotId = DriveTrainMechanismNeo.DefaultPidSlotId;
+                driveControlMode = TalonXControlMode.Velocity;
+                driveDesiredPidSlotId = SDSDriveTrainMechanism.defaultPidSlotId;
             }
             else if (drivePositionSetpoint != null)
             {
                 driveSetpoint = drivePositionSetpoint;
-                driveControlMode = SparkMaxControlMode.Position;
-                driveDesiredPidSlotId = DriveTrainMechanismNeo.SMPidSlotId;
+                driveControlMode = TalonXControlMode.Position;
+                driveDesiredPidSlotId = SDSDriveTrainMechanism.secondaryPidSlotId;
             }
 
-            this.logger.logNumber(DriveTrainMechanismNeo.DRIVE_GOAL_LOGGING_KEYS[i], driveSetpoint);
+            this.logger.logNumber(SDSDriveTrainMechanism.DRIVE_GOAL_LOGGING_KEYS[i], driveSetpoint);
             this.driveMotors[i].setControlMode(driveControlMode);
-            if (driveControlMode != SparkMaxControlMode.PercentOutput)
+            if (driveControlMode != TalonXControlMode.Disabled)
             {
                 this.driveMotors[i].set(driveSetpoint);
 
@@ -485,7 +530,7 @@ public class DriveTrainMechanismNeo implements IMechanism
 
             if (steerSetpoint != null)
             {
-                this.logger.logNumber(DriveTrainMechanismNeo.STEER_GOAL_LOGGING_KEYS[i], steerSetpoint);
+                this.logger.logNumber(SDSDriveTrainMechanism.STEER_GOAL_LOGGING_KEYS[i], steerSetpoint);
                 this.steerMotors[i].set(steerSetpoint);
             }
         }
@@ -498,7 +543,7 @@ public class DriveTrainMechanismNeo implements IMechanism
         this.pathOmegaPID.reset();
         this.pathXOffsetPID.reset();
         this.pathYOffsetPID.reset();
-        for (int i = 0; i < DriveTrainMechanismNeo.NUM_MODULES; i++)
+        for (int i = 0; i < SDSDriveTrainMechanism.NUM_MODULES; i++)
         {
             this.driveMotors[i].stop();
             this.steerMotors[i].stop();
@@ -555,23 +600,22 @@ public class DriveTrainMechanismNeo implements IMechanism
         boolean maintainPositionMode = this.driver.getDigital(DigitalOperation.DriveTrainMaintainPositionMode);
         if (maintainPositionMode || this.driver.getDigital(DigitalOperation.DriveTrainSteerMode))
         {
-            for (int i = 0; i < DriveTrainMechanismNeo.NUM_MODULES; i++)
+            for (int i = 0; i < SDSDriveTrainMechanism.NUM_MODULES; i++)
             {
                 this.result[i].driveVelocity = null;
                 if (maintainPositionMode)
                 {
-                    this.result[i].drivePosition = this.driver.getAnalog(DriveTrainMechanismNeo.DRIVE_SETPOINT_OPERATIONS[i]);
+                    this.result[i].drivePosition = this.driver.getAnalog(SDSDriveTrainMechanism.DRIVE_SETPOINT_OPERATIONS[i]);
                 }
                 else
                 {
                     this.result[i].drivePosition = null;
                 }
 
-                double moduleSteerPositionGoal = this.driver.getAnalog(DriveTrainMechanismNeo.STEER_SETPOINT_OPERATIONS[i]);
-                double currentAngle = this.steerAngles[i];
-                // TODO: update getClosestAngle to provide absolute angle [0, 360) instead of relative angle (e.g. -27390.0)
+                double moduleSteerPositionGoal = this.driver.getAnalog(SDSDriveTrainMechanism.STEER_SETPOINT_OPERATIONS[i]);
+                double currentAngle = this.steerPositions[i] * HardwareConstants.SDSDRIVETRAIN_STEER_TICK_DISTANCE;
                 AnglePair anglePair = AnglePair.getClosestAngle(moduleSteerPositionGoal, currentAngle, true);
-                moduleSteerPositionGoal = anglePair.getAngle();
+                moduleSteerPositionGoal = anglePair.getAngle() * TuningConstants.SDSDRIVETRAIN_STEER_MOTOR_POSITION_PID_KS;
                 this.isDirectionSwapped[i] = anglePair.getSwapDirection();
 
                 this.result[i].angle = moduleSteerPositionGoal;
@@ -649,13 +693,13 @@ public class DriveTrainMechanismNeo implements IMechanism
             double centerVelocityForwardRaw = this.driver.getAnalog(AnalogOperation.DriveTrainMoveForward);
             if (useSlowMode)
             {
-                centerVelocityRightRaw *= TuningConstants.DRIVETRAINNEO_SLOW_MODE_MAX_VELOCITY;
-                centerVelocityForwardRaw *= TuningConstants.DRIVETRAINNEO_SLOW_MODE_MAX_VELOCITY;
+                centerVelocityRightRaw *= TuningConstants.SDSDRIVETRAIN_SLOW_MODE_MAX_VELOCITY;
+                centerVelocityForwardRaw *= TuningConstants.SDSDRIVETRAIN_SLOW_MODE_MAX_VELOCITY;
             }
             else
             {
-                centerVelocityRightRaw *= TuningConstants.DRIVETRAINNEO_MAX_VELOCITY;
-                centerVelocityForwardRaw *= TuningConstants.DRIVETRAINNEO_MAX_VELOCITY;
+                centerVelocityRightRaw *= TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY;
+                centerVelocityForwardRaw *= TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY;
             }
 
             if (useFieldOriented)
@@ -696,11 +740,11 @@ public class DriveTrainMechanismNeo implements IMechanism
                 omega = forcedOmega;
                 if (useSlowMode)
                 {
-                    omega *= TuningConstants.DRIVETRAINNEO_SLOW_MODE_TURN_SCALE;
+                    omega *= TuningConstants.SDSDRIVETRAIN_SLOW_MODE_TURN_SCALE;
                 }
                 else
                 {
-                    omega *= TuningConstants.DRIVETRAINNEO_TURN_SCALE;
+                    omega *= TuningConstants.SDSDRIVETRAIN_TURN_SCALE;
                 }
 
                 if (this.angularVelocityLimiter != null)
@@ -729,13 +773,13 @@ public class DriveTrainMechanismNeo implements IMechanism
                     boolean skipTurn = false;
                     if (!updatedOrientation)
                     {
-                        if (Math.abs(centerVelocityForward) + Math.abs(centerVelocityRight) < TuningConstants.DRIVETRAINNEO_STATIONARY_VELOCITY)
+                        if (Math.abs(centerVelocityForward) + Math.abs(centerVelocityRight) < TuningConstants.SDSDRIVETRAIN_STATIONARY_VELOCITY)
                         {
-                            skipTurn = TuningConstants.DRIVETRAINNEO_TURN_APPROXIMATION_STATIONARY != 0.0 && Helpers.WithinDelta(this.desiredYaw, this.robotYaw, TuningConstants.DRIVETRAINNEO_TURN_APPROXIMATION_STATIONARY);
+                            skipTurn = TuningConstants.SDSDRIVETRAIN_TURN_APPROXIMATION_STATIONARY != 0.0 && Helpers.WithinDelta(this.desiredYaw, this.robotYaw, TuningConstants.SDSDRIVETRAIN_TURN_APPROXIMATION_STATIONARY);
                         }
                         else
                         {
-                            skipTurn = TuningConstants.DRIVETRAINNEO_TURN_APPROXIMATION != 0.0 && Helpers.WithinDelta(this.desiredYaw, this.robotYaw, TuningConstants.DRIVETRAINNEO_TURN_APPROXIMATION);
+                            skipTurn = TuningConstants.SDSDRIVETRAIN_TURN_APPROXIMATION != 0.0 && Helpers.WithinDelta(this.desiredYaw, this.robotYaw, TuningConstants.SDSDRIVETRAIN_TURN_APPROXIMATION);
                         }
                     }
 
@@ -750,16 +794,16 @@ public class DriveTrainMechanismNeo implements IMechanism
         }
 
         double maxModuleDriveVelocityGoal = 0.0;
-        for (int i = 0; i < DriveTrainMechanismNeo.NUM_MODULES; i++)
+        for (int i = 0; i < SDSDriveTrainMechanism.NUM_MODULES; i++)
         {
             double moduleVelocityRight = centerVelocityRight + omega * (this.moduleOffsetY[i] + rotationCenterB);
             double moduleVelocityForward = centerVelocityForward - omega * (this.moduleOffsetX[i] + rotationCenterA);
 
             Double moduleSteerPositionGoal;
             double moduleDriveVelocityGoal;
-            if (TuningConstants.DRIVETRAINNEO_SKIP_ANGLE_ON_ZERO_VELOCITY
-                    && Helpers.WithinDelta(moduleVelocityRight, 0.0, TuningConstants.DRIVETRAINNEO_SKIP_ANGLE_ON_ZERO_DELTA)
-                    && Helpers.WithinDelta(moduleVelocityForward, 0.0, TuningConstants.DRIVETRAINNEO_SKIP_ANGLE_ON_ZERO_DELTA))
+            if (TuningConstants.SDSDRIVETRAIN_SKIP_ANGLE_ON_ZERO_VELOCITY
+                    && Helpers.WithinDelta(moduleVelocityRight, 0.0, TuningConstants.SDSDRIVETRAIN_SKIP_ANGLE_ON_ZERO_DELTA)
+                    && Helpers.WithinDelta(moduleVelocityForward, 0.0, TuningConstants.SDSDRIVETRAIN_SKIP_ANGLE_ON_ZERO_DELTA))
             {
                 moduleDriveVelocityGoal = 0.0;
                 moduleSteerPositionGoal = null;
@@ -769,10 +813,9 @@ public class DriveTrainMechanismNeo implements IMechanism
                 moduleDriveVelocityGoal = Math.sqrt(moduleVelocityRight * moduleVelocityRight + moduleVelocityForward * moduleVelocityForward);
 
                 moduleSteerPositionGoal = Helpers.atan2d(-moduleVelocityRight, moduleVelocityForward);
-                double currentAngle = this.steerAngles[i];
-                // TODO: update getClosestAngle to provide absolute angle [0, 360) instead of relative angle (e.g. -27390.0)
+                double currentAngle = this.steerPositions[i] * HardwareConstants.SDSDRIVETRAIN_STEER_TICK_DISTANCE;
                 AnglePair anglePair = AnglePair.getClosestAngle(moduleSteerPositionGoal, currentAngle, true);
-                moduleSteerPositionGoal = anglePair.getAngle();
+                moduleSteerPositionGoal = anglePair.getAngle() * TuningConstants.SDSDRIVETRAIN_STEER_MOTOR_POSITION_PID_KS;
                 this.isDirectionSwapped[i] = anglePair.getSwapDirection();
 
                 if (maxModuleDriveVelocityGoal < moduleDriveVelocityGoal)
@@ -780,6 +823,7 @@ public class DriveTrainMechanismNeo implements IMechanism
                     maxModuleDriveVelocityGoal = moduleDriveVelocityGoal;
                 }
 
+                moduleDriveVelocityGoal *= HardwareConstants.SDSDRIVETRAIN_DRIVE_INCHES_PER_SECOND_TO_MOTOR_VELOCITY;
                 if (this.isDirectionSwapped[i])
                 {
                     moduleDriveVelocityGoal *= -1.0;
@@ -792,17 +836,17 @@ public class DriveTrainMechanismNeo implements IMechanism
         }
 
         // rescale velocities based on max velocity percentage, if max velocity is exceeded for any module
-        if (maxModuleDriveVelocityGoal > TuningConstants.DRIVETRAINNEO_MAX_VELOCITY)
+        if (maxModuleDriveVelocityGoal > TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY)
         {
             // divide by percentage is interchangeable with multiply by inverse-percentage
-            double invPercentage = TuningConstants.DRIVETRAINNEO_MAX_VELOCITY / maxModuleDriveVelocityGoal;
-            for (int i = 0; i < DriveTrainMechanismNeo.NUM_MODULES; i++)
+            double invPercentage = TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY / maxModuleDriveVelocityGoal;
+            for (int i = 0; i < SDSDriveTrainMechanism.NUM_MODULES; i++)
             {
                 this.result[i].driveVelocity *= invPercentage;
             }
         }
 
-        if (TuningConstants.DRIVETRAINNEO_USE_OVERCURRENT_ADJUSTMENT)
+        if (TuningConstants.SDSDRIVETRAIN_USE_OVERCURRENT_ADJUSTMENT)
         {
             CurrentLimiting value = this.powerManager.getCurrentLimitingValue();
             if (value != CurrentLimiting.Normal)
@@ -810,14 +854,14 @@ public class DriveTrainMechanismNeo implements IMechanism
                 double currentLimitingMultiplier;
                 if (value == CurrentLimiting.OverCurrent)
                 {
-                    currentLimitingMultiplier = TuningConstants.DRIVETRAINNEO_OVERCURRENT_ADJUSTMENT;
+                    currentLimitingMultiplier = TuningConstants.SDSDRIVETRAIN_OVERCURRENT_ADJUSTMENT;
                 }
                 else // if (value == CurrentLimiting.OverCurrentHigh)
                 {
-                    currentLimitingMultiplier = TuningConstants.DRIVETRAINNEO_OVERCURRENT_HIGH_ADJUSTMENT;
+                    currentLimitingMultiplier = TuningConstants.SDSDRIVETRAIN_OVERCURRENT_HIGH_ADJUSTMENT;
                 }
 
-                for (int i = 0; i < DriveTrainMechanismNeo.NUM_MODULES; i++)
+                for (int i = 0; i < SDSDriveTrainMechanism.NUM_MODULES; i++)
                 {
                     this.result[i].driveVelocity *= currentLimitingMultiplier;
                 }
@@ -832,15 +876,15 @@ public class DriveTrainMechanismNeo implements IMechanism
         double forwardRobotVelocity;
 
         // calculate our right and forward velocities using an average of our various velocities and the angle.
-        double rightRobotVelocity1 = -Helpers.sind(this.steerAngles[0]) * this.driveVelocities[0];
-        double rightRobotVelocity2 = -Helpers.sind(this.steerAngles[1]) * this.driveVelocities[1];
-        double rightRobotVelocity3 = -Helpers.sind(this.steerAngles[2]) * this.driveVelocities[2];
-        double rightRobotVelocity4 = -Helpers.sind(this.steerAngles[3]) * this.driveVelocities[3];
+        double rightRobotVelocity1 = -Helpers.sind(this.steerAngles[0]) * HardwareConstants.SDSDRIVETRAIN_DRIVE_MOTOR_VELOCITY_TO_INCHES_PER_SECOND * this.driveVelocities[0];
+        double rightRobotVelocity2 = -Helpers.sind(this.steerAngles[1]) * HardwareConstants.SDSDRIVETRAIN_DRIVE_MOTOR_VELOCITY_TO_INCHES_PER_SECOND * this.driveVelocities[1];
+        double rightRobotVelocity3 = -Helpers.sind(this.steerAngles[2]) * HardwareConstants.SDSDRIVETRAIN_DRIVE_MOTOR_VELOCITY_TO_INCHES_PER_SECOND * this.driveVelocities[2];
+        double rightRobotVelocity4 = -Helpers.sind(this.steerAngles[3]) * HardwareConstants.SDSDRIVETRAIN_DRIVE_MOTOR_VELOCITY_TO_INCHES_PER_SECOND * this.driveVelocities[3];
 
-        double forwardRobotVelocity1 = Helpers.cosd(this.steerAngles[0]) * this.driveVelocities[0];
-        double forwardRobotVelocity2 = Helpers.cosd(this.steerAngles[1]) * this.driveVelocities[1];
-        double forwardRobotVelocity3 = Helpers.cosd(this.steerAngles[2]) * this.driveVelocities[2];
-        double forwardRobotVelocity4 = Helpers.cosd(this.steerAngles[3]) * this.driveVelocities[3];
+        double forwardRobotVelocity1 = Helpers.cosd(this.steerAngles[0]) * HardwareConstants.SDSDRIVETRAIN_DRIVE_MOTOR_VELOCITY_TO_INCHES_PER_SECOND * this.driveVelocities[0];
+        double forwardRobotVelocity2 = Helpers.cosd(this.steerAngles[1]) * HardwareConstants.SDSDRIVETRAIN_DRIVE_MOTOR_VELOCITY_TO_INCHES_PER_SECOND * this.driveVelocities[1];
+        double forwardRobotVelocity3 = Helpers.cosd(this.steerAngles[2]) * HardwareConstants.SDSDRIVETRAIN_DRIVE_MOTOR_VELOCITY_TO_INCHES_PER_SECOND * this.driveVelocities[2];
+        double forwardRobotVelocity4 = Helpers.cosd(this.steerAngles[3]) * HardwareConstants.SDSDRIVETRAIN_DRIVE_MOTOR_VELOCITY_TO_INCHES_PER_SECOND * this.driveVelocities[3];
 
         // rightRobotVelocity = (rightRobotVelocity1 + rightRobotVelocity2 + rightRobotVelocity3 + rightRobotVelocity4) / 4.0;
         // forwardRobotVelocity = (forwardRobotVelocity1 + forwardRobotVelocity2 + forwardRobotVelocity3 + forwardRobotVelocity4) / 4.0;
@@ -850,16 +894,16 @@ public class DriveTrainMechanismNeo implements IMechanism
         double c = 0.5 * (forwardRobotVelocity1 + forwardRobotVelocity4);
         double d = 0.5 * (forwardRobotVelocity2 + forwardRobotVelocity3);
 
-        double omegaRadians1 = (b - a) / HardwareConstants.DRIVETRAINNEO_VERTICAL_WHEEL_SEPERATION_DISTANCE;
-        double omegaRadians2 = (c - d) / HardwareConstants.DRIVETRAINNEO_HORIZONTAL_WHEEL_SEPERATION_DISTANCE;
+        double omegaRadians1 = (b - a) / HardwareConstants.SDSDRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE;
+        double omegaRadians2 = (c - d) / HardwareConstants.SDSDRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE;
         double omegaRadians = (omegaRadians1 + omegaRadians2) / 2.0;
 
-        double rightRobotVelocityA = omegaRadians * HardwareConstants.DRIVETRAINNEO_HORIZONTAL_WHEEL_CENTER_DISTANCE + a;
-        double rightRobotVelocityB = -omegaRadians * HardwareConstants.DRIVETRAINNEO_HORIZONTAL_WHEEL_CENTER_DISTANCE + b;
+        double rightRobotVelocityA = omegaRadians * HardwareConstants.SDSDRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE + a;
+        double rightRobotVelocityB = -omegaRadians * HardwareConstants.SDSDRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE + b;
         rightRobotVelocity = -(rightRobotVelocityA + rightRobotVelocityB) / 2.0;
 
-        double forwardRobotVelocityA = omegaRadians * HardwareConstants.DRIVETRAINNEO_VERTICAL_WHEEL_CENTER_DISTANCE + c;
-        double forwardRobotVelocityB = -omegaRadians * HardwareConstants.DRIVETRAINNEO_VERTICAL_WHEEL_CENTER_DISTANCE + d;
+        double forwardRobotVelocityA = omegaRadians * HardwareConstants.SDSDRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE + c;
+        double forwardRobotVelocityB = -omegaRadians * HardwareConstants.SDSDRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE + d;
         forwardRobotVelocity = (forwardRobotVelocityA + forwardRobotVelocityB) / 2.0;
 
         this.angle += omegaRadians * Helpers.RADIANS_TO_DEGREES * this.deltaT;
@@ -889,8 +933,8 @@ public class DriveTrainMechanismNeo implements IMechanism
         return this.xPosition;
     }
 
-    public double getPositionY()
-    {
-        return this.yPosition;
-    }
+    public double getPositionY() 
+    { 
+        return this.yPosition; 
+    } 
 }

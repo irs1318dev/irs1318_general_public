@@ -935,8 +935,6 @@ public class DriveTrainMechanism implements IMechanism
 
     public double getPositionY() 
     { 
-
         return this.yPosition; 
-
     } 
 }

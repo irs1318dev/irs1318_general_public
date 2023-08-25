@@ -71,4 +71,15 @@ public class ElectronicsConstants
     public static final int DRIVETRAIN_ABSOLUTE_ENCODER_2_CAN_ID = 2;
     public static final int DRIVETRAIN_ABSOLUTE_ENCODER_3_CAN_ID = 3;
     public static final int DRIVETRAIN_ABSOLUTE_ENCODER_4_CAN_ID = 4;
+
+    //================================================== DriveTrainNeo ==============================================================
+
+    public static final int DRIVETRAINNEO_DRIVE_MOTOR_1_CAN_ID = 1;
+    public static final int DRIVETRAINNEO_STEER_MOTOR_1_CAN_ID = 2;
+    public static final int DRIVETRAINNEO_DRIVE_MOTOR_2_CAN_ID = 3;
+    public static final int DRIVETRAINNEO_STEER_MOTOR_2_CAN_ID = 4;
+    public static final int DRIVETRAINNEO_DRIVE_MOTOR_3_CAN_ID = 5;
+    public static final int DRIVETRAINNEO_STEER_MOTOR_3_CAN_ID = 6;
+    public static final int DRIVETRAINNEO_DRIVE_MOTOR_4_CAN_ID = 7;
+    public static final int DRIVETRAINNEO_STEER_MOTOR_4_CAN_ID = 8;
 }

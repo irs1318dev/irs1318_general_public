@@ -453,4 +453,11 @@ public class TuningConstants
     public static final double REVDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION = TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION / 1.25; // in inches per second per second
     public static final double REVDRIVETRAIN_LOW_PATH_TRANSLATIONAL_VELOCITY = TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY / 2.0; // in inches per second
     public static final double REVDRIVETRAIN_LOW_PATH_TRANSLATIONAL_ACCELERATION = TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION / 2.0; // in inches per second per second
+    
+    //======================================================== Electrolite Arm Constants ===================================
+    
+    public static final int WRIST_MOTOR_CAN_ID = 0;
+    public static final int INTAKE_MOTOR_CAN_ID = 0;
+    public static final boolean WRIST_MOTOR_INVERT_SENSOR = false;
+    public static final boolean WRIST_MOTOR_INVERT_OUTPUT = false;
 }

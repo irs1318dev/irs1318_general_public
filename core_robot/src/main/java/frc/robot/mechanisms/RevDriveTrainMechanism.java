@@ -569,8 +569,7 @@ public class RevDriveTrainMechanism implements IDriveTrainMechanism
 
                 double moduleSteerPositionGoal = this.driver.getAnalog(RevDriveTrainMechanism.STEER_SETPOINT_OPERATIONS[i]);
                 double currentAngle = this.steerAngles[i];
-                // TODO: update getClosestAngle to provide absolute angle [0, 360) instead of relative angle (e.g. -27390.0)
-                AnglePair anglePair = AnglePair.getClosestAngle(moduleSteerPositionGoal, currentAngle, true);
+                AnglePair anglePair = AnglePair.getClosestAngleAbsolute(moduleSteerPositionGoal, currentAngle, true);
                 moduleSteerPositionGoal = anglePair.getAngle();
                 this.isDirectionSwapped[i] = anglePair.getSwapDirection();
 
@@ -770,8 +769,7 @@ public class RevDriveTrainMechanism implements IDriveTrainMechanism
 
                 moduleSteerPositionGoal = Helpers.atan2d(-moduleVelocityRight, moduleVelocityForward);
                 double currentAngle = this.steerAngles[i];
-                // TODO: update getClosestAngle to provide absolute angle [0, 360) instead of relative angle (e.g. -27390.0)
-                AnglePair anglePair = AnglePair.getClosestAngle(moduleSteerPositionGoal, currentAngle, true);
+                AnglePair anglePair = AnglePair.getClosestAngleAbsolute(moduleSteerPositionGoal, currentAngle, true);
                 moduleSteerPositionGoal = anglePair.getAngle();
                 this.isDirectionSwapped[i] = anglePair.getSwapDirection();
 

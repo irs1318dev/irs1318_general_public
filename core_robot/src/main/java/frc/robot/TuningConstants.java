@@ -460,4 +460,24 @@ public class TuningConstants
     public static final int INTAKE_MOTOR_CAN_ID = 0;
     public static final boolean WRIST_MOTOR_INVERT_SENSOR = false;
     public static final boolean WRIST_MOTOR_INVERT_OUTPUT = false;
+    public static final boolean INTAKE_MOTOR_INVERT_OUTPUT = false;
+
+    public static final double WRIST_MOTOR_POSITION_PID_KP = 0.8;
+    public static final double WRIST_MOTOR_POSITION_PID_KI = 0;
+    public static final double WRIST_MOTOR_POSITION_PID_KD = 0;
+    public static final double WRIST_MOTOR_POSITION_PID_KF = 0.2;
+    public static final double WRIST_MOTOR_SM_PID_KP = 0;
+    public static final double WRIST_MOTOR_SM_PID_KI = 0;
+    public static final double WRIST_MOTOR_SM_PID_KD = 0;
+    public static final double WRIST_MOTOR_SM_PID_KF = 0;
+    public static final int WRIST_MOTOR_SM_IZONE = 0;
+    public static final int WRIST_MOTOR_SM_PID_CRUISE_VELOC = 48000;
+    public static final int WRIST_MOTOR_SM_PID_ACCEL = 48000;
+
+    public static final double WRIST_INTAKE_IN_POWER = 0.6;
+    public static final double WRIST_INTAKE_OUT_POWER = -0.6;
+
+    public static boolean WRIST_MOTOR_POSITION_PID_WRAPPING_ENABLED = false;
+    public static double WRIST_MOTOR_POSITION_PID_WRAPPING_MIN = 0.0;
+    public static double WRIST_MOTOR_POSITION_PID_WRAPPING_MAX = 360.0;
 }

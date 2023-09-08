@@ -34,4 +34,10 @@ public enum DigitalOperation implements IOperation
     DriveTrainDisableMaintainDirectionMode,
     DriveTrainResetXYPosition,
     DriveTrainIgnoreSlewRateLimitingMode,
+
+    // Wrist operations:
+    WristEnableSimpleMode, // make a button
+    WristDisableSimpleMode, // make a button
+    IntakeIn, // make a button
+    IntakeOut, // make a button
 }

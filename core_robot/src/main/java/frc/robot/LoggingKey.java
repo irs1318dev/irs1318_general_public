@@ -107,6 +107,11 @@ public enum LoggingKey
     DriveTrainSteerError4("dt.steer_err4"), // SDS-only
     DriveTrainSteerPositionGoal4("dt.steer_goal4"),
 
+    WristMotorVelocity("w.wrist_vel"),
+    WristMotorAngle("w.wrist_ang"),
+    IntakeMotorVelocity("w.intake_vel"),
+    intakeMotorPercentOutput("w.intake_per_out"),
+
     CompressorPreassure("com.pres");
 
     public final String value;

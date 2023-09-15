@@ -1,44 +1,32 @@
 package frc.robot.mechanisms;
 
  import frc.robot.*;
- import frc.lib.*;
- import frc.lib.controllers.PIDHandler;
  import frc.lib.driver.*;
- import frc.lib.filters.*;
- import frc.lib.helpers.AnglePair;
  import frc.lib.helpers.Helpers;
  import frc.lib.mechanisms.*;
  import frc.lib.robotprovider.*;
  import frc.robot.driver.*;
- import frc.robot.mechanisms.PowerManager.CurrentLimiting;
-
-import org.apache.commons.math3.analysis.interpolation.TricubicSplineInterpolatingFunction;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class WristIntakeMechanism implements IDriveTrainMechanism 
+public class WristIntakeMechanism implements IMechanism 
 {
     private static final int DefaultPidSlotId = 0;
     private static final int SMPidSlotId = 1;
 
     private final IDriver driver;
     private final ILogger logger;
-    private final ITimer timer;
-    private final PowerManager powerManager;
 
     private final ISparkMax wristMotor;
     private final ISparkMax intakeMotor;
 
     private double wristMotorAngle;
     private double wristMotorVelocity;
-    private double wristMotorError;
     private double wristMotorDesiredAngle;
-    private double wristMotorPercentOutput;
 
     private double intakeMotorVelocity;
-    private double intakeMotorPercentOutput;
 
     private boolean inSimpleMode;
 
@@ -52,8 +40,6 @@ public class WristIntakeMechanism implements IDriveTrainMechanism
     {
         this.driver = driver;
         this.logger = logger;
-        this.timer = timer;
-        this.powerManager = powerManager;
 
         this.wristMotor = provider.getSparkMax(TuningConstants.WRIST_MOTOR_CAN_ID, SparkMaxMotorType.Brushed);
         this.intakeMotor = provider.getSparkMax(TuningConstants.INTAKE_MOTOR_CAN_ID, SparkMaxMotorType.Brushless);
@@ -125,8 +111,6 @@ public class WristIntakeMechanism implements IDriveTrainMechanism
         else if (this.driver.getDigital(DigitalOperation.WristDisableSimpleMode))
         {
             this.inSimpleMode = false;
-            
-            this.wristMotorDesiredAngle = this.wristMotorAngle;
         }
 
         // --------------------------------- Intake Update -----------------------------------------------------
@@ -149,94 +133,55 @@ public class WristIntakeMechanism implements IDriveTrainMechanism
         double wristAngleAdjustment = this.driver.getAnalog(AnalogOperation.WristAngleAdjustment);
         
         double wristPower = 0.0;
-        boolean useSimpleMode = false;
         if (this.inSimpleMode)
         {
-            useSimpleMode = true;
-
-            // controlled by joystick
+            // controlled by joystick - raw power
             wristPower = wristAngleAdjustment;
         }
 
         else
         {
+            double newDesiredWristAngle = this.driver.getAnalog(AnalogOperation.WristSetAngle);
+
             if (wristAngleAdjustment != 0.0)
             {
-                useSimpleMode = true;
-                double wristMotorAngle = 0; // WORK HERE
+                this.wristMotorDesiredAngle = this.wristMotorAngle;
+
+                // Controlled by joysticks - angle adjustment
+                this.wristMotorDesiredAngle += wristAngleAdjustment * TuningConstants.WRIST_INPUT_TO_TICK_ADJUSTMENT;
             }
+            
+            else if (newDesiredWristAngle != TuningConstants.MAGIC_NULL_VALUE)
+            {
+                // controlled by macro
+                if (newDesiredWristAngle != TuningConstants.MAGIC_NULL_VALUE &&
+                    (!Helpers.RoughEquals(this.wristMotorDesiredAngle, newDesiredWristAngle, 0.1)))
+                {
+                    this.wristMotorDesiredAngle = newDesiredWristAngle;
+                }
+            }
+        }
+
+        if (!this.inSimpleMode)
+        {
+            
+            this.wristMotor.set(this.wristMotorDesiredAngle);
+        }
+        else
+        {
+            this.wristMotor.set(wristPower);
         }
     }
 
     @Override
     public void stop()
     {
-        // this.omegaPID.reset();
-        // this.pathOmegaPID.reset();
-        // this.pathXOffsetPID.reset();
-        // this.pathYOffsetPID.reset();
-        // for (int i = 0; i < RevDriveTrainMechanism.NUM_MODULES; i++)
-        // {
-        //     this.driveMotors[i].stop();
-        //     this.steerMotors[i].stop();
-        // }
-
-        // if (this.xVelocityLimiter != null)
-        // {
-        //     this.xVelocityLimiter.reset();
-        // }
-
-        // if (this.yVelocityLimiter != null)
-        // {
-        //     this.yVelocityLimiter.reset();
-        // }
-
-        // if (this.angularVelocityLimiter != null)
-        // {
-        //     this.angularVelocityLimiter.reset();
-        // }
-
-        // this.xPosition = 0.0;
-        // this.yPosition = 0.0;
+        this.wristMotor.stop();
+        this.intakeMotor.stop();
     }
 
-
-    @Override
-    public Pose2d getPose()
+    public double getPosition()
     {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPose'");
-    }
-
-
-    @Override
-    public double getPositionX()
-    {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPositionX'");
-    }
-
-
-    @Override
-    public double getPositionY()
-    {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPositionY'");
-    }
-
-
-    @Override
-    public double[] getModuleTurnInPlaceAngles()
-    {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getModuleTurnInPlaceAngles'");
-    }
-
-
-    @Override
-    public double[] getDriveMotorPositions()
-    {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getDriveMotorPositions'");
+        return this.wristMotorAngle;
     }
 }

@@ -32,4 +32,5 @@ public enum AnalogOperation implements IOperation
     
     // Wrist operations:
     WristAngleAdjustment,
+    WristSetAngle,
 }

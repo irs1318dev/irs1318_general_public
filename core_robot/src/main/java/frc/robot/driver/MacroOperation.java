@@ -19,4 +19,12 @@ public enum MacroOperation implements IOperation
     FollowPathTest2,
     FollowPathTest3,
     FollowPathTest4,
+
+    // Wrist operations:
+    LowCubeDrop,
+    MidCubeDrop,
+    HighCubeDrop,
+    WristStowed,
+    SubstationPickup,
+    GroundPickup,
 }

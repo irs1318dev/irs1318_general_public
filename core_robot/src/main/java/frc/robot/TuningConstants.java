@@ -476,6 +476,17 @@ public class TuningConstants
 
     public static final double WRIST_INTAKE_IN_POWER = 0.6;
     public static final double WRIST_INTAKE_OUT_POWER = -0.6;
+    public static final double WRIST_INPUT_TO_TICK_ADJUSTMENT = 0;
+    public static final double WRIST_MIN_THRESHOLD = 20;
+    public static final double WRIST_DEADZONE = 1.0;
+
+    public static final double LOW_CUBE_DROP_POSITION = 210;
+    public static final double MID_CUBE_DROP_POSITION = 140;
+    public static final double HIGH_CUBE_DROP_POSITION = 100;
+    public static final double STOWED_POSITION = 70;
+    public static final double GROUND_CUBE_PICKUP = 210;
+    public static final double SUBSTATION_CUBE_PICKUP = 100;
+    
 
     public static boolean WRIST_MOTOR_POSITION_PID_WRAPPING_ENABLED = false;
     public static double WRIST_MOTOR_POSITION_PID_WRAPPING_MIN = 0.0;

@@ -83,6 +83,18 @@ public class ButtonMap implements IButtonMap
             !ElectronicsConstants.INVERT_XBONE_RIGHT_TRIGGER, // make left positive, as counter-clockwise is positive
             -TuningConstants.SDSDRIVETRAIN_DEAD_ZONE_TURN,
             TuningConstants.SDSDRIVETRAIN_DEAD_ZONE_TURN),
+
+        // wrist Operation
+        new AnalogOperationDescription(
+            AnalogOperation.WristAngleAdjustment,
+            UserInputDevice.Codriver,
+            AnalogAxis.XBONE_LSY,
+            ElectronicsConstants.INVERT_XBONE_LEFT_Y_AXIS,
+            TuningConstants.WRIST_DEADZONE),
+        
+        new AnalogOperationDescription(
+            AnalogOperation.WristSetAngle,
+            TuningConstants.MAGIC_NULL_VALUE),
     };
 
     public static DigitalOperationDescription[] DigitalOperationSchema = new DigitalOperationDescription[]
@@ -160,6 +172,31 @@ public class ButtonMap implements IButtonMap
             UserInputDeviceButton.XBONE_A_BUTTON,
             EnumSet.of(Shift.Test1Debug),
             EnumSet.of(Shift.Test1Debug),
+            ButtonType.Toggle),
+
+        // Wrist operations:
+        new DigitalOperationDescription(
+            DigitalOperation.IntakeIn,
+            UserInputDevice.Codriver,
+            UserInputDeviceButton.XBONE_A_BUTTON,
+            ButtonType.Simple),
+        
+        new DigitalOperationDescription(
+            DigitalOperation.IntakeOut,
+            UserInputDevice.Codriver,
+            UserInputDeviceButton.XBONE_B_BUTTON,
+            ButtonType.Simple),
+        
+        new DigitalOperationDescription(
+            DigitalOperation.WristEnableSimpleMode,
+            UserInputDevice.Codriver,
+            UserInputDeviceButton.XBONE_X_BUTTON,
+            ButtonType.Toggle),
+
+        new DigitalOperationDescription(
+            DigitalOperation.WristDisableSimpleMode,
+            UserInputDevice.Codriver,
+            UserInputDeviceButton.XBONE_Y_BUTTON,
             ButtonType.Toggle),
     };
 
@@ -270,6 +307,80 @@ public class ButtonMap implements IButtonMap
                 AnalogOperation.DriveTrainTurnAngleGoal,
                 AnalogOperation.DriveTrainSpinLeft,
                 AnalogOperation.DriveTrainSpinRight,
+            }),
+        
+        // Wrist Operations
+        new MacroOperationDescription(
+            MacroOperation.LowCubeDrop,
+            UserInputDevice.Codriver,
+            180,
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.noneOf(Shift.class),
+            ButtonType.Toggle,
+            () -> new WristPositionTask(TuningConstants.LOW_CUBE_DROP_POSITION),
+            new IOperation[]
+            {
+                AnalogOperation.WristSetAngle
+            }),
+        new MacroOperationDescription(
+            MacroOperation.MidCubeDrop,
+            UserInputDevice.Codriver,
+            270,
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.noneOf(Shift.class),
+            ButtonType.Toggle,
+            () -> new WristPositionTask(TuningConstants.MID_CUBE_DROP_POSITION),
+            new IOperation[]
+            {
+                AnalogOperation.WristSetAngle
+            }),
+        new MacroOperationDescription(
+            MacroOperation.HighCubeDrop,
+            UserInputDevice.Codriver,
+            0,
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.noneOf(Shift.class),
+            ButtonType.Toggle,
+            () -> new WristPositionTask(TuningConstants.HIGH_CUBE_DROP_POSITION),
+            new IOperation[]
+            {
+                AnalogOperation.WristSetAngle
+            }),
+        new MacroOperationDescription(
+            MacroOperation.WristStowed,
+            UserInputDevice.Codriver,
+            90,
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.noneOf(Shift.class),
+            ButtonType.Toggle,
+            () -> new WristPositionTask(TuningConstants.STOWED_POSITION),
+            new IOperation[]
+            {
+                AnalogOperation.WristSetAngle
+            }),
+        new MacroOperationDescription(
+            MacroOperation.GroundPickup,
+            UserInputDevice.Codriver,
+            UserInputDeviceButton.XBONE_LT,
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.noneOf(Shift.class),
+            ButtonType.Toggle,
+            () -> new WristPositionTask(TuningConstants.GROUND_CUBE_PICKUP),
+            new IOperation[]
+            {
+                AnalogOperation.WristSetAngle
+            }),
+        new MacroOperationDescription(
+            MacroOperation.SubstationPickup,
+            UserInputDevice.Codriver,
+            UserInputDeviceButton.XBONE_RT,
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.noneOf(Shift.class),
+            ButtonType.Toggle,
+            () -> new WristPositionTask(TuningConstants.SUBSTATION_CUBE_PICKUP),
+            new IOperation[]
+            {
+                AnalogOperation.WristSetAngle
             }),
 
         new MacroOperationDescription(

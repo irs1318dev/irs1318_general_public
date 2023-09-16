@@ -18,6 +18,9 @@ public class WristIntakeMechanism implements IMechanism
 
     private final IDriver driver;
     private final ILogger logger;
+    private final ITimer timer;
+
+    private double prevTime;
 
     private final ISparkMax wristMotor;
     private final ISparkMax intakeMotor;
@@ -40,6 +43,7 @@ public class WristIntakeMechanism implements IMechanism
     {
         this.driver = driver;
         this.logger = logger;
+        this.timer = timer;
 
         this.wristMotor = provider.getSparkMax(TuningConstants.WRIST_MOTOR_CAN_ID, SparkMaxMotorType.Brushed);
         this.intakeMotor = provider.getSparkMax(TuningConstants.INTAKE_MOTOR_CAN_ID, SparkMaxMotorType.Brushless);
@@ -104,6 +108,7 @@ public class WristIntakeMechanism implements IMechanism
     @Override
     public void update()
     {
+        double currTime = this.timer.get();
         if (this.driver.getDigital(DigitalOperation.WristEnableSimpleMode))
         {
             this.inSimpleMode = true;
@@ -111,6 +116,7 @@ public class WristIntakeMechanism implements IMechanism
         else if (this.driver.getDigital(DigitalOperation.WristDisableSimpleMode))
         {
             this.inSimpleMode = false;
+            this.wristMotorDesiredAngle = this.wristMotorAngle;
         }
 
         // --------------------------------- Intake Update -----------------------------------------------------
@@ -142,13 +148,14 @@ public class WristIntakeMechanism implements IMechanism
         else
         {
             double newDesiredWristAngle = this.driver.getAnalog(AnalogOperation.WristSetAngle);
+            double elapsedTime = currTime - this.prevTime;
 
             if (wristAngleAdjustment != 0.0)
             {
                 this.wristMotorDesiredAngle = this.wristMotorAngle;
 
                 // Controlled by joysticks - angle adjustment
-                this.wristMotorDesiredAngle += wristAngleAdjustment * TuningConstants.WRIST_INPUT_TO_TICK_ADJUSTMENT;
+                this.wristMotorDesiredAngle += wristAngleAdjustment * TuningConstants.WRIST_INPUT_TO_TICK_ADJUSTMENT * elapsedTime;
             }
             
             else if (newDesiredWristAngle != TuningConstants.MAGIC_NULL_VALUE)
@@ -171,6 +178,11 @@ public class WristIntakeMechanism implements IMechanism
         {
             this.wristMotor.set(wristPower);
         }
+
+        this.logger.logNumber(LoggingKey.WristMotorSetPower, wristPower);
+        this.logger.logNumber(LoggingKey.WristMotorSetPosition, this.wristMotorDesiredAngle);
+
+        this.prevTime = currTime;
     }
 
     @Override

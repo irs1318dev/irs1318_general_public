@@ -111,6 +111,8 @@ public enum LoggingKey
     WristMotorAngle("w.wrist_ang"),
     IntakeMotorVelocity("w.intake_vel"),
     intakeMotorPercentOutput("w.intake_per_out"),
+    WristMotorSetPower("w.wrist_set_pow"),
+    WristMotorSetPosition("w.wrist_set_pos"),
 
     CompressorPreassure("com.pres");
 

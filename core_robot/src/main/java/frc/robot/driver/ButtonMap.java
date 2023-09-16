@@ -191,13 +191,13 @@ public class ButtonMap implements IButtonMap
             DigitalOperation.WristEnableSimpleMode,
             UserInputDevice.Codriver,
             UserInputDeviceButton.XBONE_X_BUTTON,
-            ButtonType.Toggle),
+            ButtonType.Simple),
 
         new DigitalOperationDescription(
             DigitalOperation.WristDisableSimpleMode,
             UserInputDevice.Codriver,
             UserInputDeviceButton.XBONE_Y_BUTTON,
-            ButtonType.Toggle),
+            ButtonType.Simple),
     };
 
     public static MacroOperationDescription[] MacroSchema = new MacroOperationDescription[]

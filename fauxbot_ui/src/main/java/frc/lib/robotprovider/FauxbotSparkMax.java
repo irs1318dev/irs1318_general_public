@@ -27,18 +27,6 @@ public class FauxbotSparkMax extends FauxbotAdvancedMotorBase implements ISparkM
         this.resetPID();
     }
 
-    public void follow(ISparkMax talonSRX)
-    {
-    }
-
-    public void setFeedbackFramePeriod(SparkMaxPeriodicFrameType frameType, int periodMS)
-    {
-    }
-
-    public void setSelectedSlot(int slotId)
-    {
-    }
-
     public void setPIDF(double p, double i, double d, double f, int slotId)
     {
         this.kp = p;
@@ -93,7 +81,6 @@ public class FauxbotSparkMax extends FauxbotAdvancedMotorBase implements ISparkM
         this.resetPID();
     }
 
-    @Override
     public void set(double newValue)
     {
         if (this.currentMode == SparkMaxControlMode.Velocity)
@@ -110,6 +97,43 @@ public class FauxbotSparkMax extends FauxbotAdvancedMotorBase implements ISparkM
         }
     }
 
+    public double getPosition()
+    {
+        return (double)this.innerEncoder.getDistance();
+    }
+
+    public void follow(ISparkMax sparkMax)
+    {
+    }
+
+    public void setAbsoluteEncoder()
+    {
+    }
+
+    public void setRelativeEncoder()
+    {
+    }
+
+    public void setRelativeEncoder(SparkMaxRelativeEncoderType encoderType, int resolution)
+    {
+    }
+
+    public void setFeedbackFramePeriod(SparkMaxPeriodicFrameType frameType, int periodMS)
+    {
+    }
+
+    public void setEncoderAverageDepth(int windowSize)
+    {
+    }
+
+    public void setVelocityMeasurementPeriod(int periodMS)
+    {
+    }
+
+    public void setSelectedSlot(int slotId)
+    {
+    }
+
     public void setForwardLimitSwitch(boolean enabled, boolean normallyOpen)
     {
     }
@@ -118,11 +142,11 @@ public class FauxbotSparkMax extends FauxbotAdvancedMotorBase implements ISparkM
     {
     }
 
-    public void setInvertOutput(boolean flip)
+    public void setInvertOutput(boolean invert)
     {
     }
 
-    public void setInvertSensor(boolean flip)
+    public void setInvertSensor(boolean invert)
     {
     }
 
@@ -134,11 +158,11 @@ public class FauxbotSparkMax extends FauxbotAdvancedMotorBase implements ISparkM
     {
     }
 
-    public void setVelocityMeasurements(int periodMS, int windowSize)
+    public void stop()
     {
     }
 
-    public void stop()
+    public void setAbsoluteOffset(double zeroOffset)
     {
     }
 
@@ -150,17 +174,23 @@ public class FauxbotSparkMax extends FauxbotAdvancedMotorBase implements ISparkM
     {
     }
 
-    public double getPosition()
+    public void burnFlash()
     {
-        return (double)this.innerEncoder.getDistance();
+    }
+
+    public void setPositionConversionFactor(double ratio)
+    {
+    }
+
+    public void setVelocityConversionFactor(double ratio)
+    {
+    }
+
+    public void setPositionPIDWrappingSettings(boolean enable, double minInput, double maxInput)
+    {
     }
 
     public double getVelocity()
-    {
-        return 0.0;
-    }
-
-    public double getError()
     {
         return 0.0;
     }

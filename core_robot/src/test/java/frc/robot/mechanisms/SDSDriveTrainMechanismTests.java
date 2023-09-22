@@ -24,24 +24,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 // import org.junit.jupiter.api.Test;
 
-public class DriveTrainMechanismTests
+public class SDSDriveTrainMechanismTests
 {
     private static final double[] MODULE_OFFSET_X =
         new double[]
         {
-            -HardwareConstants.DRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // module 1 (front-right)
-            HardwareConstants.DRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // module 2 (front-left)
-            HardwareConstants.DRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // module 3 (back-left)
-            -HardwareConstants.DRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // module 4 (back-right)
+            -HardwareConstants.SDSDRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // module 1 (front-right)
+            HardwareConstants.SDSDRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // module 2 (front-left)
+            HardwareConstants.SDSDRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // module 3 (back-left)
+            -HardwareConstants.SDSDRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE, // module 4 (back-right)
         };
 
         private static final double[] MODULE_OFFSET_Y =
         new double[]
         {
-            -HardwareConstants.DRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // module 1 (front-right)
-            -HardwareConstants.DRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // module 2 (front-left)
-            HardwareConstants.DRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // module 3 (back-left)
-            HardwareConstants.DRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // module 4 (back-right)
+            -HardwareConstants.SDSDRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // module 1 (front-right)
+            -HardwareConstants.SDSDRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // module 2 (front-left)
+            HardwareConstants.SDSDRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // module 3 (back-left)
+            HardwareConstants.SDSDRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // module 4 (back-right)
         };
 
     // @Test
@@ -68,7 +68,7 @@ public class DriveTrainMechanismTests
         LoggingManager logger = new LoggingManager(new NullLogger());
         PigeonManager pigeonManager = new PigeonManager(driver, logger, provider);
         PowerManager powerManager = new PowerManager(driver, timer, logger, provider);
-        DriveTrainMechanism driveTrain = new DriveTrainMechanism(
+        SDSDriveTrainMechanism driveTrain = new SDSDriveTrainMechanism(
             driver,
             logger,
             provider,
@@ -113,7 +113,7 @@ public class DriveTrainMechanismTests
         LoggingManager logger = new LoggingManager(new NullLogger());
         PigeonManager pigeonManager = new PigeonManager(driver, logger, provider);
         PowerManager powerManager = new PowerManager(driver, timer, logger, provider);
-        DriveTrainMechanism driveTrain = new DriveTrainMechanism(
+        SDSDriveTrainMechanism driveTrain = new SDSDriveTrainMechanism(
             driver,
             logger,
             provider,
@@ -126,7 +126,7 @@ public class DriveTrainMechanismTests
             for (int i = 0; i < 4; i++)
             {
                 // 10% max-speed
-                drive[i].set(0.1 * TuningConstants.DRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS);;
+                drive[i].set(0.1 * TuningConstants.SDSDRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS);;
             }
 
             pigeonManager.readSensors();
@@ -137,7 +137,7 @@ public class DriveTrainMechanismTests
         Pose2d pose = driveTrain.getPose();
         assertEquals(0.0, pose.angle, 0.5);
         assertEquals(0.0, pose.x, 0.5);
-        assertEquals(0.1 * TuningConstants.DRIVETRAIN_MAX_VELOCITY, pose.y, 0.5);
+        assertEquals(0.1 * TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY, pose.y, 0.5);
     }
 
     // @Test
@@ -164,7 +164,7 @@ public class DriveTrainMechanismTests
         LoggingManager logger = new LoggingManager(new NullLogger());
         PigeonManager pigeonManager = new PigeonManager(driver, logger, provider);
         PowerManager powerManager = new PowerManager(driver, timer, logger, provider);
-        DriveTrainMechanism driveTrain = new DriveTrainMechanism(
+        SDSDriveTrainMechanism driveTrain = new SDSDriveTrainMechanism(
             driver,
             logger,
             provider,
@@ -177,7 +177,7 @@ public class DriveTrainMechanismTests
             for (int i = 0; i < 4; i++)
             {
                 // 10% max-speed
-                drive[i].set(-0.1 * TuningConstants.DRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS);;
+                drive[i].set(-0.1 * TuningConstants.SDSDRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS);;
             }
 
             pigeon.set(180.0);
@@ -189,7 +189,7 @@ public class DriveTrainMechanismTests
         Pose2d pose = driveTrain.getPose();
         assertEquals(180.0, pose.angle, 0.5);
         assertEquals(0.0, pose.x, 0.5);
-        assertEquals(0.1 * TuningConstants.DRIVETRAIN_MAX_VELOCITY, pose.y, 0.5);
+        assertEquals(0.1 * TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY, pose.y, 0.5);
     }
 
     // @Test
@@ -216,7 +216,7 @@ public class DriveTrainMechanismTests
         LoggingManager logger = new LoggingManager(new NullLogger());
         PigeonManager pigeonManager = new PigeonManager(driver, logger, provider);
         PowerManager powerManager = new PowerManager(driver, timer, logger, provider);
-        DriveTrainMechanism driveTrain = new DriveTrainMechanism(
+        SDSDriveTrainMechanism driveTrain = new SDSDriveTrainMechanism(
             driver,
             logger,
             provider,
@@ -229,8 +229,8 @@ public class DriveTrainMechanismTests
             for (int i = 0; i < 4; i++)
             {
                 // 10% max-speed
-                drive[i].set(0.1 * TuningConstants.DRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS);;
-                steer[i].set(90.0 * HardwareConstants.DRIVETRAIN_STEER_TICKS_PER_DEGREE);
+                drive[i].set(0.1 * TuningConstants.SDSDRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS);;
+                steer[i].set(90.0 * HardwareConstants.SDSDRIVETRAIN_STEER_TICKS_PER_DEGREE);
             }
 
             pigeon.set(0.0);
@@ -241,7 +241,7 @@ public class DriveTrainMechanismTests
 
         Pose2d pose = driveTrain.getPose();
         assertEquals(0.0, pose.angle, 0.5);
-        assertEquals(-0.1 * TuningConstants.DRIVETRAIN_MAX_VELOCITY, pose.x, 0.5);
+        assertEquals(-0.1 * TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY, pose.x, 0.5);
         assertEquals(0.0, pose.y, 0.5);
     }
 
@@ -269,7 +269,7 @@ public class DriveTrainMechanismTests
         LoggingManager logger = new LoggingManager(new NullLogger());
         PigeonManager pigeonManager = new PigeonManager(driver, logger, provider);
         PowerManager powerManager = new PowerManager(driver, timer, logger, provider);
-        DriveTrainMechanism driveTrain = new DriveTrainMechanism(
+        SDSDriveTrainMechanism driveTrain = new SDSDriveTrainMechanism(
             driver,
             logger,
             provider,
@@ -282,7 +282,7 @@ public class DriveTrainMechanismTests
             for (int i = 0; i < 4; i++)
             {
                 // 10% max-speed
-                drive[i].set(0.1 * TuningConstants.DRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS);
+                drive[i].set(0.1 * TuningConstants.SDSDRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS);
             }
 
             pigeon.set(90.0);
@@ -293,7 +293,7 @@ public class DriveTrainMechanismTests
 
         Pose2d pose = driveTrain.getPose();
         assertEquals(90.0, pose.angle, 0.5);
-        assertEquals(-0.1 * TuningConstants.DRIVETRAIN_MAX_VELOCITY, pose.x, 0.5);
+        assertEquals(-0.1 * TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY, pose.x, 0.5);
         assertEquals(0.0, pose.y, 0.5);
     }
 
@@ -321,7 +321,7 @@ public class DriveTrainMechanismTests
         LoggingManager logger = new LoggingManager(new NullLogger());
         PigeonManager pigeonManager = new PigeonManager(driver, logger, provider);
         PowerManager powerManager = new PowerManager(driver, timer, logger, provider);
-        DriveTrainMechanism driveTrain = new DriveTrainMechanism(
+        SDSDriveTrainMechanism driveTrain = new SDSDriveTrainMechanism(
             driver,
             logger,
             provider,
@@ -336,14 +336,14 @@ public class DriveTrainMechanismTests
         {
             for (int i = 0; i < 4; i++)
             {
-                double moduleVelocityRight = robotVelocityRight + omega * DriveTrainMechanismTests.MODULE_OFFSET_Y[i];
-                double moduleVelocityForward = robotVelocityForward - omega * DriveTrainMechanismTests.MODULE_OFFSET_X[i];
+                double moduleVelocityRight = robotVelocityRight + omega * SDSDriveTrainMechanismTests.MODULE_OFFSET_Y[i];
+                double moduleVelocityForward = robotVelocityForward - omega * SDSDriveTrainMechanismTests.MODULE_OFFSET_X[i];
 
                 double moduleSteerPositionGoal = Helpers.atan2d(-moduleVelocityRight, moduleVelocityForward);
-                moduleSteerPositionGoal *= TuningConstants.DRIVETRAIN_STEER_MOTOR_POSITION_PID_KS;
+                moduleSteerPositionGoal *= TuningConstants.SDSDRIVETRAIN_STEER_MOTOR_POSITION_PID_KS;
 
                 double moduleDriveVelocityGoal = Math.sqrt(moduleVelocityRight * moduleVelocityRight + moduleVelocityForward * moduleVelocityForward);
-                moduleDriveVelocityGoal *= HardwareConstants.DRIVETRAIN_DRIVE_INCHES_PER_SECOND_TO_MOTOR_VELOCITY;
+                moduleDriveVelocityGoal *= HardwareConstants.SDSDRIVETRAIN_DRIVE_INCHES_PER_SECOND_TO_MOTOR_VELOCITY;
 
                 drive[i].set(moduleDriveVelocityGoal);
                 steer[i].set(moduleSteerPositionGoal);

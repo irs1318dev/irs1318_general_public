@@ -17,13 +17,13 @@ public class RoadRunnerTrajectoryGenerator
             new MinVelocityConstraint(
                 Arrays.asList(
                     new TankVelocityConstraint(
-                        TuningConstants.DRIVETRAIN_PATH_MAX_VELOCITY_INCHES_PER_SECOND,
-                        HardwareConstants.DRIVETRAIN_WHEEL_SEPARATION_DISTANCE),
-                    new AngularVelocityConstraint(TuningConstants.DRIVETRAIN_MAX_PATH_TURN_VELOCITY * Helpers.DEGREES_TO_RADIANS),
-                    new TranslationalVelocityConstraint(TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY)));
+                        TuningConstants.TANK_DRIVETRAIN_PATH_MAX_VELOCITY_INCHES_PER_SECOND,
+                        HardwareConstants.TANK_DRIVETRAIN_WHEEL_SEPARATION_DISTANCE),
+                    new AngularVelocityConstraint(TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TURN_VELOCITY * Helpers.DEGREES_TO_RADIANS),
+                    new TranslationalVelocityConstraint(TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY)));
 
     private static final TrajectoryAccelerationConstraint accelerationConstraint =
-            new ProfileAccelerationConstraint(TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION);
+            new ProfileAccelerationConstraint(TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION);
 
     public static void main(String[] args)
     {

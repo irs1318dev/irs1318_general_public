@@ -5,7 +5,7 @@ import frc.lib.helpers.Helpers;
 import frc.lib.robotprovider.ITimer;
 import frc.robot.TuningConstants;
 import frc.robot.driver.*;
-import frc.robot.mechanisms.DriveTrainMechanism;
+import frc.robot.mechanisms.TankDriveTrainMechanism;
 import frc.robot.mechanisms.PigeonManager;
 
 /**
@@ -21,7 +21,7 @@ public class OrientationTask extends ControlTaskBase
 
     private PIDHandler turnPidHandler;
     private PigeonManager pManager;
-    private DriveTrainMechanism dt;
+    private TankDriveTrainMechanism dt;
     private ITimer timer;
 
     private double desiredTurnVelocity;
@@ -95,7 +95,7 @@ public class OrientationTask extends ControlTaskBase
     public void begin()
     {
         this.pManager = this.getInjector().getInstance(PigeonManager.class);
-        this.dt = this.getInjector().getInstance(DriveTrainMechanism.class);
+        this.dt = this.getInjector().getInstance(TankDriveTrainMechanism.class);
         this.timer = this.getInjector().getInstance(ITimer.class);
 
         this.turnPidHandler = this.createTurnHandler();

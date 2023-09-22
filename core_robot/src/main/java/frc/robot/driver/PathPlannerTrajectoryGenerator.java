@@ -19,56 +19,56 @@ public class PathPlannerTrajectoryGenerator
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(
-                TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
-                TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
                 new PathPlannerWaypoint(0.0, 0.0, 180.0, 0.0),
                 new PathPlannerWaypoint(-30.0, 0.0, 180.0, 0.0)),
                 "goBackwards30in");
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(
-                TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
-                TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
                 new PathPlannerWaypoint(0.0, 0.0, 180.0, 0.0),
                 new PathPlannerWaypoint(-12.0, 0.0, 180.0, 0.0)),
                 "goBackwards1ft");
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(
-                TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
-                TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
                 new PathPlannerWaypoint(0.0, 0.0, 180.0, 0.0),
                 new PathPlannerWaypoint(-12.0, 0.0, 180.0, 0.0)),
                 "goBackwards15in");
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(
-                TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
-                TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
                 new PathPlannerWaypoint(0.0, 0.0, 90.0, 0.0),
                 new PathPlannerWaypoint(18.0, 32.0, 0.0, 0.0)),
                 "goLeft32inForward18in");
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(
-                TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
-                TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
                 new PathPlannerWaypoint(0.0, 0.0, 270.0, 0.0),
                 new PathPlannerWaypoint(18.0, -32.0, 0.0, 0.0)),
                 "goRight32inForward18in");
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(
-                TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
-                TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
                 new PathPlannerWaypoint(0.0, 0.0, 90.0, 0.0),
                 new PathPlannerWaypoint(0.0, 22.0, 90.0, 0.0)),
                 "goLeft22in");
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(
-                TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
-                TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
                 new PathPlannerWaypoint(0.0, 0.0, 270.0, 0.0),
                 new PathPlannerWaypoint(0.0, -22.0, 270.0, 0.0)),
                 "goRight22in");

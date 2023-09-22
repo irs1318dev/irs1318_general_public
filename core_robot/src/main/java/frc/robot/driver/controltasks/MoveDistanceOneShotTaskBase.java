@@ -2,7 +2,7 @@ package frc.robot.driver.controltasks;
 
 import frc.robot.TuningConstants;
 import frc.robot.driver.*;
-import frc.robot.mechanisms.DriveTrainMechanism;
+import frc.robot.mechanisms.TankDriveTrainMechanism;
 
 /**
  * Abstract class defining a task that moves the robot a certain distance using Positional PID.
@@ -11,7 +11,7 @@ import frc.robot.mechanisms.DriveTrainMechanism;
 public abstract class MoveDistanceOneShotTaskBase extends ControlTaskBase
 {
     private final boolean resetPositionalOnEnd;
-    private DriveTrainMechanism driveTrain;
+    private TankDriveTrainMechanism driveTrain;
 
     protected double startLeftTicks;
     protected double startRightTicks;
@@ -34,7 +34,7 @@ public abstract class MoveDistanceOneShotTaskBase extends ControlTaskBase
     @Override
     public void begin()
     {
-        this.driveTrain = this.getInjector().getInstance(DriveTrainMechanism.class);
+        this.driveTrain = this.getInjector().getInstance(TankDriveTrainMechanism.class);
 
         // set the start location
         this.setStartEncoderDistance();

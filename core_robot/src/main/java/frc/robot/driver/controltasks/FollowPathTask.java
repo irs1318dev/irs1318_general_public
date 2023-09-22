@@ -11,7 +11,7 @@ import frc.lib.robotprovider.TrajectoryState;
 import frc.robot.TuningConstants;
 import frc.robot.driver.AnalogOperation;
 import frc.robot.driver.DigitalOperation;
-import frc.robot.mechanisms.DriveTrainMechanism;
+import frc.robot.mechanisms.TankDriveTrainMechanism;
 import frc.robot.mechanisms.PigeonManager;
 
 /**
@@ -25,7 +25,7 @@ public class FollowPathTask extends ControlTaskBase
     protected ITimer timer;
 
     private IPositionManager positionManager;
-    private DriveTrainMechanism driveTrain;
+    private TankDriveTrainMechanism driveTrain;
 
     private ITrajectory trajectory;
     private double duration;
@@ -55,7 +55,7 @@ public class FollowPathTask extends ControlTaskBase
         this.timer = this.getInjector().getInstance(ITimer.class);
         this.startTime = this.timer.get();
 
-        this.driveTrain = this.getInjector().getInstance(DriveTrainMechanism.class);
+        this.driveTrain = this.getInjector().getInstance(TankDriveTrainMechanism.class);
         this.startXPosition = this.driveTrain.getXPosition();
         this.startYPosition = this.driveTrain.getYPosition();
         this.startLeftPosition = this.driveTrain.getLeftPosition();

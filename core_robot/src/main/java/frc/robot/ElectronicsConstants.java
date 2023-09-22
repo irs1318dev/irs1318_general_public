@@ -56,16 +56,16 @@ public class ElectronicsConstants
 
     public static final int INDICATOR_LIGHT_CANDLE_CAN_ID = 55;
 
-    //================================================== DriveTrain ==============================================================
+    //================================================== Tank DriveTrain ==============================================================
 
-    public static final int DRIVETRAIN_LEFT_MASTER_CAN_ID = 1;
-    public static final int DRIVETRAIN_LEFT_MASTER_PDP_SLOT = 1;
-    public static final int DRIVETRAIN_LEFT_FOLLOWER_CAN_ID = 2;
-    public static final int DRIVETRAIN_LEFT_FOLLOWER_PDP_SLOT = 0;
-    public static final int DRIVETRAIN_RIGHT_MASTER_CAN_ID = 3;
-    public static final int DRIVETRAIN_RIGHT_MASTER_PDP_SLOT = 14;
-    public static final int DRIVETRAIN_RIGHT_FOLLOWER_CAN_ID = 4;
-    public static final int DRIVETRAIN_RIGHT_FOLLOWER_PDP_SLOT = 15;
+    public static final int TANK_DRIVETRAIN_LEFT_MASTER_CAN_ID = 1;
+    public static final int TANK_DRIVETRAIN_LEFT_MASTER_PDP_SLOT = 1;
+    public static final int TANK_DRIVETRAIN_LEFT_FOLLOWER_CAN_ID = 2;
+    public static final int TANK_DRIVETRAIN_LEFT_FOLLOWER_PDP_SLOT = 0;
+    public static final int TANK_DRIVETRAIN_RIGHT_MASTER_CAN_ID = 3;
+    public static final int TANK_DRIVETRAIN_RIGHT_MASTER_PDP_SLOT = 14;
+    public static final int TANK_DRIVETRAIN_RIGHT_FOLLOWER_CAN_ID = 4;
+    public static final int TANK_DRIVETRAIN_RIGHT_FOLLOWER_PDP_SLOT = 15;
 
     //================================================== OneMotor ================================================================
 

@@ -23,7 +23,7 @@ import com.google.inject.Inject;
  * 
  */
 @Singleton
-public class DriveTrainMechanism implements IMechanism
+public class TankDriveTrainMechanism implements IMechanism
 {
     private static final int pidSlotId = 0;
     private static final int FRAME_PERIOD_MS = 5;
@@ -67,7 +67,7 @@ public class DriveTrainMechanism implements IMechanism
      * @param timer to use
      */
     @Inject
-    public DriveTrainMechanism(
+    public TankDriveTrainMechanism(
         IDriver driver,
         LoggingManager logger,
         IRobotProvider provider,
@@ -77,82 +77,82 @@ public class DriveTrainMechanism implements IMechanism
         this.logger = logger;
         this.timer = timer;
 
-        this.leftMotor = provider.getTalonFX(ElectronicsConstants.DRIVETRAIN_LEFT_MASTER_CAN_ID);
+        this.leftMotor = provider.getTalonFX(ElectronicsConstants.TANK_DRIVETRAIN_LEFT_MASTER_CAN_ID);
         this.leftMotor.setNeutralMode(MotorNeutralMode.Brake);
-        this.leftMotor.setInvertOutput(HardwareConstants.DRIVETRAIN_LEFT_MASTER_INVERT_OUTPUT);
-        this.leftMotor.setInvertSensor(HardwareConstants.DRIVETRAIN_LEFT_INVERT_SENSOR);
+        this.leftMotor.setInvertOutput(HardwareConstants.TANK_DRIVETRAIN_LEFT_MASTER_INVERT_OUTPUT);
+        this.leftMotor.setInvertSensor(HardwareConstants.TANK_DRIVETRAIN_LEFT_INVERT_SENSOR);
         this.leftMotor.setSensorType(TalonXFeedbackDevice.IntegratedSensor);
-        this.leftMotor.setFeedbackFramePeriod(DriveTrainMechanism.FRAME_PERIOD_MS);
-        this.leftMotor.setPIDFFramePeriod(DriveTrainMechanism.FRAME_PERIOD_MS);
+        this.leftMotor.setFeedbackFramePeriod(TankDriveTrainMechanism.FRAME_PERIOD_MS);
+        this.leftMotor.setPIDFFramePeriod(TankDriveTrainMechanism.FRAME_PERIOD_MS);
         this.leftMotor.configureVelocityMeasurements(10, 32);
         this.leftMotor.setPIDF(
-            TuningConstants.DRIVETRAIN_VELOCITY_PID_LEFT_KP,
-            TuningConstants.DRIVETRAIN_VELOCITY_PID_LEFT_KI,
-            TuningConstants.DRIVETRAIN_VELOCITY_PID_LEFT_KD,
-            TuningConstants.DRIVETRAIN_VELOCITY_PID_LEFT_KF,
-            DriveTrainMechanism.pidSlotId);
+            TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_LEFT_KP,
+            TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_LEFT_KI,
+            TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_LEFT_KD,
+            TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_LEFT_KF,
+            TankDriveTrainMechanism.pidSlotId);
         this.leftMotor.setVoltageCompensation(
-            TuningConstants.DRIVETRAIN_VOLTAGE_COMPENSATION_ENABLED,
-            TuningConstants.DRIVETRAIN_VOLTAGE_COMPENSATION);
+            TuningConstants.TANK_DRIVETRAIN_VOLTAGE_COMPENSATION_ENABLED,
+            TuningConstants.TANK_DRIVETRAIN_VOLTAGE_COMPENSATION);
         this.leftMotor.setSupplyCurrentLimit(
-            TuningConstants.DRIVETRAIN_SUPPLY_CURRENT_LIMITING_ENABLED,
-            TuningConstants.DRIVETRAIN_SUPPLY_CURRENT_MAX,
-            TuningConstants.DRIVETRAIN_SUPPLY_TRIGGER_CURRENT,
-            TuningConstants.DRIVETRAIN_SUPPLY_TRIGGER_DURATION);
+            TuningConstants.TANK_DRIVETRAIN_SUPPLY_CURRENT_LIMITING_ENABLED,
+            TuningConstants.TANK_DRIVETRAIN_SUPPLY_CURRENT_MAX,
+            TuningConstants.TANK_DRIVETRAIN_SUPPLY_TRIGGER_CURRENT,
+            TuningConstants.TANK_DRIVETRAIN_SUPPLY_TRIGGER_DURATION);
 
-        ITalonFX leftFollowerMotor1 = provider.getTalonFX(ElectronicsConstants.DRIVETRAIN_LEFT_FOLLOWER_CAN_ID);
+        ITalonFX leftFollowerMotor1 = provider.getTalonFX(ElectronicsConstants.TANK_DRIVETRAIN_LEFT_FOLLOWER_CAN_ID);
         leftFollowerMotor1.setNeutralMode(MotorNeutralMode.Brake);
-        leftFollowerMotor1.setInvertOutput(HardwareConstants.DRIVETRAIN_LEFT_FOLLOWER1_INVERT_OUTPUT);
+        leftFollowerMotor1.setInvertOutput(HardwareConstants.TANK_DRIVETRAIN_LEFT_FOLLOWER1_INVERT_OUTPUT);
         leftFollowerMotor1.follow(this.leftMotor);
         leftFollowerMotor1.setVoltageCompensation(
-            TuningConstants.DRIVETRAIN_VOLTAGE_COMPENSATION_ENABLED,
-            TuningConstants.DRIVETRAIN_VOLTAGE_COMPENSATION);
+            TuningConstants.TANK_DRIVETRAIN_VOLTAGE_COMPENSATION_ENABLED,
+            TuningConstants.TANK_DRIVETRAIN_VOLTAGE_COMPENSATION);
         leftFollowerMotor1.setSupplyCurrentLimit(
-            TuningConstants.DRIVETRAIN_SUPPLY_CURRENT_LIMITING_ENABLED,
-            TuningConstants.DRIVETRAIN_SUPPLY_CURRENT_MAX,
-            TuningConstants.DRIVETRAIN_SUPPLY_TRIGGER_CURRENT,
-            TuningConstants.DRIVETRAIN_SUPPLY_TRIGGER_DURATION);
+            TuningConstants.TANK_DRIVETRAIN_SUPPLY_CURRENT_LIMITING_ENABLED,
+            TuningConstants.TANK_DRIVETRAIN_SUPPLY_CURRENT_MAX,
+            TuningConstants.TANK_DRIVETRAIN_SUPPLY_TRIGGER_CURRENT,
+            TuningConstants.TANK_DRIVETRAIN_SUPPLY_TRIGGER_DURATION);
 
-        this.rightMotor = provider.getTalonFX(ElectronicsConstants.DRIVETRAIN_RIGHT_MASTER_CAN_ID);
+        this.rightMotor = provider.getTalonFX(ElectronicsConstants.TANK_DRIVETRAIN_RIGHT_MASTER_CAN_ID);
         this.rightMotor.setNeutralMode(MotorNeutralMode.Brake);
-        this.rightMotor.setInvertOutput(HardwareConstants.DRIVETRAIN_RIGHT_MASTER_INVERT_OUTPUT);
-        this.rightMotor.setInvertSensor(HardwareConstants.DRIVETRAIN_RIGHT_INVERT_SENSOR);
+        this.rightMotor.setInvertOutput(HardwareConstants.TANK_DRIVETRAIN_RIGHT_MASTER_INVERT_OUTPUT);
+        this.rightMotor.setInvertSensor(HardwareConstants.TANK_DRIVETRAIN_RIGHT_INVERT_SENSOR);
         this.rightMotor.setSensorType(TalonXFeedbackDevice.IntegratedSensor);
-        this.rightMotor.setFeedbackFramePeriod(DriveTrainMechanism.FRAME_PERIOD_MS);
-        this.rightMotor.setPIDFFramePeriod(DriveTrainMechanism.FRAME_PERIOD_MS);
+        this.rightMotor.setFeedbackFramePeriod(TankDriveTrainMechanism.FRAME_PERIOD_MS);
+        this.rightMotor.setPIDFFramePeriod(TankDriveTrainMechanism.FRAME_PERIOD_MS);
         this.rightMotor.configureVelocityMeasurements(10, 32);
         this.rightMotor.setPIDF(
-            TuningConstants.DRIVETRAIN_VELOCITY_PID_RIGHT_KP,
-            TuningConstants.DRIVETRAIN_VELOCITY_PID_RIGHT_KI,
-            TuningConstants.DRIVETRAIN_VELOCITY_PID_RIGHT_KD,
-            TuningConstants.DRIVETRAIN_VELOCITY_PID_RIGHT_KF,
-            DriveTrainMechanism.pidSlotId);
+            TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_RIGHT_KP,
+            TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_RIGHT_KI,
+            TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_RIGHT_KD,
+            TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_RIGHT_KF,
+            TankDriveTrainMechanism.pidSlotId);
         this.rightMotor.setVoltageCompensation(
-            TuningConstants.DRIVETRAIN_VOLTAGE_COMPENSATION_ENABLED,
-            TuningConstants.DRIVETRAIN_VOLTAGE_COMPENSATION);
+            TuningConstants.TANK_DRIVETRAIN_VOLTAGE_COMPENSATION_ENABLED,
+            TuningConstants.TANK_DRIVETRAIN_VOLTAGE_COMPENSATION);
         this.rightMotor.setSupplyCurrentLimit(
-            TuningConstants.DRIVETRAIN_SUPPLY_CURRENT_LIMITING_ENABLED,
-            TuningConstants.DRIVETRAIN_SUPPLY_CURRENT_MAX,
-            TuningConstants.DRIVETRAIN_SUPPLY_TRIGGER_CURRENT,
-            TuningConstants.DRIVETRAIN_SUPPLY_TRIGGER_DURATION);
+            TuningConstants.TANK_DRIVETRAIN_SUPPLY_CURRENT_LIMITING_ENABLED,
+            TuningConstants.TANK_DRIVETRAIN_SUPPLY_CURRENT_MAX,
+            TuningConstants.TANK_DRIVETRAIN_SUPPLY_TRIGGER_CURRENT,
+            TuningConstants.TANK_DRIVETRAIN_SUPPLY_TRIGGER_DURATION);
 
-        ITalonFX rightFollowerMotor1 = provider.getTalonFX(ElectronicsConstants.DRIVETRAIN_RIGHT_FOLLOWER_CAN_ID);
+        ITalonFX rightFollowerMotor1 = provider.getTalonFX(ElectronicsConstants.TANK_DRIVETRAIN_RIGHT_FOLLOWER_CAN_ID);
         rightFollowerMotor1.setNeutralMode(MotorNeutralMode.Brake);
-        rightFollowerMotor1.setInvertOutput(HardwareConstants.DRIVETRAIN_RIGHT_FOLLOWER1_INVERT_OUTPUT);
+        rightFollowerMotor1.setInvertOutput(HardwareConstants.TANK_DRIVETRAIN_RIGHT_FOLLOWER1_INVERT_OUTPUT);
         rightFollowerMotor1.follow(this.rightMotor);
         rightFollowerMotor1.setVoltageCompensation(
-            TuningConstants.DRIVETRAIN_VOLTAGE_COMPENSATION_ENABLED,
-            TuningConstants.DRIVETRAIN_VOLTAGE_COMPENSATION);
+            TuningConstants.TANK_DRIVETRAIN_VOLTAGE_COMPENSATION_ENABLED,
+            TuningConstants.TANK_DRIVETRAIN_VOLTAGE_COMPENSATION);
         rightFollowerMotor1.setSupplyCurrentLimit(
-            TuningConstants.DRIVETRAIN_SUPPLY_CURRENT_LIMITING_ENABLED,
-            TuningConstants.DRIVETRAIN_SUPPLY_CURRENT_MAX,
-            TuningConstants.DRIVETRAIN_SUPPLY_TRIGGER_CURRENT,
-            TuningConstants.DRIVETRAIN_SUPPLY_TRIGGER_DURATION);
+            TuningConstants.TANK_DRIVETRAIN_SUPPLY_CURRENT_LIMITING_ENABLED,
+            TuningConstants.TANK_DRIVETRAIN_SUPPLY_CURRENT_MAX,
+            TuningConstants.TANK_DRIVETRAIN_SUPPLY_TRIGGER_CURRENT,
+            TuningConstants.TANK_DRIVETRAIN_SUPPLY_TRIGGER_DURATION);
 
         this.leftPID = null;
         this.rightPID = null;
 
-        this.usePID = TuningConstants.DRIVETRAIN_USE_PID;
+        this.usePID = TuningConstants.TANK_DRIVETRAIN_USE_PID;
         this.usePathMode = false;
         this.usePositionalMode = false;
         this.useBrakeMode = false;
@@ -251,14 +251,14 @@ public class DriveTrainMechanism implements IMechanism
 
         // Calculate odometry:
         // check the current distance recorded by the encoders
-        double leftDistance = this.leftPosition * HardwareConstants.DRIVETRAIN_LEFT_PULSE_DISTANCE;
-        double rightDistance = this.rightPosition * HardwareConstants.DRIVETRAIN_RIGHT_PULSE_DISTANCE;
+        double leftDistance = this.leftPosition * HardwareConstants.TANK_DRIVETRAIN_LEFT_PULSE_DISTANCE;
+        double rightDistance = this.rightPosition * HardwareConstants.TANK_DRIVETRAIN_RIGHT_PULSE_DISTANCE;
 
         // calculate the angle (in radians) based on the total distance traveled
-        double angleR = (leftDistance - rightDistance) / HardwareConstants.DRIVETRAIN_WHEEL_SEPARATION_DISTANCE;
+        double angleR = (leftDistance - rightDistance) / HardwareConstants.TANK_DRIVETRAIN_WHEEL_SEPARATION_DISTANCE;
 
         // correct for odometry angle inconsistencies
-        angleR *= TuningConstants.DRIVETRAIN_ENCODER_ODOMETRY_ANGLE_CORRECTION;
+        angleR *= TuningConstants.TANK_DRIVETRAIN_ENCODER_ODOMETRY_ANGLE_CORRECTION;
 
         // calculate the average distance traveled
         double averagePositionChange = ((leftDistance - this.prevLeftDistance) + (rightDistance - this.prevRightDistance)) / 2;
@@ -387,22 +387,22 @@ public class DriveTrainMechanism implements IMechanism
             if (this.usePathMode)
             {
                 this.leftPID = new PIDHandler(
-                    TuningConstants.DRIVETRAIN_PATH_PID_LEFT_KP,
-                    TuningConstants.DRIVETRAIN_PATH_PID_LEFT_KI,
-                    TuningConstants.DRIVETRAIN_PATH_PID_LEFT_KD,
-                    TuningConstants.DRIVETRAIN_PATH_PID_LEFT_KF,
+                    TuningConstants.TANK_DRIVETRAIN_PATH_PID_LEFT_KP,
+                    TuningConstants.TANK_DRIVETRAIN_PATH_PID_LEFT_KI,
+                    TuningConstants.TANK_DRIVETRAIN_PATH_PID_LEFT_KD,
+                    TuningConstants.TANK_DRIVETRAIN_PATH_PID_LEFT_KF,
                     1.0,
-                    -TuningConstants.DRIVETRAIN_PATH_MAX_POWER_LEVEL,
-                    TuningConstants.DRIVETRAIN_PATH_MAX_POWER_LEVEL,
+                    -TuningConstants.TANK_DRIVETRAIN_PATH_MAX_POWER_LEVEL,
+                    TuningConstants.TANK_DRIVETRAIN_PATH_MAX_POWER_LEVEL,
                     this.timer);
                 this.rightPID = new PIDHandler(
-                    TuningConstants.DRIVETRAIN_PATH_PID_RIGHT_KP,
-                    TuningConstants.DRIVETRAIN_PATH_PID_RIGHT_KI,
-                    TuningConstants.DRIVETRAIN_PATH_PID_RIGHT_KD,
-                    TuningConstants.DRIVETRAIN_PATH_PID_RIGHT_KF,
+                    TuningConstants.TANK_DRIVETRAIN_PATH_PID_RIGHT_KP,
+                    TuningConstants.TANK_DRIVETRAIN_PATH_PID_RIGHT_KI,
+                    TuningConstants.TANK_DRIVETRAIN_PATH_PID_RIGHT_KD,
+                    TuningConstants.TANK_DRIVETRAIN_PATH_PID_RIGHT_KF,
                     1.0,
-                    -TuningConstants.DRIVETRAIN_PATH_MAX_POWER_LEVEL,
-                    TuningConstants.DRIVETRAIN_PATH_MAX_POWER_LEVEL,
+                    -TuningConstants.TANK_DRIVETRAIN_PATH_MAX_POWER_LEVEL,
+                    TuningConstants.TANK_DRIVETRAIN_PATH_MAX_POWER_LEVEL,
                     this.timer);
             }
             else if (this.usePositionalMode)
@@ -410,43 +410,43 @@ public class DriveTrainMechanism implements IMechanism
                 if (this.useBrakeMode)
                 {
                     this.leftPID = new PIDHandler(
-                        TuningConstants.DRIVETRAIN_BRAKE_PID_LEFT_KP,
-                        TuningConstants.DRIVETRAIN_BRAKE_PID_LEFT_KI,
-                        TuningConstants.DRIVETRAIN_BRAKE_PID_LEFT_KD,
-                        TuningConstants.DRIVETRAIN_BRAKE_PID_LEFT_KF,
+                        TuningConstants.TANK_DRIVETRAIN_BRAKE_PID_LEFT_KP,
+                        TuningConstants.TANK_DRIVETRAIN_BRAKE_PID_LEFT_KI,
+                        TuningConstants.TANK_DRIVETRAIN_BRAKE_PID_LEFT_KD,
+                        TuningConstants.TANK_DRIVETRAIN_BRAKE_PID_LEFT_KF,
                         1.0,
-                        -TuningConstants.DRIVETRAIN_BRAKE_MAX_POWER_LEVEL,
-                        TuningConstants.DRIVETRAIN_BRAKE_MAX_POWER_LEVEL,
+                        -TuningConstants.TANK_DRIVETRAIN_BRAKE_MAX_POWER_LEVEL,
+                        TuningConstants.TANK_DRIVETRAIN_BRAKE_MAX_POWER_LEVEL,
                         this.timer);
                     this.rightPID = new PIDHandler(
-                        TuningConstants.DRIVETRAIN_BRAKE_PID_RIGHT_KP,
-                        TuningConstants.DRIVETRAIN_BRAKE_PID_RIGHT_KI,
-                        TuningConstants.DRIVETRAIN_BRAKE_PID_RIGHT_KD,
-                        TuningConstants.DRIVETRAIN_BRAKE_PID_RIGHT_KF,
+                        TuningConstants.TANK_DRIVETRAIN_BRAKE_PID_RIGHT_KP,
+                        TuningConstants.TANK_DRIVETRAIN_BRAKE_PID_RIGHT_KI,
+                        TuningConstants.TANK_DRIVETRAIN_BRAKE_PID_RIGHT_KD,
+                        TuningConstants.TANK_DRIVETRAIN_BRAKE_PID_RIGHT_KF,
                         1.0,
-                        -TuningConstants.DRIVETRAIN_BRAKE_MAX_POWER_LEVEL,
-                        TuningConstants.DRIVETRAIN_BRAKE_MAX_POWER_LEVEL,
+                        -TuningConstants.TANK_DRIVETRAIN_BRAKE_MAX_POWER_LEVEL,
+                        TuningConstants.TANK_DRIVETRAIN_BRAKE_MAX_POWER_LEVEL,
                         this.timer);
                 }
                 else
                 {
                     this.leftPID = new PIDHandler(
-                        TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KP,
-                        TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KI,
-                        TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KD,
-                        TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KF,
+                        TuningConstants.TANK_DRIVETRAIN_POSITION_PID_LEFT_KP,
+                        TuningConstants.TANK_DRIVETRAIN_POSITION_PID_LEFT_KI,
+                        TuningConstants.TANK_DRIVETRAIN_POSITION_PID_LEFT_KD,
+                        TuningConstants.TANK_DRIVETRAIN_POSITION_PID_LEFT_KF,
                         1.0,
-                        -TuningConstants.DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
-                        TuningConstants.DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
+                        -TuningConstants.TANK_DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
+                        TuningConstants.TANK_DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
                         this.timer);
                     this.rightPID = new PIDHandler(
-                        TuningConstants.DRIVETRAIN_POSITION_PID_RIGHT_KP,
-                        TuningConstants.DRIVETRAIN_POSITION_PID_RIGHT_KI,
-                        TuningConstants.DRIVETRAIN_POSITION_PID_RIGHT_KD,
-                        TuningConstants.DRIVETRAIN_POSITION_PID_RIGHT_KF,
+                        TuningConstants.TANK_DRIVETRAIN_POSITION_PID_RIGHT_KP,
+                        TuningConstants.TANK_DRIVETRAIN_POSITION_PID_RIGHT_KI,
+                        TuningConstants.TANK_DRIVETRAIN_POSITION_PID_RIGHT_KD,
+                        TuningConstants.TANK_DRIVETRAIN_POSITION_PID_RIGHT_KF,
                         1.0,
-                        -TuningConstants.DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
-                        TuningConstants.DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
+                        -TuningConstants.TANK_DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
+                        TuningConstants.TANK_DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL,
                         this.timer);
                 }
             }
@@ -457,8 +457,8 @@ public class DriveTrainMechanism implements IMechanism
             }
 
             mode = TalonXControlMode.Velocity;
-            this.leftMotor.setSelectedSlot(DriveTrainMechanism.pidSlotId);
-            this.rightMotor.setSelectedSlot(DriveTrainMechanism.pidSlotId);
+            this.leftMotor.setSelectedSlot(TankDriveTrainMechanism.pidSlotId);
+            this.rightMotor.setSelectedSlot(TankDriveTrainMechanism.pidSlotId);
         }
 
         this.leftMotor.setControlMode(mode);
@@ -490,8 +490,8 @@ public class DriveTrainMechanism implements IMechanism
             forwardVelocity *= -1.0;
         }
 
-        if ((!simpleDriveModeEnabled && TuningConstants.DRIVETRAIN_REGULAR_MODE_SQUARING)
-            || (simpleDriveModeEnabled && TuningConstants.DRIVETRAIN_SIMPLE_MODE_SQUARING))
+        if ((!simpleDriveModeEnabled && TuningConstants.TANK_DRIVETRAIN_REGULAR_MODE_SQUARING)
+            || (simpleDriveModeEnabled && TuningConstants.TANK_DRIVETRAIN_SIMPLE_MODE_SQUARING))
         {
             if (turnAmount >= 0)
             {
@@ -530,13 +530,13 @@ public class DriveTrainMechanism implements IMechanism
         }
         else
         {
-            leftVelocityGoal = (TuningConstants.DRIVETRAIN_K1 * forwardVelocity) + (TuningConstants.DRIVETRAIN_K2 * turnAmount);
-            rightVelocityGoal = (TuningConstants.DRIVETRAIN_K1 * forwardVelocity) + (-TuningConstants.DRIVETRAIN_K2 * turnAmount);
+            leftVelocityGoal = (TuningConstants.TANK_DRIVETRAIN_K1 * forwardVelocity) + (TuningConstants.TANK_DRIVETRAIN_K2 * turnAmount);
+            rightVelocityGoal = (TuningConstants.TANK_DRIVETRAIN_K1 * forwardVelocity) + (-TuningConstants.TANK_DRIVETRAIN_K2 * turnAmount);
         }
 
         // decrease the desired velocity based on the configured max power level
-        leftVelocityGoal = leftVelocityGoal * TuningConstants.DRIVETRAIN_MAX_POWER_LEVEL;
-        rightVelocityGoal = rightVelocityGoal * TuningConstants.DRIVETRAIN_MAX_POWER_LEVEL;
+        leftVelocityGoal = leftVelocityGoal * TuningConstants.TANK_DRIVETRAIN_MAX_POWER_LEVEL;
+        rightVelocityGoal = rightVelocityGoal * TuningConstants.TANK_DRIVETRAIN_MAX_POWER_LEVEL;
 
         // ensure that we don't give values outside the appropriate range
         double left = this.applyPowerLevelRange(leftVelocityGoal);
@@ -548,8 +548,8 @@ public class DriveTrainMechanism implements IMechanism
         // if we are using PID, then we base the setpoint on the max velocity
         if (this.usePID)
         {
-            left *= TuningConstants.DRIVETRAIN_VELOCITY_PID_LEFT_KS;
-            right *= TuningConstants.DRIVETRAIN_VELOCITY_PID_RIGHT_KS;
+            left *= TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_LEFT_KS;
+            right *= TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_RIGHT_KS;
         }
 
         return new Setpoint(left, right);
@@ -569,8 +569,8 @@ public class DriveTrainMechanism implements IMechanism
         double rightVelocityGoal = this.driver.getAnalog(AnalogOperation.DriveTrainRightVelocity);
         double headingCorrection = this.driver.getAnalog(AnalogOperation.DriveTrainHeadingCorrection);
 
-        leftVelocityGoal /= TuningConstants.DRIVETRAIN_PATH_LEFT_MAX_VELOCITY_INCHES_PER_SECOND;
-        rightVelocityGoal /= TuningConstants.DRIVETRAIN_PATH_RIGHT_MAX_VELOCITY_INCHES_PER_SECOND;
+        leftVelocityGoal /= TuningConstants.TANK_DRIVETRAIN_PATH_LEFT_MAX_VELOCITY_INCHES_PER_SECOND;
+        rightVelocityGoal /= TuningConstants.TANK_DRIVETRAIN_PATH_RIGHT_MAX_VELOCITY_INCHES_PER_SECOND;
 
         this.logger.logNumber(LoggingKey.DriveTrainLeftPositionGoal, leftPositionGoal);
         this.logger.logNumber(LoggingKey.DriveTrainRightPositionGoal, rightPositionGoal);
@@ -582,29 +582,29 @@ public class DriveTrainMechanism implements IMechanism
         double rightGoal = this.rightPID.calculatePosition(rightPositionGoal, this.rightPosition);
 
         // add in velocity as a type of feed-forward
-        leftGoal += leftVelocityGoal * TuningConstants.DRIVETRAIN_PATH_PID_LEFT_KV;
-        rightGoal += rightVelocityGoal * TuningConstants.DRIVETRAIN_PATH_PID_RIGHT_KV;
+        leftGoal += leftVelocityGoal * TuningConstants.TANK_DRIVETRAIN_PATH_PID_LEFT_KV;
+        rightGoal += rightVelocityGoal * TuningConstants.TANK_DRIVETRAIN_PATH_PID_RIGHT_KV;
 
         // apply cross-coupling changes
         double leftPositionError = this.leftPID.getError();
         double rightPositionError = this.rightPID.getError();
 
         double positionErrorMagnitudeDelta = leftPositionError - rightPositionError;
-        if (TuningConstants.DRIVETRAIN_USE_CROSS_COUPLING
-            && !Helpers.WithinDelta(positionErrorMagnitudeDelta, 0.0, TuningConstants.DRIVETRAIN_CROSS_COUPLING_ZERO_ERROR_RANGE))
+        if (TuningConstants.TANK_DRIVETRAIN_USE_CROSS_COUPLING
+            && !Helpers.WithinDelta(positionErrorMagnitudeDelta, 0.0, TuningConstants.TANK_DRIVETRAIN_CROSS_COUPLING_ZERO_ERROR_RANGE))
         {
             // add the delta times the coupling factor to the left, and subtract from the right
             // (if left error is greater than right error, left should be given some more power than right)
-            leftGoal += TuningConstants.DRIVETRAIN_PATH_PID_LEFT_KCC * positionErrorMagnitudeDelta;
-            rightGoal -= TuningConstants.DRIVETRAIN_PATH_PID_RIGHT_KCC * positionErrorMagnitudeDelta;
+            leftGoal += TuningConstants.TANK_DRIVETRAIN_PATH_PID_LEFT_KCC * positionErrorMagnitudeDelta;
+            rightGoal -= TuningConstants.TANK_DRIVETRAIN_PATH_PID_RIGHT_KCC * positionErrorMagnitudeDelta;
         }
 
         // apply heading correction
-        if (TuningConstants.DRIVETRAIN_USE_HEADING_CORRECTION
+        if (TuningConstants.TANK_DRIVETRAIN_USE_HEADING_CORRECTION
             && headingCorrection != 0.0)
         {
-            leftGoal += TuningConstants.DRIVETRAIN_PATH_LEFT_HEADING_CORRECTION * headingCorrection;
-            rightGoal -= TuningConstants.DRIVETRAIN_PATH_RIGHT_HEADING_CORRECTION * headingCorrection;
+            leftGoal += TuningConstants.TANK_DRIVETRAIN_PATH_LEFT_HEADING_CORRECTION * headingCorrection;
+            rightGoal -= TuningConstants.TANK_DRIVETRAIN_PATH_RIGHT_HEADING_CORRECTION * headingCorrection;
         }
 
         // velocity plus position correction could put us over our max or under our min power levels
@@ -616,8 +616,8 @@ public class DriveTrainMechanism implements IMechanism
 
         if (this.usePID)
         {
-            leftGoal *= TuningConstants.DRIVETRAIN_VELOCITY_PID_LEFT_KS;
-            rightGoal *= TuningConstants.DRIVETRAIN_VELOCITY_PID_RIGHT_KS;
+            leftGoal *= TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_LEFT_KS;
+            rightGoal *= TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_RIGHT_KS;
         }
 
         return new Setpoint(leftGoal, rightGoal);
@@ -649,13 +649,13 @@ public class DriveTrainMechanism implements IMechanism
             double rightPositionError = this.rightPID.getError();
 
             double positionErrorMagnitudeDelta = leftPositionError - rightPositionError;
-            if (TuningConstants.DRIVETRAIN_USE_CROSS_COUPLING
-                && !Helpers.WithinDelta(positionErrorMagnitudeDelta, 0.0, TuningConstants.DRIVETRAIN_CROSS_COUPLING_ZERO_ERROR_RANGE))
+            if (TuningConstants.TANK_DRIVETRAIN_USE_CROSS_COUPLING
+                && !Helpers.WithinDelta(positionErrorMagnitudeDelta, 0.0, TuningConstants.TANK_DRIVETRAIN_CROSS_COUPLING_ZERO_ERROR_RANGE))
             {
                 // add the delta times the coupling factor to the left, and subtract from the right
                 // (if left error is greater than right error, left should be given some more power than right)
-                leftPower += TuningConstants.DRIVETRAIN_POSITION_PID_LEFT_KCC * positionErrorMagnitudeDelta;
-                rightPower -= TuningConstants.DRIVETRAIN_POSITION_PID_RIGHT_KCC * positionErrorMagnitudeDelta;
+                leftPower += TuningConstants.TANK_DRIVETRAIN_POSITION_PID_LEFT_KCC * positionErrorMagnitudeDelta;
+                rightPower -= TuningConstants.TANK_DRIVETRAIN_POSITION_PID_RIGHT_KCC * positionErrorMagnitudeDelta;
 
                 // cross-coupling could put us over our max or under our min power levels
                 leftPower = this.applyPowerLevelRange(leftPower);
@@ -677,12 +677,12 @@ public class DriveTrainMechanism implements IMechanism
                 rightPower = 0.0;
             }
 
-            leftPower *= TuningConstants.DRIVETRAIN_LEFT_POSITIONAL_NON_PID_MULTIPLICAND;
-            rightPower *= TuningConstants.DRIVETRAIN_RIGHT_POSITIONAL_NON_PID_MULTIPLICAND;
+            leftPower *= TuningConstants.TANK_DRIVETRAIN_LEFT_POSITIONAL_NON_PID_MULTIPLICAND;
+            rightPower *= TuningConstants.TANK_DRIVETRAIN_RIGHT_POSITIONAL_NON_PID_MULTIPLICAND;
 
             // ensure that we are within our power level range, and then scale it down
-            leftPower = this.applyPowerLevelRange(leftPower) * TuningConstants.DRIVETRAIN_MAX_POWER_POSITIONAL_NON_PID;
-            rightPower = this.applyPowerLevelRange(rightPower) * TuningConstants.DRIVETRAIN_MAX_POWER_POSITIONAL_NON_PID;
+            leftPower = this.applyPowerLevelRange(leftPower) * TuningConstants.TANK_DRIVETRAIN_MAX_POWER_POSITIONAL_NON_PID;
+            rightPower = this.applyPowerLevelRange(rightPower) * TuningConstants.TANK_DRIVETRAIN_MAX_POWER_POSITIONAL_NON_PID;
         }
 
         this.assertPowerLevelRange(leftPower, "left velocity (goal)");
@@ -690,8 +690,8 @@ public class DriveTrainMechanism implements IMechanism
 
         if (this.usePID)
         {
-            leftPower *= TuningConstants.DRIVETRAIN_VELOCITY_PID_LEFT_KS;
-            rightPower *= TuningConstants.DRIVETRAIN_VELOCITY_PID_RIGHT_KS;
+            leftPower *= TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_LEFT_KS;
+            rightPower *= TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_RIGHT_KS;
         }
 
         return new Setpoint(leftPower, rightPower);
@@ -704,7 +704,7 @@ public class DriveTrainMechanism implements IMechanism
      */
     private void assertPowerLevelRange(double powerLevel, String side)
     {
-        if (powerLevel < DriveTrainMechanism.POWERLEVEL_MIN)
+        if (powerLevel < TankDriveTrainMechanism.POWERLEVEL_MIN)
         {
             if (TuningConstants.THROW_EXCEPTIONS)
             {
@@ -714,7 +714,7 @@ public class DriveTrainMechanism implements IMechanism
             return;
         }
 
-        if (powerLevel > DriveTrainMechanism.POWERLEVEL_MAX)
+        if (powerLevel > TankDriveTrainMechanism.POWERLEVEL_MAX)
         {
             if (TuningConstants.THROW_EXCEPTIONS)
             {
@@ -732,7 +732,7 @@ public class DriveTrainMechanism implements IMechanism
      */
     private double applyPowerLevelRange(double powerLevel)
     {
-        return Helpers.EnforceRange(powerLevel, DriveTrainMechanism.POWERLEVEL_MIN, DriveTrainMechanism.POWERLEVEL_MAX);
+        return Helpers.EnforceRange(powerLevel, TankDriveTrainMechanism.POWERLEVEL_MIN, TankDriveTrainMechanism.POWERLEVEL_MAX);
     }
 
     /**

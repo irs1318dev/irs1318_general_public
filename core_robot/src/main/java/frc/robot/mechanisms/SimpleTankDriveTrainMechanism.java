@@ -74,6 +74,16 @@ public class SimpleTankDriveTrainMechanism implements IMechanism
         this.logger.logNumber(LoggingKey.DriveTrainLeftVelocityGoal, leftSetpoint);
         this.logger.logNumber(LoggingKey.DriveTrainRightVelocityGoal, rightSetpoint);
 
+        if (TuningConstants.TANK_DRIVETRAIN_INVERT_LEFT)
+        {
+            leftSetpoint *= -1.0;
+        }
+
+        if (TuningConstants.TANK_DRIVETRAIN_INVERT_RIGHT)
+        {
+            rightSetpoint *= -1.0;
+        }
+
         // apply the setpoints to the motors
         this.leftMotor.set(leftSetpoint);
         this.rightMotor.set(rightSetpoint);

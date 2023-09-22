@@ -57,8 +57,8 @@ public class ElectronicsConstants
     public static final int INDICATOR_LIGHT_CANDLE_CAN_ID = 55;
 
     // TankDriveTrain
-    public static final int SIMPLE_TANK_DRIVETRAIN_LEFT_PWM_CHANNEL = 0;
-    public static final int SIMPLE_TANK_DRIVETRAIN_RIGHT_PWM_CHANNEL = 1;
+    public static final int SIMPLE_TANK_DRIVETRAIN_LEFT_PWM_CHANNEL = 8;
+    public static final int SIMPLE_TANK_DRIVETRAIN_RIGHT_PWM_CHANNEL = 9;
 
     //================================================== SDSDriveTrain ==============================================================
 

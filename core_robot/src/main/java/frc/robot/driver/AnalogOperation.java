@@ -7,6 +7,11 @@ public enum AnalogOperation implements IOperation
     PositionStartingAngle,
 
     // DriveTrain operations:
+    // Simple Tank:
+    DriveTrainLeft,
+    DriveTrainRight,
+
+    // Swerve:
     DriveTrainMoveForward,
     DriveTrainMoveRight,
     DriveTrainTurnAngleGoal,

@@ -37,6 +37,20 @@ public class ButtonMap implements IButtonMap
 
     public static AnalogOperationDescription[] AnalogOperationSchema = new AnalogOperationDescription[]
     {
+        // DriveTrain operations
+        new AnalogOperationDescription(
+            AnalogOperation.DriveTrainLeft,
+            UserInputDevice.Driver,
+            AnalogAxis.XBONE_LSY,
+            ElectronicsConstants.INVERT_XBONE_LEFT_Y_AXIS,
+            TuningConstants.TANK_DRIVETRAIN_DEAD_ZONE),
+        new AnalogOperationDescription(
+            AnalogOperation.DriveTrainRight,
+            UserInputDevice.Driver,
+            AnalogAxis.XBONE_RSY,
+            ElectronicsConstants.INVERT_XBONE_RIGHT_Y_AXIS,
+            TuningConstants.TANK_DRIVETRAIN_DEAD_ZONE),
+
         // new AnalogOperationDescription(
         //     AnalogOperation.DriveTrainMoveForward,
         //     UserInputDevice.Driver,
@@ -85,12 +99,12 @@ public class ButtonMap implements IButtonMap
         //     TuningConstants.SDSDRIVETRAIN_DEAD_ZONE_TURN),
 
         // Operations for the OneMotor
-        new AnalogOperationDescription(
-            AnalogOperation.OneMotorPower,
-            UserInputDevice.Driver,
-            AnalogAxis.XBONE_LSY,
-            ElectronicsConstants.INVERT_XBONE_LEFT_Y_AXIS,
-            0.05),
+        // new AnalogOperationDescription(
+        //     AnalogOperation.OneMotorPower,
+        //     UserInputDevice.Driver,
+        //     AnalogAxis.XBONE_LSY,
+        //     ElectronicsConstants.INVERT_XBONE_LEFT_Y_AXIS,
+        //     0.05),
     };
 
     public static DigitalOperationDescription[] DigitalOperationSchema = new DigitalOperationDescription[]

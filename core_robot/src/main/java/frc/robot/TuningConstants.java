@@ -192,6 +192,8 @@ public class TuningConstants
 
     //================================================== DriveTrain ==============================================================
 
+    public static final double TANK_DRIVETRAIN_DEAD_ZONE = 0.1;
+
     public static final boolean SDSDRIVETRAIN_STEER_MOTORS_USE_MOTION_MAGIC = true;
 
     public static final boolean SDSDRIVETRAIN_USE_ODOMETRY = true;

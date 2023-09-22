@@ -50,6 +50,11 @@ public enum LoggingKey
     NavxY("navx.y"),
     NavxZ("navx.z"),
 
+    // Tank
+    DriveTrainLeftVelocityGoal("dt.left"),
+    DriveTrainRightVelocityGoal("dt.right"),
+
+    // Swerve
     DriveTrainDesiredAngle("dt.angle_goal"),
     DriveTrainAngle("dt.angle"),
     DriveTrainXPosition("dt.xpos", true),

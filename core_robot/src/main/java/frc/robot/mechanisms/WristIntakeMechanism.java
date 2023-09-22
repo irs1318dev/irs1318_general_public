@@ -45,9 +45,13 @@ public class WristIntakeMechanism implements IMechanism
         this.logger = logger;
         this.timer = timer;
 
-        this.wristMotor = provider.getSparkMax(TuningConstants.WRIST_MOTOR_CAN_ID, SparkMaxMotorType.Brushed);
         this.intakeMotor = provider.getSparkMax(TuningConstants.INTAKE_MOTOR_CAN_ID, SparkMaxMotorType.Brushless);
+        this.intakeMotor.setControlMode(SparkMaxControlMode.PercentOutput);
+        this.intakeMotor.setInvertOutput(TuningConstants.INTAKE_MOTOR_INVERT_OUTPUT);
+        this.intakeMotor.setNeutralMode(MotorNeutralMode.Brake);
+        this.intakeMotor.burnFlash();
 
+        this.wristMotor = provider.getSparkMax(TuningConstants.WRIST_MOTOR_CAN_ID, SparkMaxMotorType.Brushed);
         this.wristMotor.setAbsoluteEncoder();
         this.wristMotor.setInvertSensor(TuningConstants.WRIST_MOTOR_INVERT_SENSOR);
         this.wristMotor.setPositionConversionFactor(HardwareConstants.WRIST_MOTOR_TICK_DISTANCE);
@@ -73,13 +77,8 @@ public class WristIntakeMechanism implements IMechanism
             TuningConstants.WRIST_MOTOR_POSITION_PID_WRAPPING_ENABLED,
             TuningConstants.WRIST_MOTOR_POSITION_PID_WRAPPING_MIN,
             TuningConstants.WRIST_MOTOR_POSITION_PID_WRAPPING_MAX);
-        
-        this.wristMotor.setControlMode(SparkMaxControlMode.Position);
-        this.wristMotor.burnFlash();
 
-        this.intakeMotor.setControlMode(SparkMaxControlMode.PercentOutput);
-        this.intakeMotor.setInvertOutput(TuningConstants.INTAKE_MOTOR_INVERT_OUTPUT);
-        this.intakeMotor.setNeutralMode(MotorNeutralMode.Brake);
+        this.wristMotor.setControlMode(SparkMaxControlMode.Position);
 
         if (TuningConstants.REVDRIVETRAIN_STEER_MOTORS_USE_SMART_MOTION)
         {
@@ -89,8 +88,9 @@ public class WristIntakeMechanism implements IMechanism
         {
             this.wristMotor.setSelectedSlot(WristIntakeMechanism.DefaultPidSlotId);
         }
-    }
 
+        this.wristMotor.burnFlash();
+    }
 
     @Override
     public void readSensors()
@@ -136,15 +136,15 @@ public class WristIntakeMechanism implements IMechanism
         this.logger.logNumber(LoggingKey.intakeMotorPercentOutput, wristIntakePower);
 
         // -------------------------------------- Main Wrist ----------------------------------------------------
+
         double wristAngleAdjustment = this.driver.getAnalog(AnalogOperation.WristAngleAdjustment);
-        
+
         double wristPower = 0.0;
         if (this.inSimpleMode)
         {
             // controlled by joystick - raw power
             wristPower = wristAngleAdjustment;
         }
-
         else
         {
             double newDesiredWristAngle = this.driver.getAnalog(AnalogOperation.WristSetAngle);
@@ -157,7 +157,6 @@ public class WristIntakeMechanism implements IMechanism
                 // Controlled by joysticks - angle adjustment
                 this.wristMotorDesiredAngle += wristAngleAdjustment * TuningConstants.WRIST_INPUT_TO_TICK_ADJUSTMENT * elapsedTime;
             }
-            
             else if (newDesiredWristAngle != TuningConstants.MAGIC_NULL_VALUE)
             {
                 // controlled by macro
@@ -171,7 +170,6 @@ public class WristIntakeMechanism implements IMechanism
 
         if (!this.inSimpleMode)
         {
-            
             this.wristMotor.set(this.wristMotorDesiredAngle);
         }
         else

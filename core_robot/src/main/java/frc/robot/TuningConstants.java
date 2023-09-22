@@ -478,7 +478,7 @@ public class TuningConstants
     public static final double WRIST_INTAKE_OUT_POWER = -0.6;
     public static final double WRIST_INPUT_TO_TICK_ADJUSTMENT = 0;
     public static final double WRIST_MIN_THRESHOLD = 20;
-    public static final double WRIST_DEADZONE = 1.0;
+    public static final double WRIST_DEADZONE = 0.1;
 
     public static final double LOW_CUBE_DROP_POSITION = 210;
     public static final double MID_CUBE_DROP_POSITION = 140;

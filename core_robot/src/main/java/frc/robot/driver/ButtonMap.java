@@ -180,19 +180,16 @@ public class ButtonMap implements IButtonMap
             UserInputDevice.Codriver,
             UserInputDeviceButton.XBONE_A_BUTTON,
             ButtonType.Simple),
-        
         new DigitalOperationDescription(
             DigitalOperation.IntakeOut,
             UserInputDevice.Codriver,
             UserInputDeviceButton.XBONE_B_BUTTON,
             ButtonType.Simple),
-        
         new DigitalOperationDescription(
             DigitalOperation.WristEnableSimpleMode,
             UserInputDevice.Codriver,
             UserInputDeviceButton.XBONE_X_BUTTON,
             ButtonType.Simple),
-
         new DigitalOperationDescription(
             DigitalOperation.WristDisableSimpleMode,
             UserInputDevice.Codriver,
@@ -308,7 +305,7 @@ public class ButtonMap implements IButtonMap
                 AnalogOperation.DriveTrainSpinLeft,
                 AnalogOperation.DriveTrainSpinRight,
             }),
-        
+
         // Wrist Operations
         new MacroOperationDescription(
             MacroOperation.LowCubeDrop,

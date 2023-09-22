@@ -42,30 +42,30 @@ public class ButtonMap implements IButtonMap
         //     UserInputDevice.Driver,
         //     AnalogAxis.XBONE_LSY,
         //     ElectronicsConstants.INVERT_XBONE_LEFT_Y_AXIS,
-        //     -TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY_Y,
-        //     TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY_Y,
+        //     -TuningConstants.SDSDRIVETRAIN_DEAD_ZONE_VELOCITY_Y,
+        //     TuningConstants.SDSDRIVETRAIN_DEAD_ZONE_VELOCITY_Y,
         //     1.0,
-        //     TuningConstants.DRIVETRAIN_EXPONENTIAL),
+        //     TuningConstants.SDSDRIVETRAIN_EXPONENTIAL),
         // new AnalogOperationDescription(
         //     AnalogOperation.DriveTrainMoveRight,
         //     UserInputDevice.Driver,
         //     AnalogAxis.XBONE_LSX,
         //     ElectronicsConstants.INVERT_XBONE_LEFT_X_AXIS,
-        //     -TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY_X,
-        //     TuningConstants.DRIVETRAIN_DEAD_ZONE_VELOCITY_X,
+        //     -TuningConstants.SDSDRIVETRAIN_DEAD_ZONE_VELOCITY_X,
+        //     TuningConstants.SDSDRIVETRAIN_DEAD_ZONE_VELOCITY_X,
         //     1.0,
-        //     TuningConstants.DRIVETRAIN_EXPONENTIAL),
+        //     TuningConstants.SDSDRIVETRAIN_EXPONENTIAL),
         // new AnalogOperationDescription(
         //     AnalogOperation.DriveTrainTurnAngleGoal,
         //     UserInputDevice.Driver,
         //     AnalogAxis.XBONE_RSX,
         //     AnalogAxis.XBONE_RSY,
-        //     EnumSet.noneOf(Shift.class), // EnumSet.of(Shift.DriverDebug),
+        //     EnumSet.noneOf(Shift.class),
         //     EnumSet.noneOf(Shift.class),
         //     !ElectronicsConstants.INVERT_XBONE_RIGHT_X_AXIS, // make left positive...
         //     ElectronicsConstants.INVERT_XBONE_RIGHT_Y_AXIS,
         //     0.0,
-        //     TuningConstants.DRIVETRAIN_SKIP_OMEGA_ON_ZERO_DELTA,
+        //     TuningConstants.SDSDRIVETRAIN_SKIP_OMEGA_ON_ZERO_DELTA,
         //     true,
         //     TuningConstants.MAGIC_NULL_VALUE,
         //     (x, y) -> Helpers.atan2d(x, y)),
@@ -74,15 +74,15 @@ public class ButtonMap implements IButtonMap
         //     UserInputDevice.Driver,
         //     AnalogAxis.XBONE_LT,
         //     ElectronicsConstants.INVERT_XBONE_LEFT_TRIGGER, // turning left should be positive, as counter-clockwise is positive
-        //     -TuningConstants.DRIVETRAIN_DEAD_ZONE_TURN,
-        //     TuningConstants.DRIVETRAIN_DEAD_ZONE_TURN),
+        //     -TuningConstants.SDSDRIVETRAIN_DEAD_ZONE_TURN,
+        //     TuningConstants.SDSDRIVETRAIN_DEAD_ZONE_TURN),
         // new AnalogOperationDescription(
         //     AnalogOperation.DriveTrainSpinRight,
         //     UserInputDevice.Driver,
         //     AnalogAxis.XBONE_RT,
         //     !ElectronicsConstants.INVERT_XBONE_RIGHT_TRIGGER, // make left positive, as counter-clockwise is positive
-        //     -TuningConstants.DRIVETRAIN_DEAD_ZONE_TURN,
-        //     TuningConstants.DRIVETRAIN_DEAD_ZONE_TURN),
+        //     -TuningConstants.SDSDRIVETRAIN_DEAD_ZONE_TURN,
+        //     TuningConstants.SDSDRIVETRAIN_DEAD_ZONE_TURN),
 
         // Operations for the OneMotor
         new AnalogOperationDescription(

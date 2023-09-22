@@ -17,14 +17,14 @@ public class RoadRunnerTrajectoryGenerator
         new MinVelocityConstraint(
             Arrays.asList(
                 new SwerveVelocityConstraint(
-                    TuningConstants.DRIVETRAIN_MAX_MODULE_PATH_VELOCITY,
-                    HardwareConstants.DRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE,
-                    HardwareConstants.DRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE),
-                new AngularVelocityConstraint(TuningConstants.DRIVETRAIN_MAX_PATH_TURN_VELOCITY * Helpers.DEGREES_TO_RADIANS),
-                new TranslationalVelocityConstraint(TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY)));
+                    TuningConstants.SDSDRIVETRAIN_MAX_MODULE_PATH_VELOCITY,
+                    HardwareConstants.SDSDRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE,
+                    HardwareConstants.SDSDRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE),
+                new AngularVelocityConstraint(TuningConstants.SDSDRIVETRAIN_MAX_PATH_TURN_VELOCITY * Helpers.DEGREES_TO_RADIANS),
+                new TranslationalVelocityConstraint(TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY)));
 
     private static final TrajectoryAccelerationConstraint accelerationConstraint =
-            new ProfileAccelerationConstraint(TuningConstants.DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION);
+            new ProfileAccelerationConstraint(TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION);
 
     public static void main(String[] args)
     {

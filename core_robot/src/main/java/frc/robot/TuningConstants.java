@@ -194,7 +194,7 @@ public class TuningConstants
 
     public static final double TANK_DRIVETRAIN_DEAD_ZONE = 0.1;
     public static final boolean TANK_DRIVETRAIN_INVERT_LEFT = false;
-    public static final boolean TANK_DRIVETRAIN_INVERT_RIGHT = false;
+    public static final boolean TANK_DRIVETRAIN_INVERT_RIGHT = true;
 
     public static final boolean SDSDRIVETRAIN_STEER_MOTORS_USE_MOTION_MAGIC = true;
 

@@ -352,7 +352,7 @@ public class TuningConstants
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_WRAPPING_MIN = 0.0;
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_WRAPPING_MAX = 360.0;
 
-    public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KP = 0.25;
+    public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KP = 0.005;
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KI = 0.0;
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KD = 0.0;
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KF = 0.0;
@@ -371,7 +371,7 @@ public class TuningConstants
     public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KP = 0.0; //0.1;
     public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KI = 0.0;
     public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KD = 0.0;
-    public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KF = 0.05115; // .05115 ==> ~ 1023 / 20000 (100% control authority)
+    public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KF = 0.048; // .05115 ==> ~ 1023 / 20000 (100% control authority)
 
     public static final double REVDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KP = 1.0;
     public static final double REVDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KI = 0.0;

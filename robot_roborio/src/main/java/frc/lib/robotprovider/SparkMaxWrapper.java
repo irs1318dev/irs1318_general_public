@@ -58,7 +58,7 @@ public class SparkMaxWrapper implements ISparkMax
         switch (encoderType)
         {
             case HallEffect:
-                type = SparkMaxRelativeEncoder.Type.kNoSensor;
+                type = SparkMaxRelativeEncoder.Type.kHallSensor;
                 break;
 
             case Quadrature:

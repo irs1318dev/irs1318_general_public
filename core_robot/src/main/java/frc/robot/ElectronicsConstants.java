@@ -32,8 +32,8 @@ public class ElectronicsConstants
     public static final boolean INVERT_THROTTLE_AXIS = true;
     public static final boolean INVERT_TRIGGER_AXIS = false;
 
-    public static final int POWER_DISTRIBUTION_CAN_ID = 1;
-    public static final PowerDistributionModuleType POWER_DISTRIBUTION_TYPE = PowerDistributionModuleType.PowerDistributionHub;
+    public static final int POWER_DISTRIBUTION_CAN_ID = 0;
+    public static final PowerDistributionModuleType POWER_DISTRIBUTION_TYPE = PowerDistributionModuleType.PowerDistributionPanel;
 
     public static final String CANIVORE_NAME = "CANIVORE1"; // Module A
 

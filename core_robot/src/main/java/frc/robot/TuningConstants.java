@@ -326,17 +326,17 @@ public class TuningConstants
 
     //================================================== DriveTrainNeo ==============================================================
 
-    public static final boolean REVDRIVETRAIN_STEER_MOTORS_USE_SMART_MOTION = true;
+    public static final boolean REVDRIVETRAIN_STEER_MOTORS_USE_SMART_MOTION = false;
 
     public static final boolean REVDRIVETRAIN_USE_ODOMETRY = true;
     public static final boolean REVDRIVETRAIN_RESET_ON_ROBOT_START = true;
     public static final boolean REVDRIVETRAIN_FIELD_ORIENTED_ON_ROBOT_START = true;
     public static final boolean REVDRIVETRAIN_MAINTAIN_ORIENTATION_ON_ROBOT_START = true;
 
-    public static final double REVDRIVETRAIN_STEER_MOTOR1_ABSOLUTE_OFFSET = 128.056;
-    public static final double REVDRIVETRAIN_STEER_MOTOR2_ABSOLUTE_OFFSET = -16.259;
-    public static final double REVDRIVETRAIN_STEER_MOTOR3_ABSOLUTE_OFFSET = 2.725;
-    public static final double REVDRIVETRAIN_STEER_MOTOR4_ABSOLUTE_OFFSET = -30.586;
+    public static final double REVDRIVETRAIN_STEER_MOTOR1_ABSOLUTE_OFFSET = 0.0;
+    public static final double REVDRIVETRAIN_STEER_MOTOR2_ABSOLUTE_OFFSET = 0.0;
+    public static final double REVDRIVETRAIN_STEER_MOTOR3_ABSOLUTE_OFFSET = 0.0;
+    public static final double REVDRIVETRAIN_STEER_MOTOR4_ABSOLUTE_OFFSET = 0.0;
 
     public static final boolean REVDRIVETRAIN_USE_TRANSLATIONAL_RATE_LIMITING = true;
     public static final double REVDRIVETRAIN_TRANSLATIONAL_VELOCITY_MAX_NEGATIVE_RATE = -3.0 * TuningConstants.REVDRIVETRAIN_MAX_VELOCITY;
@@ -352,7 +352,7 @@ public class TuningConstants
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_WRAPPING_MIN = 0.0;
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_WRAPPING_MAX = 360.0;
 
-    public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KP = 0.5;
+    public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KP = 0.25;
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KI = 0.0;
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KD = 0.0;
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KF = 0.0;
@@ -368,7 +368,7 @@ public class TuningConstants
     // Velocity PID (drive) per-module
     public static final double REVDRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS = 16000.0; // 20000 was highest speed at full throttle FF on blocks. this is #ticks / 100ms
 
-    public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KP = 0.1;
+    public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KP = 0.0; //0.1;
     public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KI = 0.0;
     public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KD = 0.0;
     public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KF = 0.05115; // .05115 ==> ~ 1023 / 20000 (100% control authority)

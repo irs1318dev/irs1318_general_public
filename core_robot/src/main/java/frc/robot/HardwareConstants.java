@@ -89,5 +89,8 @@ public class HardwareConstants
     public static final double REVDRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE = HardwareConstants.REVDRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE / 2.0; // (in inches)
 
     // ===================================================== WRIST MOTOR ==============================================
-    public static final double WRIST_MOTOR_TICK_DISTANCE = 360;
+
+    public static final double WRIST_MOTOR_TICK_DISTANCE = 360.0;
+    public static final double WRIST_MAX_ANGLE = 350.0;
+    public static final double WRIST_MIN_ANGLE = 200.0;
 }

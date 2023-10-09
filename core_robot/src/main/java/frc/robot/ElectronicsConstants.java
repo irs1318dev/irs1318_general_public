@@ -82,4 +82,9 @@ public class ElectronicsConstants
     public static final int REVDRIVETRAIN_STEER_MOTOR_3_CAN_ID = 6;
     public static final int REVDRIVETRAIN_DRIVE_MOTOR_4_CAN_ID = 7;
     public static final int REVDRIVETRAIN_STEER_MOTOR_4_CAN_ID = 8;
+
+    public static final int WRIST_MOTOR_CAN_ID = 30;
+    public static final int INTAKE_MOTOR_CAN_ID = 40;
+    // intake wheels Rev can ID is 30
+    // intake wrist Rev CAN ID is 40
 }

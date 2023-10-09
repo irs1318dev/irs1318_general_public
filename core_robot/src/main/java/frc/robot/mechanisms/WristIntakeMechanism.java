@@ -45,13 +45,14 @@ public class WristIntakeMechanism implements IMechanism
         this.logger = logger;
         this.timer = timer;
 
-        this.intakeMotor = provider.getSparkMax(TuningConstants.INTAKE_MOTOR_CAN_ID, SparkMaxMotorType.Brushless);
+        this.intakeMotor = provider.getSparkMax(ElectronicsConstants.INTAKE_MOTOR_CAN_ID, SparkMaxMotorType.Brushless);
+        this.intakeMotor.setRelativeEncoder();
         this.intakeMotor.setControlMode(SparkMaxControlMode.PercentOutput);
         this.intakeMotor.setInvertOutput(TuningConstants.INTAKE_MOTOR_INVERT_OUTPUT);
         this.intakeMotor.setNeutralMode(MotorNeutralMode.Brake);
         this.intakeMotor.burnFlash();
 
-        this.wristMotor = provider.getSparkMax(TuningConstants.WRIST_MOTOR_CAN_ID, SparkMaxMotorType.Brushed);
+        this.wristMotor = provider.getSparkMax(ElectronicsConstants.WRIST_MOTOR_CAN_ID, SparkMaxMotorType.Brushed);
         this.wristMotor.setAbsoluteEncoder();
         this.wristMotor.setInvertSensor(TuningConstants.WRIST_MOTOR_INVERT_SENSOR);
         this.wristMotor.setPositionConversionFactor(HardwareConstants.WRIST_MOTOR_TICK_DISTANCE);
@@ -78,18 +79,21 @@ public class WristIntakeMechanism implements IMechanism
             TuningConstants.WRIST_MOTOR_POSITION_PID_WRAPPING_MIN,
             TuningConstants.WRIST_MOTOR_POSITION_PID_WRAPPING_MAX);
 
-        this.wristMotor.setControlMode(SparkMaxControlMode.Position);
-
-        if (TuningConstants.REVDRIVETRAIN_STEER_MOTORS_USE_SMART_MOTION)
+        if (TuningConstants.WRIST_MOTOR_USE_SMART_MOTION)
         {
+            this.wristMotor.setControlMode(SparkMaxControlMode.SmnartMotionPosition);
             this.wristMotor.setSelectedSlot(WristIntakeMechanism.SMPidSlotId);
         }
         else
         {
+            this.wristMotor.setControlMode(SparkMaxControlMode.Position);
             this.wristMotor.setSelectedSlot(WristIntakeMechanism.DefaultPidSlotId);
         }
 
         this.wristMotor.burnFlash();
+
+        this.wristMotorDesiredAngle =
+            Helpers.EnforceRange(this.wristMotor.getPosition(), HardwareConstants.WRIST_MIN_ANGLE, HardwareConstants.WRIST_MAX_ANGLE);
     }
 
     @Override
@@ -112,11 +116,13 @@ public class WristIntakeMechanism implements IMechanism
         if (this.driver.getDigital(DigitalOperation.WristEnableSimpleMode))
         {
             this.inSimpleMode = true;
+            this.wristMotor.setControlMode(SparkMaxControlMode.PercentOutput);
         }
         else if (this.driver.getDigital(DigitalOperation.WristDisableSimpleMode))
         {
             this.inSimpleMode = false;
             this.wristMotorDesiredAngle = this.wristMotorAngle;
+            this.wristMotor.setControlMode(SparkMaxControlMode.Position);
         }
 
         // --------------------------------- Intake Update -----------------------------------------------------
@@ -152,16 +158,13 @@ public class WristIntakeMechanism implements IMechanism
 
             if (wristAngleAdjustment != 0.0)
             {
-                this.wristMotorDesiredAngle = this.wristMotorAngle;
-
                 // Controlled by joysticks - angle adjustment
                 this.wristMotorDesiredAngle += wristAngleAdjustment * TuningConstants.WRIST_INPUT_TO_TICK_ADJUSTMENT * elapsedTime;
             }
             else if (newDesiredWristAngle != TuningConstants.MAGIC_NULL_VALUE)
             {
                 // controlled by macro
-                if (newDesiredWristAngle != TuningConstants.MAGIC_NULL_VALUE &&
-                    (!Helpers.RoughEquals(this.wristMotorDesiredAngle, newDesiredWristAngle, 0.1)))
+                if (!Helpers.RoughEquals(this.wristMotorDesiredAngle, newDesiredWristAngle, 0.1))
                 {
                     this.wristMotorDesiredAngle = newDesiredWristAngle;
                 }
@@ -170,6 +173,8 @@ public class WristIntakeMechanism implements IMechanism
 
         if (!this.inSimpleMode)
         {
+            this.wristMotorDesiredAngle = Helpers.EnforceRange(this.wristMotorDesiredAngle, HardwareConstants.WRIST_MIN_ANGLE, HardwareConstants.WRIST_MAX_ANGLE);
+
             this.wristMotor.set(this.wristMotorDesiredAngle);
         }
         else

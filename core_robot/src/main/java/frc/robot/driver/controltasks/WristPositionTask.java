@@ -28,6 +28,7 @@ public class WristPositionTask extends ControlTaskBase
     {
         this.wristPosition = wristPosition;
         this.waitUntilPositionReached = waitUntilPositionReached;
+        this.currentWristState = WristState.DesiredGoal;
     }
 
     /**

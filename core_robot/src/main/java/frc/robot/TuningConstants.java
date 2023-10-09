@@ -456,39 +456,37 @@ public class TuningConstants
     
     //======================================================== Electrolite Arm Constants ===================================
     
-    public static final int WRIST_MOTOR_CAN_ID = 0;
-    public static final int INTAKE_MOTOR_CAN_ID = 0;
-    public static final boolean WRIST_MOTOR_INVERT_SENSOR = false;
+    public static final boolean WRIST_MOTOR_USE_SMART_MOTION = false;
+    public static final boolean WRIST_MOTOR_INVERT_SENSOR = true;
     public static final boolean WRIST_MOTOR_INVERT_OUTPUT = false;
     public static final boolean INTAKE_MOTOR_INVERT_OUTPUT = false;
 
-    public static final double WRIST_MOTOR_POSITION_PID_KP = 0.8;
+    public static final double WRIST_MOTOR_POSITION_PID_KP = 0.015;
     public static final double WRIST_MOTOR_POSITION_PID_KI = 0;
     public static final double WRIST_MOTOR_POSITION_PID_KD = 0;
-    public static final double WRIST_MOTOR_POSITION_PID_KF = 0.2;
-    public static final double WRIST_MOTOR_SM_PID_KP = 0;
-    public static final double WRIST_MOTOR_SM_PID_KI = 0;
-    public static final double WRIST_MOTOR_SM_PID_KD = 0;
-    public static final double WRIST_MOTOR_SM_PID_KF = 0;
+    public static final double WRIST_MOTOR_POSITION_PID_KF = 0.0;
+    public static final double WRIST_MOTOR_SM_PID_KP = 0.02;
+    public static final double WRIST_MOTOR_SM_PID_KI = 0.0;
+    public static final double WRIST_MOTOR_SM_PID_KD = 0.0;
+    public static final double WRIST_MOTOR_SM_PID_KF = 0.02;
     public static final int WRIST_MOTOR_SM_IZONE = 0;
-    public static final int WRIST_MOTOR_SM_PID_CRUISE_VELOC = 48000;
-    public static final int WRIST_MOTOR_SM_PID_ACCEL = 48000;
+    public static final int WRIST_MOTOR_SM_PID_CRUISE_VELOC = 10;
+    public static final int WRIST_MOTOR_SM_PID_ACCEL = 15;
 
-    public static final double WRIST_INTAKE_IN_POWER = 0.6;
-    public static final double WRIST_INTAKE_OUT_POWER = -0.6;
-    public static final double WRIST_INPUT_TO_TICK_ADJUSTMENT = 0;
-    public static final double WRIST_MIN_THRESHOLD = 20;
+    public static final double WRIST_INTAKE_IN_POWER = 0.4;
+    public static final double WRIST_INTAKE_OUT_POWER = -0.8;
+    public static final double WRIST_INPUT_TO_TICK_ADJUSTMENT = 25.0;
+    public static final double WRIST_MIN_THRESHOLD = 5.0;
     public static final double WRIST_DEADZONE = 0.1;
 
-    public static final double LOW_CUBE_DROP_POSITION = 210;
-    public static final double MID_CUBE_DROP_POSITION = 140;
-    public static final double HIGH_CUBE_DROP_POSITION = 100;
-    public static final double STOWED_POSITION = 70;
+    public static final double LOW_CUBE_DROP_POSITION = 220;
+    public static final double MID_CUBE_DROP_POSITION = 280;
+    public static final double HIGH_CUBE_DROP_POSITION = 330;
+    public static final double STOWED_POSITION = 350;
     public static final double GROUND_CUBE_PICKUP = 210;
-    public static final double SUBSTATION_CUBE_PICKUP = 100;
-    
+    public static final double SUBSTATION_CUBE_PICKUP = 320;
 
-    public static boolean WRIST_MOTOR_POSITION_PID_WRAPPING_ENABLED = false;
-    public static double WRIST_MOTOR_POSITION_PID_WRAPPING_MIN = 0.0;
-    public static double WRIST_MOTOR_POSITION_PID_WRAPPING_MAX = 360.0;
+    public static final boolean WRIST_MOTOR_POSITION_PID_WRAPPING_ENABLED = true;
+    public static final double WRIST_MOTOR_POSITION_PID_WRAPPING_MIN = 0.0;
+    public static final double WRIST_MOTOR_POSITION_PID_WRAPPING_MAX = 360.0;
 }

@@ -3,6 +3,7 @@ package frc.lib.robotprovider;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.*;
 import com.revrobotics.CANSparkMaxLowLevel.*;
+import com.revrobotics.SparkMaxPIDController.AccelStrategy;
 
 public class SparkMaxWrapper implements ISparkMax
 {
@@ -58,7 +59,7 @@ public class SparkMaxWrapper implements ISparkMax
         switch (encoderType)
         {
             case HallEffect:
-                type = SparkMaxRelativeEncoder.Type.kNoSensor;
+                type = SparkMaxRelativeEncoder.Type.kHallSensor;
                 break;
 
             case Quadrature:
@@ -90,6 +91,10 @@ public class SparkMaxWrapper implements ISparkMax
         {
             case Position:
                 controlType = CANSparkMax.ControlType.kPosition;
+                break;
+
+            case SmnartMotionPosition:
+                controlType = CANSparkMax.ControlType.kSmartMotion;
                 break;
 
             case Velocity:
@@ -278,6 +283,9 @@ public class SparkMaxWrapper implements ISparkMax
         RevErrorCodeHelper.printError(
             this.pidController.setSmartMotionMaxAccel(acceleration, slotId),
             "SparkMaxWrapper.setPIDFSmartMotion-maxaccel");
+        RevErrorCodeHelper.printError(
+            this.pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, slotId),
+            "SparkMaxWrapper.setPIDFSmartMotion-accelStrategy");
     }
 
     public void setPIDFSmartMotion(double p, double i, double d, double f, int izone, int velocity, int acceleration, double minOutput, double maxOutput, int slotId)
@@ -308,6 +316,9 @@ public class SparkMaxWrapper implements ISparkMax
         RevErrorCodeHelper.printError(
             this.pidController.setOutputRange(minOutput, maxOutput),
             "SparkMaxWrapper.setPIDFSmartMotion-output");
+        RevErrorCodeHelper.printError(
+            this.pidController.setSmartMotionAccelStrategy(AccelStrategy.kTrapezoidal, slotId),
+            "SparkMaxWrapper.setPIDFSmartMotion-accelStrategy");
     }
 
     public void setForwardLimitSwitch(boolean enabled, boolean normallyOpen)

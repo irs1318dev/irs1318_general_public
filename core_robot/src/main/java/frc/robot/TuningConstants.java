@@ -190,7 +190,7 @@ public class TuningConstants
     public static final int INDICATOR_OFF_COLOR_BLUE = 0;
     public static final int INDICATOR_OFF_COLOR_WHITE = 0;
 
-    //================================================== DriveTrain ==============================================================
+    //================================================== SDS DriveTrain ==============================================================
 
     public static final boolean SDSDRIVETRAIN_STEER_MOTORS_USE_MOTION_MAGIC = true;
 
@@ -324,7 +324,7 @@ public class TuningConstants
     public static final double SDSDRIVETRAIN_LOW_PATH_TRANSLATIONAL_VELOCITY = TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY / 2.0; // in inches per second
     public static final double SDSDRIVETRAIN_LOW_PATH_TRANSLATIONAL_ACCELERATION = TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION / 2.0; // in inches per second per second
 
-    //================================================== DriveTrainNeo ==============================================================
+    //================================================== REV DriveTrain ==============================================================
 
     public static final boolean REVDRIVETRAIN_STEER_MOTORS_USE_SMART_MOTION = false;
 

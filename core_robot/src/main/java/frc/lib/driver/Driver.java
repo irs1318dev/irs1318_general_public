@@ -288,7 +288,7 @@ public class Driver implements IDriver
                     // some disobey rule #2 (remove only those that were previously active, and not the 1 that is newly active...)
                     macroOperationsToCancel.addAll(SetHelper.<MacroOperation>RelativeComplement(newRelevantMacroOperations, relevantMacroOperations));
                 }
-                else
+                else if (SetHelper.<MacroOperation>Count(newRelevantMacroOperations) > 1)
                 {
                     // disobeys rule #3:
                     // (there are 2 or more active macros that weren't previously active)

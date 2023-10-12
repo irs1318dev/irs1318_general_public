@@ -93,7 +93,7 @@ public class SparkMaxWrapper implements ISparkMax
                 controlType = CANSparkMax.ControlType.kPosition;
                 break;
 
-            case SmnartMotionPosition:
+            case SmartMotionPosition:
                 controlType = CANSparkMax.ControlType.kSmartMotion;
                 break;
 

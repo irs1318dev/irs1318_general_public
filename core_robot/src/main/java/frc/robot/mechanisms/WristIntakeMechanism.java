@@ -81,7 +81,7 @@ public class WristIntakeMechanism implements IMechanism
 
         if (TuningConstants.WRIST_MOTOR_USE_SMART_MOTION)
         {
-            this.wristMotor.setControlMode(SparkMaxControlMode.SmnartMotionPosition);
+            this.wristMotor.setControlMode(SparkMaxControlMode.SmartMotionPosition);
             this.wristMotor.setSelectedSlot(WristIntakeMechanism.SMPidSlotId);
         }
         else

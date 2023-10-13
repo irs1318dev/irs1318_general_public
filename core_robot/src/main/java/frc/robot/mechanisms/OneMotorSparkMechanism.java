@@ -143,7 +143,7 @@ public class OneMotorSparkMechanism implements IMechanism
             shouldUpdatePID = true;
         }
 
-        int newAccel = (int)this.selectionManager.getSelectedAcceleration();
+        int newAccel = TuningConstants.ONEMOTOR_PID_MM_ACCEL; // (int)this.selectionManager.getSelectedAcceleration();
         if (newAccel != this.kAccel)
         {
             shouldUpdatePID = true;

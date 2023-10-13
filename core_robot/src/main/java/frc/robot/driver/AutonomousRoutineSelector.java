@@ -66,7 +66,23 @@ public class AutonomousRoutineSelector
 
             this.logger.logString(LoggingKey.AutonomousSelection, startPosition.toString() + "." + routine.toString() + "(" + (isRed ? "red" : "blue") + ")");
 
-            return GetFillerRoutine();
+            if(routine == AutoRoutine.PlaceDriveBack)
+            {
+                return placeDriveBack(isRed);
+            }
+
+            else
+                {
+                    return ConcurrentTask.AllTasks(
+                        new ResetLevelTask(),
+                        new PositionStartingTask(
+                            TuningConstants.RevStartPositionX,
+                            TuningConstants.RevStartPositionY,
+                            180.0,
+                            true,
+                            true),
+                        new ResetLevelTask());
+                }
         }
 
         return GetFillerRoutine();
@@ -78,6 +94,37 @@ public class AutonomousRoutineSelector
     private static IControlTask GetFillerRoutine()
     {
         return new WaitTask(0.0);
+    }
+
+    private static IControlTask placeDriveBack(boolean isRed)
+    {
+        return SequentialTask.Sequence(
+            ConcurrentTask.AllTasks(
+                new ResetLevelTask(),
+                new PositionStartingTask(
+                    TuningConstants.RevStartPositionX,
+                    TuningConstants.RevStartPositionY,
+                    180.0,
+                    true,
+                    true)),
+
+            new WristPositionTask(
+                TuningConstants.HIGH_CUBE_DROP_POSITION,
+                true),
+            new IntakeInTask(true, 1.0),
+            
+            new WaitTask(0.2),
+
+            ConcurrentTask.AllTasks(
+                new FollowPathTask("goForwards30in" , Type.Absolute),
+                SequentialTask.Sequence(
+                    new WaitTask(0.5),
+                    new WristPositionTask(
+                        TuningConstants.STOWED_POSITION,
+                        false)
+                )
+            )
+        );
     }
 }
 

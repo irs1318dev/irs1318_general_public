@@ -6,6 +6,7 @@ package frc.robot.mechanisms;
  import frc.lib.mechanisms.*;
  import frc.lib.robotprovider.*;
  import frc.robot.driver.*;
+ import frc.lib.filters.FloatingAverageCalculator;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -19,6 +20,7 @@ public class WristIntakeMechanism implements IMechanism
     private final IDriver driver;
     private final ILogger logger;
     private final ITimer timer;
+    private final PowerManager powerManager;
 
     private double prevTime;
 
@@ -28,6 +30,15 @@ public class WristIntakeMechanism implements IMechanism
     private double wristMotorAngle;
     private double wristMotorVelocity;
     private double wristMotorDesiredAngle;
+
+    private double wristPowerAverage;
+    private double wristVelocityAverage;
+
+    private FloatingAverageCalculator wristPowerAverageCalculator;
+    private FloatingAverageCalculator wristVelocityAverageCalculator;
+
+    private double wristSetpointChangedTime;
+    private boolean wristStalled;    
 
     private double intakeMotorVelocity;
 
@@ -44,6 +55,7 @@ public class WristIntakeMechanism implements IMechanism
         this.driver = driver;
         this.logger = logger;
         this.timer = timer;
+        this.powerManager = powerManager;
 
         this.intakeMotor = provider.getSparkMax(ElectronicsConstants.INTAKE_MOTOR_CAN_ID, SparkMaxMotorType.Brushless);
         this.intakeMotor.setRelativeEncoder();
@@ -92,6 +104,10 @@ public class WristIntakeMechanism implements IMechanism
 
         this.wristMotor.burnFlash();
 
+        
+        this.wristPowerAverageCalculator = new FloatingAverageCalculator(this.timer, TuningConstants.WRIST_POWER_TRACKING_DURATION, TuningConstants.WRIST_POWER_SAMPLES_PER_SECOND);
+        this.wristVelocityAverageCalculator = new FloatingAverageCalculator(this.timer, TuningConstants.WRIST_VELOCITY_TRACKING_DURATION, TuningConstants.WRIST_VELOCITY_SAMPLES_PER_SECOND);
+
         this.wristMotorDesiredAngle =
             Helpers.EnforceRange(this.wristMotor.getPosition(), HardwareConstants.WRIST_MIN_ANGLE, HardwareConstants.WRIST_MAX_ANGLE);
     }
@@ -104,6 +120,16 @@ public class WristIntakeMechanism implements IMechanism
 
         this.intakeMotorVelocity = this.intakeMotor.getVelocity();
 
+        double wristCurrent = this.powerManager.getCurrent(ElectronicsConstants.WRIST_PDH_CHANNEL);
+        double batteryVoltage = this.powerManager.getBatteryVoltage();
+
+        this.wristPowerAverage = this.wristPowerAverageCalculator.update(wristCurrent * batteryVoltage);
+        this.wristVelocityAverage = this.wristVelocityAverageCalculator.update(Math.abs(this.wristMotorVelocity));
+
+
+        
+        this.logger.logNumber(LoggingKey.WristVelocityAverage, this.wristVelocityAverage);
+        this.logger.logNumber(LoggingKey.WristPower, this.wristPowerAverage);
         this.logger.logNumber(LoggingKey.WristMotorVelocity, this.wristMotorVelocity);
         this.logger.logNumber(LoggingKey.WristMotorAngle, this.wristMotorAngle);
         this.logger.logNumber(LoggingKey.IntakeMotorVelocity, this.intakeMotorVelocity);
@@ -123,6 +149,9 @@ public class WristIntakeMechanism implements IMechanism
             this.inSimpleMode = false;
             this.wristMotorDesiredAngle = this.wristMotorAngle;
             this.wristMotor.setControlMode(SparkMaxControlMode.Position);
+
+            this.wristSetpointChangedTime = currTime;
+            this.wristStalled = false;
         }
 
         // --------------------------------- Intake Update -----------------------------------------------------
@@ -150,6 +179,9 @@ public class WristIntakeMechanism implements IMechanism
         {
             // controlled by joystick - raw power
             wristPower = wristAngleAdjustment;
+
+            this.wristSetpointChangedTime = currTime;
+            this.wristStalled = false;
         }
         else
         {
@@ -160,6 +192,9 @@ public class WristIntakeMechanism implements IMechanism
             {
                 // Controlled by joysticks - angle adjustment
                 this.wristMotorDesiredAngle += wristAngleAdjustment * TuningConstants.WRIST_INPUT_TO_TICK_ADJUSTMENT * elapsedTime;
+
+                this.wristSetpointChangedTime = currTime;
+                this.wristStalled = false;
             }
             else if (newDesiredWristAngle != TuningConstants.MAGIC_NULL_VALUE)
             {
@@ -167,17 +202,39 @@ public class WristIntakeMechanism implements IMechanism
                 if (!Helpers.RoughEquals(this.wristMotorDesiredAngle, newDesiredWristAngle, 0.1))
                 {
                     this.wristMotorDesiredAngle = newDesiredWristAngle;
+
+                    this.wristSetpointChangedTime = currTime;
+                    this.wristStalled = false;
                 }
             }
         }
 
-        if (!this.inSimpleMode)
+        if (TuningConstants.WRIST_STALL_PROTECTION_ENABLED)
         {
-            this.wristMotorDesiredAngle = Helpers.EnforceRange(this.wristMotorDesiredAngle, HardwareConstants.WRIST_MIN_ANGLE, HardwareConstants.WRIST_MAX_ANGLE);
+            if (currTime > this.wristSetpointChangedTime + TuningConstants.WRIST_VELOCITY_TRACKING_DURATION &&
+                this.wristPowerAverage >= TuningConstants.WRIST_STALLED_POWER_THRESHOLD &&
+                Math.abs(this.wristVelocityAverage) <= TuningConstants.WRIST_STALLED_VELOCITY_THRESHOLD)
+            {
+                this.wristStalled = true;
+            }
 
-            this.wristMotor.set(this.wristMotorDesiredAngle);
         }
-        else
+
+
+        if(!this.inSimpleMode)
+        {
+            if (this.wristStalled)
+            {
+                this.wristMotor.stop();
+            }
+            else 
+            {
+                this.wristMotorDesiredAngle = Helpers.EnforceRange(this.wristMotorDesiredAngle, HardwareConstants.WRIST_MIN_ANGLE, HardwareConstants.WRIST_MAX_ANGLE);
+
+                this.wristMotor.set(this.wristMotorDesiredAngle);
+            }
+        }
+        else 
         {
             this.wristMotor.set(wristPower);
         }

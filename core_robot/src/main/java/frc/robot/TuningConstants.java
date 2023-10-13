@@ -454,6 +454,12 @@ public class TuningConstants
     public static final double REVDRIVETRAIN_LOW_PATH_TRANSLATIONAL_VELOCITY = TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY / 2.0; // in inches per second
     public static final double REVDRIVETRAIN_LOW_PATH_TRANSLATIONAL_ACCELERATION = TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION / 2.0; // in inches per second per second
     
+
+    //============================================================ AUTONOMOUS POSITIONS ======================================
+
+    public static final double RevStartPositionX = 0.0;
+    public static final double RevStartPositionY = 0.0;
+    
     //======================================================== Electrolite Arm Constants ===================================
     
     public static final boolean WRIST_MOTOR_USE_SMART_MOTION = false;
@@ -489,4 +495,23 @@ public class TuningConstants
     public static final boolean WRIST_MOTOR_POSITION_PID_WRAPPING_ENABLED = true;
     public static final double WRIST_MOTOR_POSITION_PID_WRAPPING_MIN = 0.0;
     public static final double WRIST_MOTOR_POSITION_PID_WRAPPING_MAX = 360.0;
+
+    // Wrist stall prevention
+    public static final boolean WRIST_STALL_PROTECTION_ENABLED = true;
+    public static final double WRIST_STALLED_CURRENT_THRESHOLD = 3.5; // amount of current being "used" by the linear actuator (despite not moving according to the encoders) to be considered stalled
+    public static final double BATTERY_AVERAGE_EXPECTED_VOLTAGE = 12.0; // expected voltage of battery
+    public static final double WRIST_STALLED_POWER_THRESHOLD = TuningConstants.WRIST_STALLED_CURRENT_THRESHOLD * TuningConstants.BATTERY_AVERAGE_EXPECTED_VOLTAGE; // amount of power that can be "used" by the linear actuators to be considered stalled
+    public static final double WRIST_STALLED_VELOCITY_THRESHOLD = 8.0; // 8 ticks/sec is very slow, unlikely to be really moving...
+
+    // Power sampling for wrist
+    public static final double WRIST_POWER_TRACKING_DURATION = 0.25; // duration of time to keep track of the average current
+    public static final double WRIST_POWER_SAMPLES_PER_LOOP = 1.0;
+    public static final double WRIST_POWER_SAMPLES_PER_SECOND = TuningConstants.LOOPS_PER_SECOND * TuningConstants.WRIST_POWER_SAMPLES_PER_LOOP;
+    public static final double WRIST_NOT_MOVING_POWER_THRESHOLD = 0.25; // amount of power being "used" by the linear actuator to be considered "not moving"
+    
+
+    // Velocity sampling for wrist
+    public static final double WRIST_VELOCITY_TRACKING_DURATION = TuningConstants.WRIST_POWER_TRACKING_DURATION; // should match the power tracking
+    public static final double WRIST_VELOCITY_SAMPLES_PER_LOOP = TuningConstants.WRIST_POWER_SAMPLES_PER_LOOP; // should match the power tracking
+    public static final double WRIST_VELOCITY_SAMPLES_PER_SECOND = TuningConstants.WRIST_POWER_SAMPLES_PER_SECOND;
 }

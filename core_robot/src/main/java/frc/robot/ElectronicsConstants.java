@@ -89,4 +89,5 @@ public class ElectronicsConstants
     public static final int INTAKE_MOTOR_CAN_ID = 40;
     // intake wheels Rev can ID is 30
     // intake wrist Rev CAN ID is 40
+    public static final int WRIST_PDH_CHANNEL = 0;
 }

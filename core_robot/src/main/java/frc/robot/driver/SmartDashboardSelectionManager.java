@@ -21,15 +21,7 @@ public class SmartDashboardSelectionManager
     public enum AutoRoutine
     {
         None,
-        Place,
-        Taxi,
-        Charge,
-        OnePlusTaxi,
-        OnePlusCharge,
-        OnePlusPickup,
-        OnePickupCharge,
-        OnePlusOne,
-        ThreePiece
+        PlaceDriveBack
     }
 
     /**

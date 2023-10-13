@@ -72,6 +72,16 @@ public class PathPlannerTrajectoryGenerator
                 new PathPlannerWaypoint(0.0, 0.0, 270.0, 0.0),
                 new PathPlannerWaypoint(0.0, -22.0, 270.0, 0.0)),
                 "goRight22in");
+
+        // ------------------------------- Auton Paths --------------------------------------------
+        addTrajectory(
+            trajectoryManager,
+            pathPlanner.buildTrajectory(
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
+                new PathPlannerWaypoint(0.0, 0.0, 0.0, 180.0),
+                new PathPlannerWaypoint(30.0, 0.0, 0.0, 180.0)),
+                "goForwards30in");
     }
 
     public static void generateTrajectories(boolean isRed, TrajectoryManager trajectoryManager, IPathPlanner pathPlanner)

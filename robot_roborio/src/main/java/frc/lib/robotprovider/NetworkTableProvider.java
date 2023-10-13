@@ -2,6 +2,7 @@ package frc.lib.robotprovider;
 
 import edu.wpi.first.networktables.BooleanTopic;
 import edu.wpi.first.networktables.DoubleTopic;
+import edu.wpi.first.networktables.IntegerTopic;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -44,6 +45,14 @@ public class NetworkTableProvider implements INetworkTableProvider
     public void stopShuffleboardRecording()
     {
         Shuffleboard.stopRecording();
+    }
+
+    @Override
+    public IIntegerSubscriber getIntegerSlider(String title, int initialValue)
+    {
+        IntegerTopic numberTopic = NetworkTableProvider.getSmartDashboard().getIntegerTopic(title);
+        numberTopic.publish().set(initialValue);
+        return new IntegerSubscriberWrapper(numberTopic.subscribe(initialValue));
     }
 
     @Override

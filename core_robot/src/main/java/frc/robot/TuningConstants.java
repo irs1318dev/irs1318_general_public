@@ -480,7 +480,7 @@ public class TuningConstants
     public static final int WRIST_MOTOR_SM_PID_ACCEL = 15;
 
     public static final double WRIST_INTAKE_IN_POWER = 0.4;
-    public static final double WRIST_INTAKE_OUT_POWER = -0.8;
+    public static final double WRIST_INTAKE_OUT_POWER = -0.95;
     public static final double WRIST_INPUT_TO_TICK_ADJUSTMENT = 25.0;
     public static final double WRIST_MIN_THRESHOLD = 5.0;
     public static final double WRIST_DEADZONE = 0.1;

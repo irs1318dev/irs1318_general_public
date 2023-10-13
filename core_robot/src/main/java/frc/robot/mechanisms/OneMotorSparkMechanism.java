@@ -31,6 +31,8 @@ public class OneMotorSparkMechanism implements IMechanism
     private double kF;
     private double kAccel;
     private double kCruiseVel;
+    private double kMinOutput;
+    private double kMaxOutput;
     private boolean useBrakeMode;
     private boolean invertOutput;
 
@@ -70,6 +72,8 @@ public class OneMotorSparkMechanism implements IMechanism
         this.kF = TuningConstants.ONEMOTOR_PID_KF;
         this.kAccel = TuningConstants.ONEMOTOR_PID_MM_ACCEL;
         this.kCruiseVel = TuningConstants.ONEMOTOR_PID_MM_CRUISE_VELOC;
+        this.kMinOutput = TuningConstants.ONEMOTOR_PID_MIN_OUTPUT;
+        this.kMaxOutput = TuningConstants.ONEMOTOR_PID_MAX_OUTPUT;
         this.useBrakeMode = true;
         this.invertOutput = TuningConstants.ONEMOTOR_INVERT_OUTPUT;
 
@@ -145,6 +149,18 @@ public class OneMotorSparkMechanism implements IMechanism
             shouldUpdatePID = true;
         }
 
+        double newMinOutput = this.selectionManager.getSelectedMinOutput();
+        if (newMinOutput != this.kMinOutput)
+        {
+            shouldUpdatePID = true;
+        }
+
+        double newMaxOutput = this.selectionManager.getSelectedMaxOutput();
+        if (newMaxOutput != this.kMaxOutput)
+        {
+            shouldUpdatePID = true;
+        }
+
         if (shouldUpdatePID)
         {
             this.kP = newKP;
@@ -153,6 +169,8 @@ public class OneMotorSparkMechanism implements IMechanism
             this.kF = newKF;
             this.kAccel = newAccel;
             this.kCruiseVel = newCruiseVel;
+            this.kMinOutput = newMinOutput;
+            this.kMaxOutput = newMaxOutput;
 
             this.motor.setPIDFSmartMotion(
                 this.kP,
@@ -162,8 +180,8 @@ public class OneMotorSparkMechanism implements IMechanism
                 0,
                 (int)this.kCruiseVel,
                 (int)this.kAccel,
-                TuningConstants.ONEMOTOR_PID_MIN_OUTPUT,
-                TuningConstants.ONEMOTOR_PID_MAX_OUTPUT,
+                this.kMinOutput,
+                this.kMaxOutput,
                 OneMotorSparkMechanism.slotId);
         }
 

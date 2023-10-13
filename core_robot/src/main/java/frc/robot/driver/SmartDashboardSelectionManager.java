@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import frc.lib.robotprovider.*;
+import frc.robot.TuningConstants;
 
 @Singleton
 public class SmartDashboardSelectionManager
@@ -20,6 +21,8 @@ public class SmartDashboardSelectionManager
     private final IDoubleSubscriber kCruiseVelSlider;
     private final IBooleanSubscriber invertOutputCheckbox;
     private final IBooleanSubscriber brakeModeCheckbox;
+    private final IDoubleSubscriber kMinOutputSlider;
+    private final IDoubleSubscriber kMaxOutputSlider;
 
     public enum StartPosition
     {
@@ -85,14 +88,16 @@ public class SmartDashboardSelectionManager
         this.motorModeChooser.addObject("trapezoidalMotionProfile", MotorMode.TrapezoidalMotionProfile);
         networkTableProvider.addChooser("Motor Mode", this.motorModeChooser);
 
-        this.kpSlider = networkTableProvider.getNumberSlider("kP", 0.0);
-        this.kiSlider = networkTableProvider.getNumberSlider("kI", 0.0);
-        this.kdSlider = networkTableProvider.getNumberSlider("kD", 0.0);
-        this.kfSlider = networkTableProvider.getNumberSlider("kF", 0.0);
-        this.kAccelSlider = networkTableProvider.getNumberSlider("kAccel", 0.0);
-        this.kCruiseVelSlider = networkTableProvider.getNumberSlider("kCruiseVel", 0.0);
+        this.kpSlider = networkTableProvider.getNumberSlider("kP", TuningConstants.ONEMOTOR_PID_KP);
+        this.kiSlider = networkTableProvider.getNumberSlider("kI", TuningConstants.ONEMOTOR_PID_KI);
+        this.kdSlider = networkTableProvider.getNumberSlider("kD", TuningConstants.ONEMOTOR_PID_KD);
+        this.kfSlider = networkTableProvider.getNumberSlider("kF", TuningConstants.ONEMOTOR_PID_KF);
+        this.kAccelSlider = networkTableProvider.getNumberSlider("kAccel", TuningConstants.ONEMOTOR_PID_MM_ACCEL);
+        this.kCruiseVelSlider = networkTableProvider.getNumberSlider("kCruiseVel", TuningConstants.ONEMOTOR_PID_MM_CRUISE_VELOC);
+        this.kMinOutputSlider = networkTableProvider.getNumberSlider("kMinOutput", TuningConstants.ONEMOTOR_PID_MIN_OUTPUT);
+        this.kMaxOutputSlider = networkTableProvider.getNumberSlider("kMaxOutput", TuningConstants.ONEMOTOR_PID_MAX_OUTPUT);
 
-        this.invertOutputCheckbox = networkTableProvider.getCheckbox("invertOutput", false);
+        this.invertOutputCheckbox = networkTableProvider.getCheckbox("invertOutput", TuningConstants.ONEMOTOR_INVERT_OUTPUT);
         this.brakeModeCheckbox = networkTableProvider.getCheckbox("useBrakeMode", false);
     }
 
@@ -139,6 +144,16 @@ public class SmartDashboardSelectionManager
     public double getSelectedCruiseVelocity()
     {
         return this.kCruiseVelSlider.get();
+    }
+
+    public double getSelectedMinOutput()
+    {
+        return this.kMinOutputSlider.get();
+    }
+
+    public double getSelectedMaxOutput()
+    {
+        return this.kMaxOutputSlider.get();
     }
 
     public boolean getSelectedInvertOutput()

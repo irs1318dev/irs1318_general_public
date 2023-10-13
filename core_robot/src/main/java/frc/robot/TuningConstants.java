@@ -465,8 +465,8 @@ public class TuningConstants
     public static final double ONEMOTOR_PID_KI = 0.0;
     public static final double ONEMOTOR_PID_KD = 0.0;
     public static final double ONEMOTOR_PID_KF = 0.0; // 1.0 / 6000.0;
-    public static final double ONEMOTOR_PID_MIN_OUTPUT = -0.1; // 1.0 / 6000.0;
-    public static final double ONEMOTOR_PID_MAX_OUTPUT = 0.1; // 1.0 / 6000.0;
+    public static final double ONEMOTOR_PID_MIN_OUTPUT = -1.0; // 1.0 / 6000.0;
+    public static final double ONEMOTOR_PID_MAX_OUTPUT = 1.0; // 1.0 / 6000.0;
     public static final int ONEMOTOR_PID_MM_CRUISE_VELOC = 0;
     public static final int ONEMOTOR_PID_MM_ACCEL = 0;
 

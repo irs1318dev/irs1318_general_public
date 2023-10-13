@@ -485,20 +485,20 @@ public class TuningConstants
     public static final double WRIST_MIN_THRESHOLD = 5.0;
     public static final double WRIST_DEADZONE = 0.1;
 
-    public static final double LOW_CUBE_DROP_POSITION = 230;
-    public static final double MID_CUBE_DROP_POSITION = 280;
-    public static final double HIGH_CUBE_DROP_POSITION = 330;
-    public static final double STOWED_POSITION = 350;
-    public static final double GROUND_CUBE_PICKUP = 210;
-    public static final double SUBSTATION_CUBE_PICKUP = 320;
+    public static final double LOW_CUBE_DROP_POSITION = 230.0;
+    public static final double MID_CUBE_DROP_POSITION = 280.0;
+    public static final double HIGH_CUBE_DROP_POSITION = 330.0;
+    public static final double STOWED_POSITION = 350.0;
+    public static final double GROUND_CUBE_PICKUP = 210.0;
+    public static final double SUBSTATION_CUBE_PICKUP = 320.0;
 
     public static final boolean WRIST_MOTOR_POSITION_PID_WRAPPING_ENABLED = true;
     public static final double WRIST_MOTOR_POSITION_PID_WRAPPING_MIN = 0.0;
     public static final double WRIST_MOTOR_POSITION_PID_WRAPPING_MAX = 360.0;
 
     // Wrist stall prevention
-    public static final boolean WRIST_STALL_PROTECTION_ENABLED = true;
-    public static final double WRIST_STALLED_CURRENT_THRESHOLD = 3.5; // amount of current being "used" by the linear actuator (despite not moving according to the encoders) to be considered stalled
+    public static final boolean WRIST_STALL_PROTECTION_ENABLED = false;
+    public static final double WRIST_STALLED_CURRENT_THRESHOLD = 3.5; // amount of current being "used" by the wrist motor (despite not moving according to the encoders) to be considered stalled
     public static final double BATTERY_AVERAGE_EXPECTED_VOLTAGE = 12.0; // expected voltage of battery
     public static final double WRIST_STALLED_POWER_THRESHOLD = TuningConstants.WRIST_STALLED_CURRENT_THRESHOLD * TuningConstants.BATTERY_AVERAGE_EXPECTED_VOLTAGE; // amount of power that can be "used" by the linear actuators to be considered stalled
     public static final double WRIST_STALLED_VELOCITY_THRESHOLD = 8.0; // 8 ticks/sec is very slow, unlikely to be really moving...
@@ -507,8 +507,7 @@ public class TuningConstants
     public static final double WRIST_POWER_TRACKING_DURATION = 0.25; // duration of time to keep track of the average current
     public static final double WRIST_POWER_SAMPLES_PER_LOOP = 1.0;
     public static final double WRIST_POWER_SAMPLES_PER_SECOND = TuningConstants.LOOPS_PER_SECOND * TuningConstants.WRIST_POWER_SAMPLES_PER_LOOP;
-    public static final double WRIST_NOT_MOVING_POWER_THRESHOLD = 0.25; // amount of power being "used" by the linear actuator to be considered "not moving"
-    
+    public static final double WRIST_NOT_MOVING_POWER_THRESHOLD = 0.25; // amount of power being "used" by the wrist motorr to be considered "not moving"
 
     // Velocity sampling for wrist
     public static final double WRIST_VELOCITY_TRACKING_DURATION = TuningConstants.WRIST_POWER_TRACKING_DURATION; // should match the power tracking

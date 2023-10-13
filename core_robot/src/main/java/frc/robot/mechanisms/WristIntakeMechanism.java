@@ -217,11 +217,9 @@ public class WristIntakeMechanism implements IMechanism
             {
                 this.wristStalled = true;
             }
-
         }
 
-
-        if(!this.inSimpleMode)
+        if (!this.inSimpleMode)
         {
             if (this.wristStalled)
             {

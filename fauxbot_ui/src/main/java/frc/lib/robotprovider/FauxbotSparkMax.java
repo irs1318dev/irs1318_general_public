@@ -190,6 +190,11 @@ public class FauxbotSparkMax extends FauxbotAdvancedMotorBase implements ISparkM
     {
     }
 
+    public double getOutput()
+    {
+        return 0.0;
+    }
+
     public double getVelocity()
     {
         return 0.0;

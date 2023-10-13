@@ -35,7 +35,7 @@ public class SmartDashboardSelectionManager
 
         this.routineChooser = networkTableProvider.getSendableChooser();
         this.routineChooser.addDefault("None", AutoRoutine.None);
-        this.routineChooser.addObject("PlaceDriveBack", AutoRoutine.PlaceDriveBack);
+        this.routineChooser.addObject("Place", AutoRoutine.PlaceDriveBack);
         networkTableProvider.addChooser("Auto Routine", this.routineChooser);
 
         this.positionChooser = networkTableProvider.getSendableChooser();

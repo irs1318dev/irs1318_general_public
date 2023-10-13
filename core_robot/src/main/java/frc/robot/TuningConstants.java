@@ -498,10 +498,10 @@ public class TuningConstants
 
     // Wrist stall prevention
     public static final boolean WRIST_STALL_PROTECTION_ENABLED = false;
-    public static final double WRIST_STALLED_CURRENT_THRESHOLD = 3.5; // amount of current being "used" by the wrist motor (despite not moving according to the encoders) to be considered stalled
+    public static final double WRIST_STALLED_CURRENT_THRESHOLD = 2.5; // amount of current being "used" by the wrist motor (despite not moving according to the encoders) to be considered stalled
     public static final double BATTERY_AVERAGE_EXPECTED_VOLTAGE = 12.0; // expected voltage of battery
     public static final double WRIST_STALLED_POWER_THRESHOLD = TuningConstants.WRIST_STALLED_CURRENT_THRESHOLD * TuningConstants.BATTERY_AVERAGE_EXPECTED_VOLTAGE; // amount of power that can be "used" by the linear actuators to be considered stalled
-    public static final double WRIST_STALLED_VELOCITY_THRESHOLD = 8.0; // 8 ticks/sec is very slow, unlikely to be really moving...
+    public static final double WRIST_STALLED_VELOCITY_THRESHOLD = 0.05; // .05 rot/sec is very slow
 
     // Power sampling for wrist
     public static final double WRIST_POWER_TRACKING_DURATION = 0.25; // duration of time to keep track of the average current

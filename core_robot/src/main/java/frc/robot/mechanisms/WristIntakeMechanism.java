@@ -237,6 +237,7 @@ public class WristIntakeMechanism implements IMechanism
             this.wristMotor.set(wristPower);
         }
 
+        this.logger.logBoolean(LoggingKey.WristMotorStalled, this.wristStalled);
         this.logger.logNumber(LoggingKey.WristMotorSetPower, wristPower);
         this.logger.logNumber(LoggingKey.WristMotorSetPosition, this.wristMotorDesiredAngle);
 

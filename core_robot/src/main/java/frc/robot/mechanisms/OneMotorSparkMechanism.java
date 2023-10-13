@@ -29,8 +29,8 @@ public class OneMotorSparkMechanism implements IMechanism
     private double kI;
     private double kD;
     private double kF;
-    private double kAccel;
-    private double kCruiseVel;
+    private int kAccel;
+    private int kCruiseVel;
     private double kMinOutput;
     private double kMaxOutput;
     private boolean useBrakeMode;
@@ -137,13 +137,13 @@ public class OneMotorSparkMechanism implements IMechanism
             shouldUpdatePID = true;
         }
 
-        double newCruiseVel = this.selectionManager.getSelectedCruiseVelocity();
+        int newCruiseVel = (int)this.selectionManager.getSelectedCruiseVelocity();
         if (newCruiseVel != this.kCruiseVel)
         {
             shouldUpdatePID = true;
         }
 
-        double newAccel = this.selectionManager.getSelectedAcceleration();
+        int newAccel = (int)this.selectionManager.getSelectedAcceleration();
         if (newAccel != this.kAccel)
         {
             shouldUpdatePID = true;
@@ -242,6 +242,8 @@ public class OneMotorSparkMechanism implements IMechanism
 
         this.logger.logNumber(LoggingKey.OneMotorSparkSetpoint, setpoint);
         this.motor.set(setpoint);
+
+        this.logger.logNumber(LoggingKey.OneMotorSparkOutput, this.motor.getOutput());
     }
 
     @Override

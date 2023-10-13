@@ -118,6 +118,7 @@ public enum LoggingKey
     OneMotorSRXErrorPercent("omsrx.error%"),
     OneMotorSparkVelocity("omspark.velocity"),
     OneMotorSparkPosition("omspark.position"),
+    OneMotorSparkOutput("omspark.output"),
     OneMotorSparkForwardLimit("omspark.forwardlimit"),
     OneMotorSparkReverseLimit("omspark.reverselimit"),
     OneMotorSparkSetpoint("omspark.setpoint");

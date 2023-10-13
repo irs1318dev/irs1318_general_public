@@ -17,8 +17,8 @@ public class SmartDashboardSelectionManager
     private final IDoubleSubscriber kiSlider;
     private final IDoubleSubscriber kdSlider;
     private final IDoubleSubscriber kfSlider;
-    private final IDoubleSubscriber kAccelSlider;
-    private final IDoubleSubscriber kCruiseVelSlider;
+    private final IIntegerSubscriber kAccelSlider;
+    private final IIntegerSubscriber kCruiseVelSlider;
     private final IBooleanSubscriber invertOutputCheckbox;
     private final IBooleanSubscriber brakeModeCheckbox;
     private final IDoubleSubscriber kMinOutputSlider;
@@ -92,8 +92,8 @@ public class SmartDashboardSelectionManager
         this.kiSlider = networkTableProvider.getNumberSlider("kI", TuningConstants.ONEMOTOR_PID_KI);
         this.kdSlider = networkTableProvider.getNumberSlider("kD", TuningConstants.ONEMOTOR_PID_KD);
         this.kfSlider = networkTableProvider.getNumberSlider("kF", TuningConstants.ONEMOTOR_PID_KF);
-        this.kAccelSlider = networkTableProvider.getNumberSlider("kAccel", TuningConstants.ONEMOTOR_PID_MM_ACCEL);
-        this.kCruiseVelSlider = networkTableProvider.getNumberSlider("kCruiseVel", TuningConstants.ONEMOTOR_PID_MM_CRUISE_VELOC);
+        this.kAccelSlider = networkTableProvider.getIntegerSlider("kAccel", TuningConstants.ONEMOTOR_PID_MM_ACCEL);
+        this.kCruiseVelSlider = networkTableProvider.getIntegerSlider("kCruiseVel", TuningConstants.ONEMOTOR_PID_MM_CRUISE_VELOC);
         this.kMinOutputSlider = networkTableProvider.getNumberSlider("kMinOutput", TuningConstants.ONEMOTOR_PID_MIN_OUTPUT);
         this.kMaxOutputSlider = networkTableProvider.getNumberSlider("kMaxOutput", TuningConstants.ONEMOTOR_PID_MAX_OUTPUT);
 
@@ -136,12 +136,12 @@ public class SmartDashboardSelectionManager
         return this.kfSlider.get();
     }
 
-    public double getSelectedAcceleration()
+    public long getSelectedAcceleration()
     {
         return this.kAccelSlider.get();
     }
 
-    public double getSelectedCruiseVelocity()
+    public long getSelectedCruiseVelocity()
     {
         return this.kCruiseVelSlider.get();
     }

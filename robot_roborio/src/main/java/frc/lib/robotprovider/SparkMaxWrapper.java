@@ -510,6 +510,11 @@ public class SparkMaxWrapper implements ISparkMax
         }
     }
 
+    public double getOutput()
+    {
+        return this.wrappedObject.getAppliedOutput();
+    }
+
     public boolean getForwardLimitSwitchStatus()
     {
         if (this.wrappedFwdLimitSwitch == null)

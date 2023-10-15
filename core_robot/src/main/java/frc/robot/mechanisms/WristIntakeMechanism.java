@@ -173,6 +173,10 @@ public class WristIntakeMechanism implements IMechanism
         {
             wristIntakePower = TuningConstants.WRIST_INTAKE_OUT_POWER;
         }
+        else if (this.driver.getDigital(DigitalOperation.IntakeOutMedium))
+        {
+            wristIntakePower = TuningConstants.WRIST_INTAKE_OUT_MEDIUM_POWER;
+        }
         else if (this.driver.getDigital(DigitalOperation.IntakeOutSlow))
         {
             wristIntakePower = TuningConstants.WRIST_INTAKE_OUT_SLOW_POWER;

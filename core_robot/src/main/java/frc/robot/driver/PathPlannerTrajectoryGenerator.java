@@ -79,9 +79,9 @@ public class PathPlannerTrajectoryGenerator
             pathPlanner.buildTrajectory(
                 TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
                 TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
-                new PathPlannerWaypoint(0.0, 0.0, 0.0, 180.0),
-                new PathPlannerWaypoint(30.0, 0.0, 0.0, 180.0)),
-                "goForwards30in");
+                new PathPlannerWaypoint(0.0, 0.0, 0.0, 0.0),
+                new PathPlannerWaypoint(150.0, 0.0, 0.0, 0.0)),
+                "goForwards5ft");
     }
 
     public static void generateTrajectories(boolean isRed, TrajectoryManager trajectoryManager, IPathPlanner pathPlanner)

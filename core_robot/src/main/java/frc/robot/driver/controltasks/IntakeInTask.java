@@ -8,6 +8,7 @@ public class IntakeInTask extends CompositeOperationTask
         {
             DigitalOperation.IntakeIn,
             DigitalOperation.IntakeOut,
+            DigitalOperation.IntakeOutMedium,
             DigitalOperation.IntakeOutSlow,
             DigitalOperation.IntakeOutSuperSlow,
         };
@@ -24,6 +25,14 @@ public class IntakeInTask extends CompositeOperationTask
     {
         super(
             intakeIn ? DigitalOperation.IntakeIn : DigitalOperation.IntakeOut,
+            IntakeInTask.possibleOperations,
+            timeout);
+    }
+
+    public IntakeInTask(DigitalOperation intakeOperation, double timeout)
+    {
+        super(
+            intakeOperation,
             IntakeInTask.possibleOperations,
             timeout);
     }

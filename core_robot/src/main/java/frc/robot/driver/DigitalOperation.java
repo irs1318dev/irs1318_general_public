@@ -39,6 +39,7 @@ public enum DigitalOperation implements IOperation
     WristEnableSimpleMode, // make a button
     WristDisableSimpleMode, // make a button
     IntakeIn, // make a button
+    IntakeOutMedium,
     IntakeOut, // make a button
     IntakeOutSlow,
     IntakeOutSuperSlow,

@@ -66,12 +66,11 @@ public class AutonomousRoutineSelector
 
             this.logger.logString(LoggingKey.AutonomousSelection, startPosition.toString() + "." + routine.toString() + "(" + (isRed ? "red" : "blue") + ")");
 
-            // if(routine == AutoRoutine.PlaceDriveBack)
-            // {
-            //     return placeDriveBack(isRed);
-            // }
-
-            if (routine == AutoRoutine.Place)
+            if (routine == AutoRoutine.PlaceDriveBack)
+            {
+                return placeDriveBack(isRed);
+            }
+            else if (routine == AutoRoutine.Place)
             {
                 return place();
             }
@@ -108,19 +107,19 @@ public class AutonomousRoutineSelector
                 new PositionStartingTask(
                     TuningConstants.RevStartPositionX,
                     TuningConstants.RevStartPositionY,
-                    180.0,
+                    0.0,
                     true,
                     true)),
 
             new WristPositionTask(
                 TuningConstants.HIGH_CUBE_DROP_POSITION,
                 true),
-            new IntakeInTask(false, 1.0),
+            new IntakeInTask(DigitalOperation.IntakeOutMedium, 1.0),
             
             new WaitTask(0.2),
 
             ConcurrentTask.AllTasks(
-                new FollowPathTask("goForwards30in" , Type.Absolute),
+                new FollowPathTask("goForwards5ft" , Type.Absolute),
                 SequentialTask.Sequence(
                     new WaitTask(0.5),
                     new WristPositionTask(
@@ -145,7 +144,7 @@ public class AutonomousRoutineSelector
             new WristPositionTask(
                 TuningConstants.HIGH_CUBE_DROP_POSITION,
                 true),
-            new IntakeInTask(false, 1.0),
+            new IntakeInTask(DigitalOperation.IntakeOutMedium, 1.0),
             new WristPositionTask(
                 TuningConstants.STOWED_POSITION,
                 false)

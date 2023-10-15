@@ -481,6 +481,7 @@ public class TuningConstants
 
     public static final double WRIST_INTAKE_IN_POWER = 0.4;
     public static final double WRIST_INTAKE_OUT_POWER = -0.95;
+    public static final double WRIST_INTAKE_OUT_MEDIUM_POWER = -0.6;
     public static final double WRIST_INTAKE_OUT_SLOW_POWER = -0.4;
     public static final double WRIST_INTAKE_OUT_SUPER_SLOW_POWER = -0.2;
     

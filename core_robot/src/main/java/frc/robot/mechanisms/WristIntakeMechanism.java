@@ -42,6 +42,7 @@ public class WristIntakeMechanism implements IMechanism
 
     private double intakeMotorVelocity;
 
+    private boolean firstRun;
     private boolean inSimpleMode;
 
     @Inject
@@ -108,8 +109,7 @@ public class WristIntakeMechanism implements IMechanism
         this.wristPowerAverageCalculator = new FloatingAverageCalculator(this.timer, TuningConstants.WRIST_POWER_TRACKING_DURATION, TuningConstants.WRIST_POWER_SAMPLES_PER_SECOND);
         this.wristVelocityAverageCalculator = new FloatingAverageCalculator(this.timer, TuningConstants.WRIST_VELOCITY_TRACKING_DURATION, TuningConstants.WRIST_VELOCITY_SAMPLES_PER_SECOND);
 
-        this.wristMotorDesiredAngle =
-            Helpers.EnforceRange(this.wristMotor.getPosition(), HardwareConstants.WRIST_MIN_ANGLE, HardwareConstants.WRIST_MAX_ANGLE);
+        this.firstRun = true;
     }
 
     @Override
@@ -138,6 +138,16 @@ public class WristIntakeMechanism implements IMechanism
     @Override
     public void update()
     {
+        if (this.firstRun)
+        {
+            // provide an initial goal angle for the wrist based on its starting location.
+            // we can't do this during the constructor because the RoboRIO hasn't received the first frame from the motor controller yet.
+            this.wristMotorDesiredAngle =
+                Helpers.EnforceRange(this.wristMotorAngle, HardwareConstants.WRIST_MIN_ANGLE, HardwareConstants.WRIST_MAX_ANGLE);
+
+            this.firstRun = false;
+        }
+
         double currTime = this.timer.get();
         if (this.driver.getDigital(DigitalOperation.WristEnableSimpleMode))
         {

@@ -21,7 +21,8 @@ public class SmartDashboardSelectionManager
     public enum AutoRoutine
     {
         None,
-        PlaceDriveBack
+        PlaceDriveBack,
+        Place
     }
 
     /**
@@ -35,7 +36,8 @@ public class SmartDashboardSelectionManager
 
         this.routineChooser = networkTableProvider.getSendableChooser();
         this.routineChooser.addDefault("None", AutoRoutine.None);
-        this.routineChooser.addObject("Place", AutoRoutine.PlaceDriveBack);
+        this.routineChooser.addObject("Place", AutoRoutine.Place);
+        this.routineChooser.addObject("Place Drive Back", AutoRoutine.PlaceDriveBack);
         networkTableProvider.addChooser("Auto Routine", this.routineChooser);
 
         this.positionChooser = networkTableProvider.getSendableChooser();

@@ -105,7 +105,6 @@ public class WristIntakeMechanism implements IMechanism
 
         this.wristMotor.burnFlash();
 
-        
         this.wristPowerAverageCalculator = new FloatingAverageCalculator(this.timer, TuningConstants.WRIST_POWER_TRACKING_DURATION, TuningConstants.WRIST_POWER_SAMPLES_PER_SECOND);
         this.wristVelocityAverageCalculator = new FloatingAverageCalculator(this.timer, TuningConstants.WRIST_VELOCITY_TRACKING_DURATION, TuningConstants.WRIST_VELOCITY_SAMPLES_PER_SECOND);
 
@@ -126,8 +125,6 @@ public class WristIntakeMechanism implements IMechanism
         this.wristPowerAverage = this.wristPowerAverageCalculator.update(wristCurrent * batteryVoltage);
         this.wristVelocityAverage = this.wristVelocityAverageCalculator.update(Math.abs(this.wristMotorVelocity));
 
-
-        
         this.logger.logNumber(LoggingKey.WristVelocityAverage, this.wristVelocityAverage);
         this.logger.logNumber(LoggingKey.WristPower, this.wristPowerAverage);
         this.logger.logNumber(LoggingKey.WristMotorVelocity, this.wristMotorVelocity);
@@ -175,6 +172,14 @@ public class WristIntakeMechanism implements IMechanism
         else if (this.driver.getDigital(DigitalOperation.IntakeOut))
         {
             wristIntakePower = TuningConstants.WRIST_INTAKE_OUT_POWER;
+        }
+        else if (this.driver.getDigital(DigitalOperation.IntakeOutSlow))
+        {
+            wristIntakePower = TuningConstants.WRIST_INTAKE_OUT_SLOW_POWER;
+        }
+        else if (this.driver.getDigital(DigitalOperation.IntakeOutSuperSlow))
+        {
+            wristIntakePower = TuningConstants.WRIST_INTAKE_OUT_SUPER_SLOW_POWER;
         }
 
         this.intakeMotor.set(wristIntakePower);

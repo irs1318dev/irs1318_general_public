@@ -66,23 +66,27 @@ public class AutonomousRoutineSelector
 
             this.logger.logString(LoggingKey.AutonomousSelection, startPosition.toString() + "." + routine.toString() + "(" + (isRed ? "red" : "blue") + ")");
 
-            if(routine == AutoRoutine.PlaceDriveBack)
-            {
-                return placeDriveBack(isRed);
-            }
+            // if(routine == AutoRoutine.PlaceDriveBack)
+            // {
+            //     return placeDriveBack(isRed);
+            // }
 
+            if (routine == AutoRoutine.Place)
+            {
+                return place();
+            }
             else
-                {
-                    return ConcurrentTask.AllTasks(
-                        new ResetLevelTask(),
-                        new PositionStartingTask(
-                            TuningConstants.RevStartPositionX,
-                            TuningConstants.RevStartPositionY,
-                            180.0,
-                            true,
-                            true),
-                        new ResetLevelTask());
-                }
+            {
+                return ConcurrentTask.AllTasks(
+                    new ResetLevelTask(),
+                    new PositionStartingTask(
+                        TuningConstants.RevStartPositionX,
+                        TuningConstants.RevStartPositionY,
+                        180.0,
+                        true,
+                        true),
+                    new ResetLevelTask());
+            }
         }
 
         return GetFillerRoutine();
@@ -111,7 +115,7 @@ public class AutonomousRoutineSelector
             new WristPositionTask(
                 TuningConstants.HIGH_CUBE_DROP_POSITION,
                 true),
-            new IntakeInTask(true, 1.0),
+            new IntakeInTask(false, 1.0),
             
             new WaitTask(0.2),
 
@@ -124,6 +128,27 @@ public class AutonomousRoutineSelector
                         false)
                 )
             )
+        );
+    }
+
+    private static IControlTask place()
+    {
+        return SequentialTask.Sequence(
+            ConcurrentTask.AllTasks(
+                new ResetLevelTask(),
+                new PositionStartingTask(
+                    TuningConstants.RevStartPositionX,
+                    TuningConstants.RevStartPositionY,
+                    180.0,
+                    true,
+                    true)),
+            new WristPositionTask(
+                TuningConstants.HIGH_CUBE_DROP_POSITION,
+                true),
+            new IntakeInTask(false, 1.0),
+            new WristPositionTask(
+                TuningConstants.STOWED_POSITION,
+                false)
         );
     }
 }

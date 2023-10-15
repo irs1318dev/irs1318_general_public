@@ -1,8 +1,6 @@
 package frc.robot.driver.controltasks;
 
-import frc.robot.TuningConstants;
 import frc.robot.driver.*;
-import frc.robot.mechanisms.*;
 
 public class IntakeInTask extends CompositeOperationTask
 {
@@ -10,6 +8,8 @@ public class IntakeInTask extends CompositeOperationTask
         {
             DigitalOperation.IntakeIn,
             DigitalOperation.IntakeOut,
+            DigitalOperation.IntakeOutSlow,
+            DigitalOperation.IntakeOutSuperSlow,
         };
 
     public IntakeInTask(boolean intakeIn)

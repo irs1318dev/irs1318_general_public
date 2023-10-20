@@ -271,6 +271,8 @@ public class Driver implements IDriver
         // 2. have not been usurped by a new macro (i.e. that was started in this round)
         // 3. are new macros that do not overlap with other new macros
         EnumSet<MacroOperation> macroOperationsToCancel = EnumSet.noneOf(MacroOperation.class);
+
+        // first perform checks for analog operations:
         for (AnalogOperation operation : activeMacroAnalogOperationMap.keySet())
         {
             EnumSet<MacroOperation> relevantMacroOperations = activeMacroAnalogOperationMap.get(operation);
@@ -280,7 +282,7 @@ public class Driver implements IDriver
                 // (macro usurped by user action)
                 macroOperationsToCancel.addAll(relevantMacroOperations);
             }
-            else if (!relevantMacroOperations.isEmpty())
+            else if (SetHelper.<MacroOperation>Count(relevantMacroOperations) > 1)
             {
                 EnumSet<MacroOperation> newRelevantMacroOperations = SetHelper.<MacroOperation>RelativeComplement(previouslyActiveMacroOperations, relevantMacroOperations);
                 if (newRelevantMacroOperations.isEmpty())
@@ -288,7 +290,7 @@ public class Driver implements IDriver
                     // some disobey rule #2 (remove only those that were previously active, and not the 1 that is newly active...)
                     macroOperationsToCancel.addAll(SetHelper.<MacroOperation>RelativeComplement(newRelevantMacroOperations, relevantMacroOperations));
                 }
-                else
+                else if (SetHelper.<MacroOperation>Count(newRelevantMacroOperations) > 1)
                 {
                     // disobeys rule #3:
                     // (there are 2 or more active macros that weren't previously active)
@@ -297,6 +299,7 @@ public class Driver implements IDriver
             }
         }
 
+        // and then for digital operations:
         for (DigitalOperation operation : activeMacroDigitalOperationMap.keySet())
         {
             EnumSet<MacroOperation> relevantMacroOperations = activeMacroDigitalOperationMap.get(operation);
@@ -306,15 +309,15 @@ public class Driver implements IDriver
                 // (macro usurped by user action)
                 macroOperationsToCancel.addAll(relevantMacroOperations);
             }
-            else if (!relevantMacroOperations.isEmpty())
+            else if (SetHelper.<MacroOperation>Count(relevantMacroOperations) > 1)
             {
-                Set<MacroOperation> newRelevantMacroOperations = SetHelper.<MacroOperation>RelativeComplement(previouslyActiveMacroOperations, relevantMacroOperations);
+                EnumSet<MacroOperation> newRelevantMacroOperations = SetHelper.<MacroOperation>RelativeComplement(previouslyActiveMacroOperations, relevantMacroOperations);
                 if (newRelevantMacroOperations.isEmpty())
                 {
                     // some disobey rule #2 (remove only those that were previously active, and not the 1 that is newly active...)
                     macroOperationsToCancel.addAll(SetHelper.<MacroOperation>RelativeComplement(newRelevantMacroOperations, relevantMacroOperations));
                 }
-                else
+                else if (SetHelper.<MacroOperation>Count(newRelevantMacroOperations) > 1)
                 {
                     // disobeys rule #3:
                     // (there are 2 or more active macros that weren't previously active)

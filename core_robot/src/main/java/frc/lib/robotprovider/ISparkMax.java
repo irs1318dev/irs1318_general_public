@@ -33,6 +33,7 @@ public interface ISparkMax extends IMotor
     void setPositionPIDWrappingSettings(boolean enable, double minInput, double maxInput);
     double getPosition();
     double getVelocity();
+    double getOutput();
     boolean getForwardLimitSwitchStatus();
     boolean getReverseLimitSwitchStatus();
 }

@@ -1,6 +1,8 @@
 package frc.lib.robotprovider;
 
+import edu.wpi.first.networktables.BooleanTopic;
 import edu.wpi.first.networktables.DoubleTopic;
+import edu.wpi.first.networktables.IntegerTopic;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -46,11 +48,27 @@ public class NetworkTableProvider implements INetworkTableProvider
     }
 
     @Override
+    public IIntegerSubscriber getIntegerSlider(String title, int initialValue)
+    {
+        IntegerTopic numberTopic = NetworkTableProvider.getSmartDashboard().getIntegerTopic(title);
+        numberTopic.publish().set(initialValue);
+        return new IntegerSubscriberWrapper(numberTopic.subscribe(initialValue));
+    }
+
+    @Override
     public IDoubleSubscriber getNumberSlider(String title, double initialValue)
     {
-        DoubleTopic number = NetworkTableProvider.getSmartDashboard().getDoubleTopic(title);
-        number.publish().set(initialValue);
-        return new DoubleSubscriberWrapper(number.subscribe(initialValue));
+        DoubleTopic numberTopic = NetworkTableProvider.getSmartDashboard().getDoubleTopic(title);
+        numberTopic.publish().set(initialValue);
+        return new DoubleSubscriberWrapper(numberTopic.subscribe(initialValue));
+    }
+
+    @Override
+    public IBooleanSubscriber getCheckbox(String title, boolean initialValue)
+    {
+        BooleanTopic boolTopic = NetworkTableProvider.getSmartDashboard().getBooleanTopic(title);
+        boolTopic.publish().set(initialValue);
+        return new BooleanSubscriberWrapper(boolTopic.subscribe(initialValue));
     }
 
     @Override

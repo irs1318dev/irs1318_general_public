@@ -190,7 +190,7 @@ public class TuningConstants
     public static final int INDICATOR_OFF_COLOR_BLUE = 0;
     public static final int INDICATOR_OFF_COLOR_WHITE = 0;
 
-    //================================================== DriveTrain ==============================================================
+    //================================================== SDS DriveTrain ==============================================================
 
     public static final boolean SDSDRIVETRAIN_STEER_MOTORS_USE_MOTION_MAGIC = true;
 
@@ -324,19 +324,19 @@ public class TuningConstants
     public static final double SDSDRIVETRAIN_LOW_PATH_TRANSLATIONAL_VELOCITY = TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY / 2.0; // in inches per second
     public static final double SDSDRIVETRAIN_LOW_PATH_TRANSLATIONAL_ACCELERATION = TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION / 2.0; // in inches per second per second
 
-    //================================================== DriveTrainNeo ==============================================================
+    //================================================== REV DriveTrain ==============================================================
 
-    public static final boolean REVDRIVETRAIN_STEER_MOTORS_USE_SMART_MOTION = true;
+    public static final boolean REVDRIVETRAIN_STEER_MOTORS_USE_SMART_MOTION = false;
 
     public static final boolean REVDRIVETRAIN_USE_ODOMETRY = true;
     public static final boolean REVDRIVETRAIN_RESET_ON_ROBOT_START = true;
     public static final boolean REVDRIVETRAIN_FIELD_ORIENTED_ON_ROBOT_START = true;
     public static final boolean REVDRIVETRAIN_MAINTAIN_ORIENTATION_ON_ROBOT_START = true;
 
-    public static final double REVDRIVETRAIN_STEER_MOTOR1_ABSOLUTE_OFFSET = 128.056;
-    public static final double REVDRIVETRAIN_STEER_MOTOR2_ABSOLUTE_OFFSET = -16.259;
-    public static final double REVDRIVETRAIN_STEER_MOTOR3_ABSOLUTE_OFFSET = 2.725;
-    public static final double REVDRIVETRAIN_STEER_MOTOR4_ABSOLUTE_OFFSET = -30.586;
+    public static final double REVDRIVETRAIN_STEER_MOTOR1_ABSOLUTE_OFFSET = 0.0;
+    public static final double REVDRIVETRAIN_STEER_MOTOR2_ABSOLUTE_OFFSET = 0.0;
+    public static final double REVDRIVETRAIN_STEER_MOTOR3_ABSOLUTE_OFFSET = 0.0;
+    public static final double REVDRIVETRAIN_STEER_MOTOR4_ABSOLUTE_OFFSET = 0.0;
 
     public static final boolean REVDRIVETRAIN_USE_TRANSLATIONAL_RATE_LIMITING = true;
     public static final double REVDRIVETRAIN_TRANSLATIONAL_VELOCITY_MAX_NEGATIVE_RATE = -3.0 * TuningConstants.REVDRIVETRAIN_MAX_VELOCITY;
@@ -352,7 +352,7 @@ public class TuningConstants
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_WRAPPING_MIN = 0.0;
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_WRAPPING_MAX = 360.0;
 
-    public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KP = 0.5;
+    public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KP = 0.02;
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KI = 0.0;
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KD = 0.0;
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KF = 0.0;
@@ -366,12 +366,12 @@ public class TuningConstants
     public static final int REVDRIVETRAIN_STEER_MOTORS_SM_PID_ACCEL = 48000;
 
     // Velocity PID (drive) per-module
-    public static final double REVDRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS = 16000.0; // 20000 was highest speed at full throttle FF on blocks. this is #ticks / 100ms
+    public static final double REVDRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS = 208.0; // 208.0 was highest speed at full throttle FF on blocks. this is inches/second
 
-    public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KP = 0.1;
+    public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KP = 0.0; //0.1;
     public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KI = 0.0;
     public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KD = 0.0;
-    public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KF = 0.05115; // .05115 ==> ~ 1023 / 20000 (100% control authority)
+    public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KF = 0.0048076923076923;
 
     public static final double REVDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KP = 1.0;
     public static final double REVDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KI = 0.0;
@@ -435,7 +435,7 @@ public class TuningConstants
     public static final double REVDRIVETRAIN_ROTATION_A_MULTIPLIER = HardwareConstants.REVDRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE / 2.0;
     public static final double REVDRIVETRAIN_ROTATION_B_MULTIPLIER = HardwareConstants.REVDRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE / 2.0;
 
-    public static final double REVDRIVETRAIN_MAX_VELOCITY = TuningConstants.REVDRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS * HardwareConstants.REVDRIVETRAIN_DRIVE_MOTOR_VELOCITY_TO_INCHES_PER_SECOND; // max velocity in inches per second
+    public static final double REVDRIVETRAIN_MAX_VELOCITY = TuningConstants.REVDRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS; // max velocity in inches per second
     public static final double REVDRIVETRAIN_SLOW_MODE_MAX_VELOCITY = 0.3 * TuningConstants.REVDRIVETRAIN_MAX_VELOCITY; // max velocity in inches per second
     public static final double REVDRIVETRAIN_VELOCITY_TO_PERCENTAGE = 1.0 / TuningConstants.REVDRIVETRAIN_MAX_VELOCITY;
     public static final double REVDRIVETRAIN_TURN_GOAL_VELOCITY = 10.0; // degrees per second for turn goal

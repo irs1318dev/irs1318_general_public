@@ -63,6 +63,29 @@ public class SetHelper
     }
 
     /**
+     * Generate a set that represents the relative complement of notIn with respect to in.
+     * Selects all of the items that appear in "in" but not in "notIn"
+     * @param notIn set of items that should not be included in the result
+     * @param in set of items that may be included in the result
+     * @return a set of items that contain all of the values of "in" that are not in "notIn"
+     */
+    public static <T extends Enum<T>> int Count(EnumSet<T> set)
+    {
+        int count = 0;
+        for (T element : set)
+        {
+            if (!set.contains(element))
+            {
+                ExceptionHelpers.Assert(false, "set " + set.toString() + " doesn't contain " + element.toString());
+            }
+
+            count++;
+        }
+
+        return count;
+    }
+
+    /**
      * Generate a set that represents the intersection of the two provided sets.
      * Selects all of the items that exist in both the left and the right set (inner join)
      * @param left set to perform the inner join

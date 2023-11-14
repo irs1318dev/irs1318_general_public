@@ -13,6 +13,18 @@ public class FauxbotNetworkTableProvider implements INetworkTableProvider
     }
 
     @Override
+    public IBooleanSubscriber getCheckbox(String title, boolean initialValue)
+    {
+        return null;
+    }
+
+    @Override
+    public IIntegerSubscriber getIntegerSlider(String title, int initialValue)
+    {
+        return null;
+    }
+
+    @Override
     public IDoubleSubscriber getNumberSlider(String title, double initialValue)
     {
         return null;

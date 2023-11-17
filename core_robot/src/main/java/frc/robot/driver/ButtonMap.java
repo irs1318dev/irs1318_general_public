@@ -91,6 +91,10 @@ public class ButtonMap implements IButtonMap
             AnalogAxis.XBONE_LSY,
             ElectronicsConstants.INVERT_XBONE_LEFT_Y_AXIS,
             TuningConstants.WRIST_DEADZONE),
+
+        new AnalogOperationDescription(
+            AnalogOperation.IntakeMotorVelocityGoal,
+            TuningConstants.MAGIC_NULL_VALUE),
         
         new AnalogOperationDescription(
             AnalogOperation.WristSetAngle,

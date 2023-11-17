@@ -41,6 +41,9 @@ public class WristIntakeMechanism implements IMechanism
     private boolean wristStalled;    
 
     private double intakeMotorVelocity;
+    private double inatkeMotorDesiredVelocity;
+    private boolean inVelocityMode;
+
 
     private boolean firstRun;
     private boolean inSimpleMode;
@@ -60,9 +63,26 @@ public class WristIntakeMechanism implements IMechanism
 
         this.intakeMotor = provider.getSparkMax(ElectronicsConstants.INTAKE_MOTOR_CAN_ID, SparkMaxMotorType.Brushless);
         this.intakeMotor.setRelativeEncoder();
-        this.intakeMotor.setControlMode(SparkMaxControlMode.PercentOutput);
         this.intakeMotor.setInvertOutput(TuningConstants.INTAKE_MOTOR_INVERT_OUTPUT);
         this.intakeMotor.setNeutralMode(MotorNeutralMode.Brake);
+        this.intakeMotor.setVelocityConversionFactor(HardwareConstants.INTAKE_MOTOR_TICK_DISTANCE);
+
+        this.intakeMotor.setPIDF(
+            TuningConstants.INTAKE_MOTOR_VELOCITY_PID_KP, 
+            TuningConstants.INTAKE_MOTOR_VELOCITY_PID_KI,
+            TuningConstants.INTAKE_MOTOR_VELOCITY_PID_KD,
+            TuningConstants.INTAKE_MOTOR_VELOCITY_PID_KF,
+            WristIntakeMechanism.DefaultPidSlotId);
+
+        if (TuningConstants.INTAKE_MOTOR_USE_VELOCITY_CONTROL)
+        {
+            this.intakeMotor.setControlMode(SparkMaxControlMode.Velocity);
+            this.intakeMotor.setSelectedSlot(WristIntakeMechanism.DefaultPidSlotId);
+        }
+        else {
+            this.intakeMotor.setControlMode(SparkMaxControlMode.PercentOutput);
+        }
+
         this.intakeMotor.burnFlash();
 
         this.wristMotor = provider.getSparkMax(ElectronicsConstants.WRIST_MOTOR_CAN_ID, SparkMaxMotorType.Brushed);
@@ -163,30 +183,53 @@ public class WristIntakeMechanism implements IMechanism
 
         // --------------------------------- Intake Update -----------------------------------------------------
 
-        // control intake rollers
-        double wristIntakePower = TuningConstants.ZERO;
-        if (this.driver.getDigital(DigitalOperation.IntakeIn))
+        if (this.driver.getDigital(DigitalOperation.IntakeEnableSimpleMode))
         {
-            wristIntakePower = TuningConstants.WRIST_INTAKE_IN_POWER;
+            this.inVelocityMode = false;
+            this.intakeMotor.setControlMode(SparkMaxControlMode.PercentOutput);
         }
-        else if (this.driver.getDigital(DigitalOperation.IntakeOut))
+        else if (this.driver.getDigital(DigitalOperation.IntakeDisableSimpleMode))
         {
-            wristIntakePower = TuningConstants.WRIST_INTAKE_OUT_POWER;
-        }
-        else if (this.driver.getDigital(DigitalOperation.IntakeOutMedium))
-        {
-            wristIntakePower = TuningConstants.WRIST_INTAKE_OUT_MEDIUM_POWER;
-        }
-        else if (this.driver.getDigital(DigitalOperation.IntakeOutSlow))
-        {
-            wristIntakePower = TuningConstants.WRIST_INTAKE_OUT_SLOW_POWER;
-        }
-        else if (this.driver.getDigital(DigitalOperation.IntakeOutSuperSlow))
-        {
-            wristIntakePower = TuningConstants.WRIST_INTAKE_OUT_SUPER_SLOW_POWER;
+            this.inVelocityMode = true;
+            this.wristMotor.setControlMode(SparkMaxControlMode.Velocity);
         }
 
-        this.intakeMotor.set(wristIntakePower);
+        // control intake rollers
+        double wristIntakePower = TuningConstants.ZERO;
+        double inatkeMotorVelocityGoal = this.driver.getAnalog(AnalogOperation.IntakeMotorVelocityGoal);
+
+        if(this.inVelocityMode && inatkeMotorVelocityGoal != TuningConstants.MAGIC_NULL_VALUE)
+        {
+            this.inatkeMotorDesiredVelocity = inatkeMotorVelocityGoal * HardwareConstants.INTAKE_MOTOR_TICK_DISTANCE;
+            this.intakeMotor.set(inatkeMotorDesiredVelocity);
+        }
+        else if(!this.inVelocityMode)
+        {
+            if (this.driver.getDigital(DigitalOperation.IntakeIn))
+            {
+                wristIntakePower = TuningConstants.WRIST_INTAKE_IN_POWER;
+            }
+            else if (this.driver.getDigital(DigitalOperation.IntakeOut))
+            {
+                wristIntakePower = TuningConstants.WRIST_INTAKE_OUT_POWER;
+            }
+            else if (this.driver.getDigital(DigitalOperation.IntakeOutMedium))
+            {
+                wristIntakePower = TuningConstants.WRIST_INTAKE_OUT_MEDIUM_POWER;
+            }
+            else if (this.driver.getDigital(DigitalOperation.IntakeOutSlow))
+            {
+                wristIntakePower = TuningConstants.WRIST_INTAKE_OUT_SLOW_POWER;
+            }
+            else if (this.driver.getDigital(DigitalOperation.IntakeOutSuperSlow))
+            {
+                wristIntakePower = TuningConstants.WRIST_INTAKE_OUT_SUPER_SLOW_POWER;
+            }
+
+            this.intakeMotor.set(wristIntakePower);
+        }
+
+        this.logger.logNumber(LoggingKey.intakeMotorVelocitySetpoint, inatkeMotorDesiredVelocity);
         this.logger.logNumber(LoggingKey.intakeMotorPercentOutput, wristIntakePower);
 
         // -------------------------------------- Main Wrist ----------------------------------------------------
@@ -273,5 +316,10 @@ public class WristIntakeMechanism implements IMechanism
     public double getPosition()
     {
         return this.wristMotorAngle;
+    }
+
+    public double getVelocity()
+    {
+        return this.intakeMotorVelocity;
     }
 }

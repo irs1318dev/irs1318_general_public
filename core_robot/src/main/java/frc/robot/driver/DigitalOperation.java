@@ -43,4 +43,6 @@ public enum DigitalOperation implements IOperation
     IntakeOut, // make a button
     IntakeOutSlow,
     IntakeOutSuperSlow,
+    IntakeEnableSimpleMode,
+    IntakeDisableSimpleMode,
 }

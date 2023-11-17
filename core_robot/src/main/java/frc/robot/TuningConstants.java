@@ -484,6 +484,14 @@ public class TuningConstants
     public static final double WRIST_INTAKE_OUT_MEDIUM_POWER = -0.6;
     public static final double WRIST_INTAKE_OUT_SLOW_POWER = -0.4;
     public static final double WRIST_INTAKE_OUT_SUPER_SLOW_POWER = -0.2;
+
+    public static final double INTAKE_MOTOR_VELOCITY_PID_KP = 0.015;
+    public static final double INTAKE_MOTOR_VELOCITY_PID_KI = 0;
+    public static final double INTAKE_MOTOR_VELOCITY_PID_KD = 0;
+    public static final double INTAKE_MOTOR_VELOCITY_PID_KF = 0.0;
+    public static final double INTAKE_MIN_THRESHOLD = 0.5;
+
+    public static final boolean INTAKE_MOTOR_USE_VELOCITY_CONTROL = true; 
     
 
     public static final double WRIST_INPUT_TO_TICK_ADJUSTMENT = 25.0;

@@ -91,6 +91,7 @@ public class HardwareConstants
     // ===================================================== WRIST MOTOR ==============================================
 
     public static final double WRIST_MOTOR_TICK_DISTANCE = 360.0;
+    public static final double INTAKE_MOTOR_TICK_DISTANCE = 80.0;
     public static final double WRIST_MAX_ANGLE = 350.0;
     public static final double WRIST_MIN_ANGLE = 200.0;
 }

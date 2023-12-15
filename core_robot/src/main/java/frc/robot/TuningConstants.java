@@ -6,7 +6,7 @@ package frc.robot;
  */
 public class TuningConstants
 {
-    public static final boolean COMPETITION_ROBOT = true;
+    public static final boolean COMPETITION_ROBOT = false;
     public static boolean THROW_EXCEPTIONS = !TuningConstants.COMPETITION_ROBOT;
     public static boolean LOG_EXCEPTIONS = true;
     public static double LOOP_DURATION = 0.02; // we expect the robot's main loop to run at roughly ~50 Hz, or 1 update per 20ms (0.02s)
@@ -28,6 +28,8 @@ public class TuningConstants
     public static final boolean LOG_FILE_ONLY_COMPETITION_MATCHES = false;
     public static final long LOG_FILE_REQUIRED_FREE_SPACE = 50 * 1024 * 1024; // require at least 50 MB of space
     public static final int LOG_FLUSH_THRESHOLD = 25;
+    public static final boolean USE_LOGGING_FREQUENCY = true; // TuningConstants.COMPETITION_ROBOT;
+    public static final int DEFAULT_LOGGING_FREQUENCY = 10; // number of entries to ignore between logging
 
     //================================================== Autonomous ==============================================================
 

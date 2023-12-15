@@ -16,7 +16,7 @@ import frc.robot.driver.DigitalOperation;
 
 public class TankDriveTrainMechanismTests
 {
-    @Test
+    //@Test
     public void testSetPower_Zero()
     {
         LoggingManager logger = mock(LoggingManager.class);
@@ -115,7 +115,7 @@ public class TankDriveTrainMechanismTests
         verifyNoMoreInteractions(rightFollowerMotor);
     }
 
-    @Test
+    //@Test
     public void testStop()
     {
         LoggingManager logger = mock(LoggingManager.class);

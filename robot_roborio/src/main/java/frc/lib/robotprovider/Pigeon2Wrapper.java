@@ -47,9 +47,9 @@ public class Pigeon2Wrapper implements IPigeon2
         this.yaw.refresh();
         this.pitch.refresh();
         this.roll.refresh();
-        CTREStatusCodeHelper.printError(this.yaw.getError(), "Pigeon2.getYawPitchRoll-yaw");
-        CTREStatusCodeHelper.printError(this.pitch.getError(), "Pigeon2.getYawPitchRoll-pitch");
-        CTREStatusCodeHelper.printError(this.roll.getError(), "Pigeon2.getYawPitchRoll-roll");
+        CTREStatusCodeHelper.printError(this.yaw.getStatus(), "Pigeon2.getYawPitchRoll-yaw");
+        CTREStatusCodeHelper.printError(this.pitch.getStatus(), "Pigeon2.getYawPitchRoll-pitch");
+        CTREStatusCodeHelper.printError(this.roll.getStatus(), "Pigeon2.getYawPitchRoll-roll");
         ypr_deg[0] = this.yaw.getValue();
         ypr_deg[1] = this.pitch.getValue();
         ypr_deg[2] = this.roll.getValue();
@@ -59,25 +59,25 @@ public class Pigeon2Wrapper implements IPigeon2
     {
         if (this.rollRate == null)
         {
-            this.rollRate = this.wrappedObject.getAngularVelocityX();
+            this.rollRate = this.wrappedObject.getAngularVelocityXWorld();
         }
 
         if (this.pitchRate == null)
         {
-            this.pitchRate = this.wrappedObject.getAngularVelocityX();
+            this.pitchRate = this.wrappedObject.getAngularVelocityYWorld();
         }
 
         if (this.yawRate == null)
         {
-            this.yawRate = this.wrappedObject.getAngularVelocityX();
+            this.yawRate = this.wrappedObject.getAngularVelocityZWorld();
         }
 
         this.rollRate.refresh();
         this.pitchRate.refresh();
         this.yawRate.refresh();
-        CTREStatusCodeHelper.printError(this.rollRate.getError(), "Pigeon2.getRawGyro-rollRate");
-        CTREStatusCodeHelper.printError(this.pitchRate.getError(), "Pigeon2.getRawGyro-pitchRate");
-        CTREStatusCodeHelper.printError(this.yawRate.getError(), "Pigeon2.getRawGyro-yawRate");
+        CTREStatusCodeHelper.printError(this.rollRate.getStatus(), "Pigeon2.getRawGyro-rollRate");
+        CTREStatusCodeHelper.printError(this.pitchRate.getStatus(), "Pigeon2.getRawGyro-pitchRate");
+        CTREStatusCodeHelper.printError(this.yawRate.getStatus(), "Pigeon2.getRawGyro-yawRate");
         xyz_dps[0] = this.roll.getValue();
         xyz_dps[1] = this.pitch.getValue();
         xyz_dps[2] = this.yaw.getValue();
@@ -116,17 +116,17 @@ public class Pigeon2Wrapper implements IPigeon2
     {
         if (this.rollRate == null)
         {
-            this.rollRate = this.wrappedObject.getAngularVelocityX();
+            this.rollRate = this.wrappedObject.getAngularVelocityXWorld();
         }
 
         if (this.pitchRate == null)
         {
-            this.pitchRate = this.wrappedObject.getAngularVelocityX();
+            this.pitchRate = this.wrappedObject.getAngularVelocityXWorld();
         }
 
         if (this.yawRate == null)
         {
-            this.yawRate = this.wrappedObject.getAngularVelocityX();
+            this.yawRate = this.wrappedObject.getAngularVelocityXWorld();
         }
 
         CTREStatusCodeHelper.printError(this.rollRate.setUpdateFrequency(frequencyHz, Pigeon2Wrapper.timeoutSec), "Pigeon2.setGyroUpdatePeriod-rollRate");

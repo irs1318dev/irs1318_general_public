@@ -706,7 +706,7 @@ public class TalonFXWrapper implements ITalonFX
         this.ensureConfigurator();
 
         CTREStatusCodeHelper.printError(
-            this.currentConfigurator.setRotorPosition(position, TalonFXWrapper.timeoutSecs),
+            this.currentConfigurator.setPosition(position, TalonFXWrapper.timeoutSecs),
             "TalonFX.setPosition");
     }
 
@@ -723,7 +723,7 @@ public class TalonFXWrapper implements ITalonFX
         }
 
         this.position.refresh();
-        CTREStatusCodeHelper.printError(this.position.getError(), "TalonFX.getPosition");
+        CTREStatusCodeHelper.printError(this.position.getStatus(), "TalonFX.getPosition");
 
         return this.position.getValue();
     }
@@ -736,7 +736,7 @@ public class TalonFXWrapper implements ITalonFX
         }
 
         this.velocity.refresh();
-        CTREStatusCodeHelper.printError(this.position.getError(), "TalonFX.getVelocity");
+        CTREStatusCodeHelper.printError(this.position.getStatus(), "TalonFX.getVelocity");
 
         return this.velocity.getValue();
     }
@@ -749,7 +749,7 @@ public class TalonFXWrapper implements ITalonFX
         }
 
         this.error.refresh();
-        CTREStatusCodeHelper.printError(this.position.getError(), "TalonFX.getError");
+        CTREStatusCodeHelper.printError(this.position.getStatus(), "TalonFX.getError");
 
         return this.error.getValue();
     }

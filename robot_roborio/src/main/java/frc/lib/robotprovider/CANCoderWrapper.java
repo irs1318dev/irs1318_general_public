@@ -35,7 +35,7 @@ public class CANCoderWrapper implements ICANCoder
         }
 
         this.position.refresh();
-        CTREStatusCodeHelper.printError(this.position.getError(), "CANCoderWrapper.getPosition");
+        CTREStatusCodeHelper.printError(this.position.getStatus(), "CANCoderWrapper.getPosition");
         return reverse ? -this.position.getValue() : this.position.getValue();
     }
 
@@ -47,7 +47,7 @@ public class CANCoderWrapper implements ICANCoder
         }
 
         this.velocity.refresh();
-        CTREStatusCodeHelper.printError(this.velocity.getError(), "CANCoderWrapper.getVelocity");
+        CTREStatusCodeHelper.printError(this.velocity.getStatus(), "CANCoderWrapper.getVelocity");
         return reverse ? -this.velocity.getValue() : this.velocity.getValue();
     }
 
@@ -59,7 +59,7 @@ public class CANCoderWrapper implements ICANCoder
         }
 
         this.absolutePosition.refresh();
-        CTREStatusCodeHelper.printError(this.absolutePosition.getError(), "CANCoderWrapper.getAbsolutePosition");
+        CTREStatusCodeHelper.printError(this.absolutePosition.getStatus(), "CANCoderWrapper.getAbsolutePosition");
         return reverse ? -this.absolutePosition.getValue() : this.absolutePosition.getValue();
     }
 

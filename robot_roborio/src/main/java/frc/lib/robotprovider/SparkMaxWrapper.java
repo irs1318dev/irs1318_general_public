@@ -1,19 +1,19 @@
 package frc.lib.robotprovider;
 
 import com.revrobotics.*;
-import com.revrobotics.CANSparkMax.*;
-import com.revrobotics.CANSparkMaxLowLevel.*;
-import com.revrobotics.SparkMaxPIDController.AccelStrategy;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel.*;
+import com.revrobotics.SparkPIDController.AccelStrategy;
 
 public class SparkMaxWrapper implements ISparkMax
 {
     final CANSparkMax wrappedObject;
-    private SparkMaxPIDController pidController;
+    private SparkPIDController pidController;
     private boolean useAbsoluteEncoder;
     private RelativeEncoder wrappedRelativeEncoder;
     private AbsoluteEncoder wrappedAbsoluteEncoder;
-    private SparkMaxLimitSwitch wrappedFwdLimitSwitch;
-    private SparkMaxLimitSwitch wrappedRevLimitSwitch;
+    private SparkLimitSwitch wrappedFwdLimitSwitch;
+    private SparkLimitSwitch wrappedRevLimitSwitch;
 
     private SparkMaxControlMode currentMode;
     private int selectedSlot;
@@ -45,7 +45,7 @@ public class SparkMaxWrapper implements ISparkMax
     public void setAbsoluteEncoder()
     {
         this.useAbsoluteEncoder = true;
-        this.wrappedAbsoluteEncoder = this.wrappedObject.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
+        this.wrappedAbsoluteEncoder = this.wrappedObject.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
     }
 
     public void setRelativeEncoder()
@@ -55,20 +55,20 @@ public class SparkMaxWrapper implements ISparkMax
 
     public void setRelativeEncoder(SparkMaxRelativeEncoderType encoderType, int resolution)
     {
-        SparkMaxRelativeEncoder.Type type;
+        SparkRelativeEncoder.Type type;
         switch (encoderType)
         {
             case HallEffect:
-                type = SparkMaxRelativeEncoder.Type.kHallSensor;
+                type = SparkRelativeEncoder.Type.kHallSensor;
                 break;
 
             case Quadrature:
-                type = SparkMaxRelativeEncoder.Type.kQuadrature;
+                type = SparkRelativeEncoder.Type.kQuadrature;
                 break;
 
             case None:
             default:
-                type = SparkMaxRelativeEncoder.Type.kNoSensor;
+                type = SparkRelativeEncoder.Type.kNoSensor;
                 break;
         }
 
@@ -323,10 +323,10 @@ public class SparkMaxWrapper implements ISparkMax
 
     public void setForwardLimitSwitch(boolean enabled, boolean normallyOpen)
     {
-        SparkMaxLimitSwitch.Type polarity = SparkMaxLimitSwitch.Type.kNormallyClosed;
+        SparkLimitSwitch.Type polarity = SparkLimitSwitch.Type.kNormallyClosed;
         if (normallyOpen)
         {
-            polarity = SparkMaxLimitSwitch.Type.kNormallyOpen;
+            polarity = SparkLimitSwitch.Type.kNormallyOpen;
         }
 
         this.wrappedFwdLimitSwitch = this.wrappedObject.getForwardLimitSwitch(polarity);
@@ -337,10 +337,10 @@ public class SparkMaxWrapper implements ISparkMax
 
     public void setReverseLimitSwitch(boolean enabled, boolean normallyOpen)
     {
-        SparkMaxLimitSwitch.Type polarity = SparkMaxLimitSwitch.Type.kNormallyClosed;
+        SparkLimitSwitch.Type polarity = SparkLimitSwitch.Type.kNormallyClosed;
         if (normallyOpen)
         {
-            polarity = SparkMaxLimitSwitch.Type.kNormallyOpen;
+            polarity = SparkLimitSwitch.Type.kNormallyOpen;
         }
 
         this.wrappedRevLimitSwitch = this.wrappedObject.getForwardLimitSwitch(polarity);

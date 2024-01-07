@@ -9,6 +9,8 @@ import frc.robot.LoggingKey;
 import frc.robot.TuningConstants;
 
 import java.util.Calendar;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -272,11 +274,11 @@ public class CoreRobot<T extends AbstractModule>
         MatchType matchType = driverStation.getMatchType();
         int matchNumber = driverStation.getMatchNumber();
         int replayNumber = driverStation.getReplayNumber();
-        Alliance alliance = driverStation.getAlliance();
-        int location = driverStation.getLocation();
+        Optional<Alliance> alliance = driverStation.getAlliance();
+        OptionalInt location = driverStation.getLocation();
         RobotMode mode = driverStation.getMode();
 
-        if (eventName != null && matchType != MatchType.None && matchNumber > 0 && alliance != Alliance.Invalid && location >= 1 && location <= 3)
+        if (eventName != null && matchType != MatchType.None && matchNumber > 0 && alliance.isPresent() && location.isPresent())
         {
             // a la "2020 Glacier Peak - Q03 (R2).autonomous"
             return
@@ -287,8 +289,8 @@ public class CoreRobot<T extends AbstractModule>
                     matchType.value,
                     matchNumber,
                     replayNumber == 0 ? "" : String.format("R%1$d", replayNumber),
-                    alliance.value,
-                    location,
+                    alliance.get().value,
+                    location.getAsInt(),
                     mode.toString().toLowerCase());
         }
 

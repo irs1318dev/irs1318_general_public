@@ -56,8 +56,8 @@ public class PigeonManager implements IPositionManager
 
         this.pigeon = provider.getPigeon2(ElectronicsConstants.PIGEON_IMU_CAN_ID, ElectronicsConstants.CANIVORE_NAME);
         this.pigeon.setYaw(0.0);
-        this.pigeon.setYPRUpdatePeriod(5);
-        this.pigeon.setGyroUpdatePeriod(5);
+        this.pigeon.setYPRUpdateFrequency(200);
+        this.pigeon.setRPYRateUpdateFrequency(200);
 
         this.ypr_deg = new double[3];
         this.xyz_dps = new double[3];
@@ -90,7 +90,7 @@ public class PigeonManager implements IPositionManager
         this.pitch = this.ypr_deg[1];
         this.roll = this.ypr_deg[2];
 
-        this.pigeon.getRawGyro(this.xyz_dps);
+        this.pigeon.getRollPitchYawRates(this.xyz_dps);
         this.yawRate = this.xyz_dps[2];
         this.pitchRate = this.xyz_dps[1];
         this.rollRate = this.xyz_dps[0];

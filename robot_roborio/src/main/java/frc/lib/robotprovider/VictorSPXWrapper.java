@@ -28,27 +28,22 @@ public class VictorSPXWrapper implements IVictorSPX
         this.wrappedObject.follow(((TalonSRXWrapper)talonSRX).wrappedObject);
     }
 
-    public void follow(ITalonFX talonFX)
-    {
-        this.wrappedObject.follow(((TalonFXWrapper)talonFX).wrappedObject);
-    }
-
     public void follow(IVictorSPX victorSPX)
     {
         this.wrappedObject.follow(((VictorSPXWrapper)victorSPX).wrappedObject);
     }
 
-    public void setControlMode(TalonXControlMode mode)
+    public void setControlMode(TalonSRXControlMode mode)
     {
-        if (mode == TalonXControlMode.PercentOutput)
+        if (mode == TalonSRXControlMode.PercentOutput)
         {
             this.controlMode = ControlMode.PercentOutput;
         }
-        else if (mode == TalonXControlMode.Disabled)
+        else if (mode == TalonSRXControlMode.Disabled)
         {
             this.controlMode = ControlMode.Disabled;
         }
-        else if (mode == TalonXControlMode.Follower)
+        else if (mode == TalonSRXControlMode.Follower)
         {
             this.controlMode = ControlMode.Follower;
         }

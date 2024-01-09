@@ -1,5 +1,8 @@
 package frc.lib.robotprovider;
 
+import java.util.Optional;
+import java.util.OptionalInt;
+
 public class FauxbotDriverStation implements IDriverStation
 {
     public static FauxbotDriverStation Instance = new FauxbotDriverStation();
@@ -18,15 +21,15 @@ public class FauxbotDriverStation implements IDriverStation
     }
 
     @Override
-    public Alliance getAlliance()
+    public Optional<Alliance> getAlliance()
     {
-        return Alliance.Invalid;
+        return Optional.empty();
     }
 
     @Override
-    public int getLocation()
+    public OptionalInt getLocation()
     {
-        return 0;
+        return OptionalInt.empty();
     }
 
     @Override

@@ -36,7 +36,7 @@ public class TalonSRXWrapper implements ITalonSRX
         this.wrappedObject.set(this.controlMode, value);
     }
 
-    public void set(TalonXControlMode mode, double value)
+    public void set(TalonSRXControlMode mode, double value)
     {
         this.wrappedObject.set(TalonSRXWrapper.getControlMode(mode), value);
     }
@@ -46,30 +46,25 @@ public class TalonSRXWrapper implements ITalonSRX
         this.wrappedObject.follow(((TalonSRXWrapper)talonSRX).wrappedObject);
     }
 
-    public void follow(ITalonFX talonFX)
-    {
-        this.wrappedObject.follow(((TalonFXWrapper)talonFX).wrappedObject);
-    }
-
     public void follow(IVictorSPX victorSPX)
     {
         this.wrappedObject.follow(((VictorSPXWrapper)victorSPX).wrappedObject);
     }
 
-    public void setControlMode(TalonXControlMode mode)
+    public void setControlMode(TalonSRXControlMode mode)
     {
-        this.controlModeRequired = (mode == TalonXControlMode.Required);
+        this.controlModeRequired = (mode == TalonSRXControlMode.Required);
         this.controlMode = TalonSRXWrapper.getControlMode(mode);
     }
 
-    public void setSensorType(TalonXFeedbackDevice feedbackDevice)
+    public void setSensorType(TalonSRXFeedbackDevice feedbackDevice)
     {
         FeedbackDevice device;
-        if (feedbackDevice == TalonXFeedbackDevice.QuadEncoder)
+        if (feedbackDevice == TalonSRXFeedbackDevice.QuadEncoder)
         {
             device = FeedbackDevice.QuadEncoder;
         }
-        else if (feedbackDevice == TalonXFeedbackDevice.PulseWidthEncodedPosition)
+        else if (feedbackDevice == TalonSRXFeedbackDevice.PulseWidthEncodedPosition)
         {
             device = FeedbackDevice.PulseWidthEncodedPosition;
         }
@@ -78,45 +73,45 @@ public class TalonSRXWrapper implements ITalonSRX
             return;
         }
 
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configSelectedFeedbackSensor(device, TalonSRXWrapper.pidIdx, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setSensorType");
     }
 
     public void setGeneralFramePeriod(int periodMS)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, periodMS, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setGeneralFramePeriod");
     }
 
     public void setFeedbackFramePeriod(int periodMS)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, periodMS, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setFeedbackFramePeriod");
     }
 
     public void setPIDFFramePeriod(int periodMS)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, periodMS, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setPIDFFramePeriod");
     }
 
     public void configureVelocityMeasurements(int periodMS, int windowSize)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configVelocityMeasurementPeriod(SensorVelocityMeasPeriod.valueOf(periodMS), TalonSRXWrapper.timeoutMS),
             "TalonSRX.configureVelocityMeasurementsPeriod");
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configVelocityMeasurementWindow(windowSize, TalonSRXWrapper.timeoutMS),
             "TalonSRX.configureVelocityMeasurementsWindow");
     }
 
     public void configureAllowableClosedloopError(int slotId, int error)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configAllowableClosedloopError(slotId, error, TalonSRXWrapper.timeoutMS),
             "TalonSRX.configureAllowableClosedloopError");
     }
@@ -128,119 +123,82 @@ public class TalonSRXWrapper implements ITalonSRX
 
     public void setPIDF(double p, double i, double d, double f, int slotId)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.config_kP(slotId, p, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setPIDF_kP");
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.config_kI(slotId, i, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setPIDF_kI");
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.config_kD(slotId, d, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setPIDF_kD");
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.config_kF(slotId, f, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setPIDF_kF");
     }
 
     public void setMotionMagicPIDF(double p, double i, double d, double f, double velocity, double acceleration, int slotId)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.config_kP(slotId, p, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setMotionMagicPIDF_kP");
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.config_kI(slotId, i, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setMotionMagicPIDF_kI");
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.config_kD(slotId, d, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setMotionMagicPIDF_kD");
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.config_kF(slotId, f, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setMotionMagicPIDF_kF");
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configMotionCruiseVelocity(velocity, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setMotionMagicPIDF_CruiseVelocity");
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configMotionAcceleration(acceleration, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setMotionMagicPIDF_Acceleration");
     }
 
     public void setPIDF(double p, double i, double d, double f, int izone, double closeLoopRampRate, int slotId)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.config_kP(slotId, p, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setPIDF_kP");
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.config_kI(slotId, i, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setPIDF_kI");
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.config_kD(slotId, d, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setPIDF_kD");
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.config_kF(slotId, f, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setPIDF_kF");
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.config_IntegralZone(slotId, izone, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setPIDF_IntegralZone");
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configClosedloopRamp(closeLoopRampRate, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setPIDF_ClosedloopRamp");
     }
 
-    public void setForwardLimitSwitch(boolean enabled, boolean normallyOpen)
+    public void updateLimitSwitchConfig(boolean forwardEnabled, boolean forwardNormallyOpen, boolean reverseEnabled, boolean reverseNormallyOpen)
     {
-        LimitSwitchSource source = LimitSwitchSource.Deactivated;
-        if (enabled)
-        {
-            source = LimitSwitchSource.FeedbackConnector;
-        }
-
-        LimitSwitchNormal type = LimitSwitchNormal.NormallyClosed;
-        if (normallyOpen)
-        {
-            type = LimitSwitchNormal.NormallyOpen;
-        }
-
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configForwardLimitSwitchSource(
-                source,
-                type,
+                forwardEnabled ? LimitSwitchSource.FeedbackConnector : LimitSwitchSource.Deactivated,
+                forwardNormallyOpen ? LimitSwitchNormal.NormallyOpen : LimitSwitchNormal.NormallyClosed,
                 TalonSRXWrapper.timeoutMS),
-            "TalonSRX.setForwardLimitSwitch");
-    }
+            "TalonSRX.updateLimitSwitchConfig-forward");
 
-    public void setReverseLimitSwitch(boolean enabled, boolean normallyOpen)
-    {
-        LimitSwitchSource source = LimitSwitchSource.Deactivated;
-        if (enabled)
-        {
-            source = LimitSwitchSource.FeedbackConnector;
-        }
-
-        LimitSwitchNormal type = LimitSwitchNormal.NormallyClosed;
-        if (normallyOpen)
-        {
-            type = LimitSwitchNormal.NormallyOpen;
-        }
-
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configReverseLimitSwitchSource(
-                source,
-                type,
+                reverseEnabled ? LimitSwitchSource.FeedbackConnector : LimitSwitchSource.Deactivated,
+                reverseNormallyOpen ? LimitSwitchNormal.NormallyOpen : LimitSwitchNormal.NormallyClosed,
                 TalonSRXWrapper.timeoutMS),
-            "TalonSRX.setReverseLimitSwitch");
+            "TalonSRX.updateLimitSwitchConfig-reverse");
     }
 
-    public void setInvertOutput(boolean invert)
-    {
-        this.wrappedObject.setInverted(invert);
-    }
-
-    public void setInvertSensor(boolean invert)
-    {
-        this.wrappedObject.setSensorPhase(invert);
-    }
-
-    public void setNeutralMode(MotorNeutralMode neutralMode)
+    public void setMotorOutputSettings(boolean invert, MotorNeutralMode neutralMode)
     {
         NeutralMode mode;
         if (neutralMode == MotorNeutralMode.Brake)
@@ -253,11 +211,17 @@ public class TalonSRXWrapper implements ITalonSRX
         }
 
         this.wrappedObject.setNeutralMode(mode);
+        this.wrappedObject.setInverted(invert);
+    }
+
+    public void setInvertSensor(boolean invert)
+    {
+        this.wrappedObject.setSensorPhase(invert);
     }
 
     public void setVoltageCompensation(boolean enabled, double maxVoltage)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configVoltageCompSaturation(maxVoltage, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setVoltageCompensationSaturation");
         this.wrappedObject.enableVoltageCompensation(enabled);
@@ -270,14 +234,14 @@ public class TalonSRXWrapper implements ITalonSRX
 
     public void setPosition(double position)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.setSelectedSensorPosition(position, TalonSRXWrapper.pidIdx, TalonSRXWrapper.timeoutMS),
             "TalonSRX.setPosition");
     }
 
     public void reset()
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.setSelectedSensorPosition(0.0, TalonSRXWrapper.pidIdx, TalonSRXWrapper.timeoutMS),
             "TalonSRX.reset");
     }
@@ -306,33 +270,33 @@ public class TalonSRXWrapper implements ITalonSRX
             collection.isRevLimitSwitchClosed());
     }
 
-    static ControlMode getControlMode(TalonXControlMode mode)
+    static ControlMode getControlMode(TalonSRXControlMode mode)
     {
-        if (mode == TalonXControlMode.PercentOutput)
+        if (mode == TalonSRXControlMode.PercentOutput)
         {
             return ControlMode.PercentOutput;
         }
-        else if (mode == TalonXControlMode.Disabled)
+        else if (mode == TalonSRXControlMode.Disabled)
         {
             return ControlMode.Disabled;
         }
-        else if (mode == TalonXControlMode.Follower)
+        else if (mode == TalonSRXControlMode.Follower)
         {
             return ControlMode.Follower;
         }
-        else if (mode == TalonXControlMode.Position)
+        else if (mode == TalonSRXControlMode.Position)
         {
             return ControlMode.Position;
         }
-        else if (mode == TalonXControlMode.MotionMagicPosition)
+        else if (mode == TalonSRXControlMode.MotionMagicPosition)
         {
             return ControlMode.MotionMagic;
         }
-        else if (mode == TalonXControlMode.Velocity)
+        else if (mode == TalonSRXControlMode.Velocity)
         {
             return ControlMode.Velocity;
         }
-        else if (mode == TalonXControlMode.Current)
+        else if (mode == TalonSRXControlMode.Current)
         {
             return ControlMode.Current;
         }

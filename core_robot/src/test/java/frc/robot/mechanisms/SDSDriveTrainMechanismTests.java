@@ -4,17 +4,13 @@ import frc.lib.driver.IDriver;
 import frc.lib.mechanisms.LoggingManager;
 import frc.lib.robotprovider.IPigeon2;
 import frc.lib.robotprovider.ITalonFX;
-import frc.lib.robotprovider.ITalonSRX;
 import frc.lib.robotprovider.ITimer;
-import frc.lib.robotprovider.IVictorSPX;
 import frc.lib.robotprovider.JoystickRumbleType;
 import frc.lib.robotprovider.MotorNeutralMode;
 import frc.lib.robotprovider.NullLogger;
 import frc.lib.robotprovider.Pose2d;
 import frc.lib.robotprovider.RobotMode;
-import frc.lib.robotprovider.TalonFXInvertType;
-import frc.lib.robotprovider.TalonXControlMode;
-import frc.lib.robotprovider.TalonXFeedbackDevice;
+import frc.lib.robotprovider.TalonFXControlMode;
 import frc.lib.robotprovider.TalonXLimitSwitchStatus;
 import frc.lib.driver.descriptions.UserInputDevice;
 import frc.lib.helpers.Helpers;
@@ -422,7 +418,7 @@ public class SDSDriveTrainMechanismTests
             ypr_deg[2] = this.currentAngle;
         }
 
-        public void getRawGyro(double[] xyz_dps)
+        public void getRollPitchYawRates(double[] xyz_dps)
         {
             xyz_dps[0] = this.currentAngle;
             xyz_dps[1] = this.currentAngle;
@@ -439,11 +435,13 @@ public class SDSDriveTrainMechanismTests
             this.currentAngle = angle;
         }
 
-        public void setYPRUpdatePeriod(int timeoutMs)
+        @Override
+        public void setYPRUpdateFrequency(double frequencyHz)
         {
         }
 
-        public void setGyroUpdatePeriod(int timeoutMs)
+        @Override
+        public void setRPYRateUpdateFrequency(double frequencyHz)
         {
         }
     }
@@ -459,52 +457,12 @@ public class SDSDriveTrainMechanismTests
         }
 
         @Override
-        public void follow(ITalonSRX talonSRX)
-        {
-        }
-
-        @Override
         public void follow(ITalonFX talonFX)
         {
         }
 
         @Override
-        public void follow(IVictorSPX victorSPX)
-        {
-        }
-
-        @Override
-        public void setControlMode(TalonXControlMode mode)
-        {
-        }
-
-        @Override
-        public void setSensorType(TalonXFeedbackDevice feedbackDevice)
-        {
-        }
-
-        @Override
-        public void setGeneralFramePeriod(int periodMS)
-        {
-        }
-
-        @Override
-        public void setFeedbackFramePeriod(int periodMS)
-        {
-        }
-
-        @Override
-        public void setPIDFFramePeriod(int periodMS)
-        {
-        }
-
-        @Override
-        public void configureVelocityMeasurements(int periodMS, int windowSize)
-        {
-        }
-
-        @Override
-        public void configureAllowableClosedloopError(int slotId, int error)
+        public void setControlMode(TalonFXControlMode mode)
         {
         }
 
@@ -520,41 +478,6 @@ public class SDSDriveTrainMechanismTests
 
         @Override
         public void setMotionMagicPIDF(double p, double i, double d, double f, double velocity, double acceleration, int slotId)
-        {
-        }
-
-        @Override
-        public void setPIDF(double p, double i, double d, double f, int izone, double closeLoopRampRate, int slotId)
-        {
-        }
-
-        @Override
-        public void setForwardLimitSwitch(boolean enabled, boolean normallyOpen)
-        {
-        }
-
-        @Override
-        public void setReverseLimitSwitch(boolean enabled, boolean normallyOpen)
-        {
-        }
-
-        @Override
-        public void setInvertOutput(boolean flip)
-        {
-        }
-
-        @Override
-        public void setInvertSensor(boolean flip)
-        {
-        }
-
-        @Override
-        public void setInvert(TalonFXInvertType invertType)
-        {
-        }
-
-        @Override
-        public void setNeutralMode(MotorNeutralMode neutralMode)
         {
         }
 
@@ -609,13 +532,59 @@ public class SDSDriveTrainMechanismTests
         }
 
         @Override
-        public void set(TalonXControlMode mode, double value)
+        public void set(TalonFXControlMode mode, double value)
+        {
+            this.currentValue = value;
+        }
+
+        @Override
+        public void set(TalonFXControlMode mode, int slotId, double value)
         {
             this.currentValue = value;
         }
 
         @Override
         public void setSupplyCurrentLimit(boolean enabled, double currentLimit, double triggerThresholdCurrent, double triggerThresholdTime)
+        {
+        }
+
+        @Override
+        public void updateLimitSwitchConfig(boolean forwardEnabled, boolean forwardNormallyOpen, boolean reverseEnabled, boolean reverseNormallyOpen)
+        {
+        }
+
+        @Override
+        public void setMotorOutputSettings(boolean invert, MotorNeutralMode neutralMode)
+        {
+        }
+
+        @Override
+        public void follow(ITalonFX talonFX, boolean invertDirection)
+        {
+        }
+
+        @Override
+        public void clearRemoteSensor()
+        {
+        }
+
+        @Override
+        public void setRemoteSensor(int sensorId, double ratio)
+        {
+        }
+
+        @Override
+        public void setFeedbackUpdateRate(double frequencyHz)
+        {
+        }
+
+        @Override
+        public void setErrorUpdateRate(double frequencyHz)
+        {
+        }
+
+        @Override
+        public void updateLimitSwitchConfig(boolean forwardEnabled, boolean forwardNormallyOpen, boolean forwardReset, double forwardResetPosition, boolean reverseEnabled, boolean reverseNormallyOpen, boolean reverseReset, double reverseResetPosition)
         {
         }
     }

@@ -18,7 +18,7 @@ public class FauxbotPigeon2 extends FauxbotSensorBase implements IPigeon2
         ypr_deg[0] = this.angleProperty.getValue();
     }
 
-    public void getRawGyro(double[] xyz_dps)
+    public void getRollPitchYawRates(double[] xyz_dps)
     {
     }
 
@@ -27,11 +27,13 @@ public class FauxbotPigeon2 extends FauxbotSensorBase implements IPigeon2
         this.angleProperty.setValue(angleDeg);
     }
 
-    public void setYPRUpdatePeriod(int timeoutMs)
+    @Override
+    public void setYPRUpdateFrequency(double frequencyHz)
     {
     }
 
-    public void setGyroUpdatePeriod(int timeoutMs)
+    @Override
+    public void setRPYRateUpdateFrequency(double frequencyHz)
     {
     }
 

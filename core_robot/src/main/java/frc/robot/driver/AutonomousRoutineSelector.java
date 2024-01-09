@@ -1,5 +1,7 @@
 package frc.robot.driver;
 
+import java.util.Optional;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -62,7 +64,8 @@ public class AutonomousRoutineSelector
             StartPosition startPosition = this.selectionManager.getSelectedStartPosition();
             AutoRoutine routine = this.selectionManager.getSelectedAutoRoutine();
 
-            boolean isRed = this.driverStation.getAlliance() == Alliance.Red;
+            Optional<Alliance> alliance = this.driverStation.getAlliance();
+            boolean isRed = alliance.isPresent() && alliance.get() == Alliance.Red;
 
             this.logger.logString(LoggingKey.AutonomousSelection, startPosition.toString() + "." + routine.toString() + "(" + (isRed ? "red" : "blue") + ")");
 

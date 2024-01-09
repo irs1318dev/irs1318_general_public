@@ -19,7 +19,13 @@ public class FauxbotPathPlanner implements IPathPlanner
     }
 
     @Override
-    public ITrajectory buildTrajectory(double maxVelocity, double maxAcceleration, PathPlannerWaypoint firstWaypoint, PathPlannerWaypoint secondWaypoint, PathPlannerWaypoint... otherWaypoints)
+    public ITrajectory buildTrajectory(
+        double maxVelocity,
+        double maxAcceleration,
+        double maxAngularVelocity,
+        double maxAngularAcceleration,
+        double endRotation,
+        PathPlannerWaypoint... waypoints)
     {
         return null;
     }

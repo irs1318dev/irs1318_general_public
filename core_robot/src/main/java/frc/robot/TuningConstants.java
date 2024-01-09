@@ -6,7 +6,7 @@ package frc.robot;
  */
 public class TuningConstants
 {
-    public static final boolean COMPETITION_ROBOT = true;
+    public static final boolean COMPETITION_ROBOT = false;
     public static boolean THROW_EXCEPTIONS = !TuningConstants.COMPETITION_ROBOT;
     public static boolean LOG_EXCEPTIONS = true;
     public static double LOOP_DURATION = 0.02; // we expect the robot's main loop to run at roughly ~50 Hz, or 1 update per 20ms (0.02s)
@@ -28,6 +28,8 @@ public class TuningConstants
     public static final boolean LOG_FILE_ONLY_COMPETITION_MATCHES = false;
     public static final long LOG_FILE_REQUIRED_FREE_SPACE = 50 * 1024 * 1024; // require at least 50 MB of space
     public static final int LOG_FLUSH_THRESHOLD = 25;
+    public static final boolean USE_LOGGING_FREQUENCY = true; // TuningConstants.COMPETITION_ROBOT;
+    public static final int DEFAULT_LOGGING_FREQUENCY = 10; // number of entries to ignore between logging
 
     //================================================== Autonomous ==============================================================
 
@@ -214,27 +216,27 @@ public class TuningConstants
     // Position PID (angle) per-module
     public static final double SDSDRIVETRAIN_STEER_MOTOR_POSITION_PID_KS = HardwareConstants.SDSDRIVETRAIN_STEER_TICKS_PER_DEGREE;
 
-    public static final double SDSDRIVETRAIN_STEER_MOTORS_POSITION_PID_KP = 0.5;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_POSITION_PID_KP = 11.0; // 0.5
     public static final double SDSDRIVETRAIN_STEER_MOTORS_POSITION_PID_KI = 0.0;
     public static final double SDSDRIVETRAIN_STEER_MOTORS_POSITION_PID_KD = 0.0;
     public static final double SDSDRIVETRAIN_STEER_MOTORS_POSITION_PID_KF = 0.0;
 
-    public static final double SDSDRIVETRAIN_STEER_MOTORS_MM_PID_KP = 0.5;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_MM_PID_KP = 1.1010752688172043;
     public static final double SDSDRIVETRAIN_STEER_MOTORS_MM_PID_KI = 0.0;
     public static final double SDSDRIVETRAIN_STEER_MOTORS_MM_PID_KD = 0.0;
-    public static final double SDSDRIVETRAIN_STEER_MOTORS_MM_PID_KF = 0.34; // 1023 over max speed (3000 ticks per 100ms)
-    public static final int SDSDRIVETRAIN_STEER_MOTORS_MM_PID_CRUISE_VELOC = 48000;
-    public static final int SDSDRIVETRAIN_STEER_MOTORS_MM_PID_ACCEL = 48000;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_MM_PID_KF = 0.748731182795699;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_MM_PID_CRUISE_VELOC = 234.375;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_MM_PID_ACCEL = 234.375;
 
     // Velocity PID (drive) per-module
-    public static final double SDSDRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS = 16000.0; // 20000 was highest speed at full throttle FF on blocks. this is #ticks / 100ms
+    public static final double SDSDRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS = 78.125; // RPM ~98.0 was highest speed at full throttle FF on blocks
 
-    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KP = 0.1;
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KP = 0.22021505376344086;
     public static final double SDSDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KI = 0.0;
     public static final double SDSDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KD = 0.0;
-    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KF = 0.05115; // .05115 ==> ~ 1023 / 20000 (100% control authority)
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KF = 0.11264;
 
-    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KP = 1.0;
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KP = 22.0;
     public static final double SDSDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KI = 0.0;
     public static final double SDSDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KD = 0.0;
     public static final double SDSDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KF = 0.0;
@@ -289,8 +291,8 @@ public class TuningConstants
     public static final double SDSDRIVETRAIN_STEER_SUPPLY_TRIGGER_CURRENT = 30.0;
     public static final double SDSDRIVETRAIN_STEER_SUPPLY_TRIGGER_DURATION = 0.1;
 
-    public static final int SDSDRIVETRAIN_SENSOR_FRAME_PERIOD_MS = 10;
-    public static final int SDSDRIVETRAIN_PID_FRAME_PERIOD_MS = 100;
+    public static final int SDSDRIVETRAIN_FEEDBACK_UPDATE_RATE_HZ = 100;
+    public static final int SDSDRIVETRAIN_ERROR_UPDATE_RATE_HZ = 10;
 
     public static final boolean SDSDRIVETRAIN_SKIP_ANGLE_ON_ZERO_VELOCITY = true;
     public static final double SDSDRIVETRAIN_SKIP_ANGLE_ON_ZERO_DELTA = 0.001;
@@ -319,6 +321,8 @@ public class TuningConstants
     public static final double SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY = 0.60 * TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY; // in inches per second
     public static final double SDSDRIVETRAIN_TRUE_MAX_PATH_TRANSLATIONAL_VELOCITY = 0.75 * TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY; // in inches per second
     public static final double SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION = 0.75 * TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY; // in inches per second per second
+    public static final double SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY = 0.60 * TuningConstants.SDSDRIVETRAIN_MAX_PATH_TURN_VELOCITY; // in degrees per second
+    public static final double SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION = 0.75 * TuningConstants.SDSDRIVETRAIN_MAX_PATH_TURN_VELOCITY; // in degrees per second per second
     public static final double SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY = TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY / 1.4; // in inches per second
     public static final double SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION = TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION / 1.25; // in inches per second per second
     public static final double SDSDRIVETRAIN_LOW_PATH_TRANSLATIONAL_VELOCITY = TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY / 2.0; // in inches per second

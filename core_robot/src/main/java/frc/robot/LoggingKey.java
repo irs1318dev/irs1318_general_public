@@ -5,11 +5,11 @@ package frc.robot;
  */
 public enum LoggingKey
 {
-    RobotState("r.state", true),
-    RobotTime("r.time", true),
-    RobotMatch("r.match"),
+    RobotState("r.state", 1, true),
+    RobotTime("r.time", 1, true),
+    RobotMatch("r.match", 50),
     RobotCrash("r.crash", true),
-    DriverMode("driver.mode"),
+    DriverMode("driver.mode", 1, true),
     DriverActiveMacros("driver.activeMacros", true),
     DriverActiveShifts("driver.activeShifts"),
     AutonomousSelection("auto.selected"),
@@ -31,16 +31,16 @@ public enum LoggingKey
     PowerBatteryVoltage("power.battV"),
     NavxStartingAngle("navx.startingAngle"),
     PigeonState("pigeon.state"),
-    PigeonYaw("pigeon.yaw", true),
-    PigeonPitch("pigeon.pitch", true),
+    PigeonYaw("pigeon.yaw"),
+    PigeonPitch("pigeon.pitch"),
     PigeonPitchOffset("pigeon.pitchOffset"),
     PigeonRollOffset("pigeon.rollOffset"),
     PigeonYawOffset("pigeon.yawOffset"),
-    PigeonRoll("pigeon.roll", true),
+    PigeonRoll("pigeon.roll"),
     PigeonStartingYaw("pigeon.startingYaw"),
-    PigeonYawRate("pigeon.yawRate", true),
-    PigeonPitchRate("pigeon.pitchRate", true),
-    PigeonRollRate("pigeon.rollRate", true),
+    PigeonYawRate("pigeon.yawRate"),
+    PigeonPitchRate("pigeon.pitchRate"),
+    PigeonRollRate("pigeon.rollRate"),
     NavxConnected("navx.isConnected"),
     NavxAngle("navx.angle"),
     NavxPitch("navx.pitch"),
@@ -123,15 +123,32 @@ public enum LoggingKey
     OneMotorSparkSetpoint("omspark.setpoint");
 
     public final String value;
-    public final boolean shouldLog;
+    public final int loggingFrequency;
+    public final boolean shouldLogToCsv;
     private LoggingKey(String value)
     {
-        this(value, false);
+        this(value, TuningConstants.DEFAULT_LOGGING_FREQUENCY, false);
     }
 
-    private LoggingKey(String value, boolean shouldLog)
+    private LoggingKey(String value, int loggingFrequency)
     {
+        this(value, loggingFrequency, false);
+    }
+
+    private LoggingKey(String value, boolean shouldLogToCsv)
+    {
+        this(value, TuningConstants.DEFAULT_LOGGING_FREQUENCY, shouldLogToCsv);
+    }
+
+    private LoggingKey(String value, int loggingFrequency, boolean shouldLogToCsv)
+    {
+        if (loggingFrequency <= 0)
+        {
+            loggingFrequency = TuningConstants.DEFAULT_LOGGING_FREQUENCY;
+        }
+
         this.value = value;
-        this.shouldLog = shouldLog;
+        this.loggingFrequency = loggingFrequency;
+        this.shouldLogToCsv = shouldLogToCsv;
     }
 }

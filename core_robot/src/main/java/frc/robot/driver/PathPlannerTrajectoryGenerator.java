@@ -21,6 +21,9 @@ public class PathPlannerTrajectoryGenerator
             pathPlanner.buildTrajectory(
                 TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
                 TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                0.0,
                 new PathPlannerWaypoint(0.0, 0.0, 180.0, 0.0),
                 new PathPlannerWaypoint(-30.0, 0.0, 180.0, 0.0)),
                 "goBackwards30in");
@@ -29,6 +32,9 @@ public class PathPlannerTrajectoryGenerator
             pathPlanner.buildTrajectory(
                 TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
                 TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                0.0,
                 new PathPlannerWaypoint(0.0, 0.0, 180.0, 0.0),
                 new PathPlannerWaypoint(-12.0, 0.0, 180.0, 0.0)),
                 "goBackwards1ft");
@@ -37,6 +43,9 @@ public class PathPlannerTrajectoryGenerator
             pathPlanner.buildTrajectory(
                 TuningConstants.SDSDRIVETRAIN_TRUE_MAX_PATH_TRANSLATIONAL_VELOCITY,
                 TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                0.0,
                 new PathPlannerWaypoint(0.0, 0.0, 180.0, 0.0),
                 new PathPlannerWaypoint(-12.0, 0.0, 180.0, 0.0)),
                 "goBackwards15in");
@@ -45,6 +54,9 @@ public class PathPlannerTrajectoryGenerator
             pathPlanner.buildTrajectory(
                 TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY,
                 TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                0.0,
                 new PathPlannerWaypoint(0.0, 0.0, 90.0, 0.0),
                 new PathPlannerWaypoint(18.0, 32.0, 0.0, 0.0)),
                 "goLeft32inForward18in");
@@ -53,6 +65,9 @@ public class PathPlannerTrajectoryGenerator
             pathPlanner.buildTrajectory(
                 TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY,
                 TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                0.0,
                 new PathPlannerWaypoint(0.0, 0.0, 270.0, 0.0),
                 new PathPlannerWaypoint(18.0, -32.0, 0.0, 0.0)),
                 "goRight32inForward18in");
@@ -61,6 +76,9 @@ public class PathPlannerTrajectoryGenerator
             pathPlanner.buildTrajectory(
                 TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY,
                 TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                0.0,
                 new PathPlannerWaypoint(0.0, 0.0, 90.0, 0.0),
                 new PathPlannerWaypoint(0.0, 22.0, 90.0, 0.0)),
                 "goLeft22in");
@@ -69,6 +87,9 @@ public class PathPlannerTrajectoryGenerator
             pathPlanner.buildTrajectory(
                 TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY,
                 TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                0.0,
                 new PathPlannerWaypoint(0.0, 0.0, 270.0, 0.0),
                 new PathPlannerWaypoint(0.0, -22.0, 270.0, 0.0)),
                 "goRight22in");

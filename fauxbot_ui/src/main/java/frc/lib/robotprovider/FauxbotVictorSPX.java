@@ -15,11 +15,7 @@ public class FauxbotVictorSPX extends FauxbotAdvancedMotorBase implements IVicto
     {
     }
 
-    public void follow(ITalonFX talonFX)
-    {
-    }
-
-    public void setControlMode(TalonXControlMode mode)
+    public void setControlMode(TalonSRXControlMode mode)
     {
     }
 

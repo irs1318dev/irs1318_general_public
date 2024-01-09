@@ -14,21 +14,21 @@ public class PigeonIMUWrapper implements IPigeonIMU
 
     public void getYawPitchRoll(double[] ypr_deg)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.getYawPitchRoll(ypr_deg),
             "PigeonIMU.getYawPitchRoll");
     }
 
     public void getRawGyro(double[] xyz_dps)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.getRawGyro(xyz_dps),
             "PigeonIMU.getRawGyro");
     }
 
     public void setYaw(double angleDeg)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.setYaw(angleDeg),
             "PigeonIMU.setYaw");
     }
@@ -41,7 +41,7 @@ public class PigeonIMUWrapper implements IPigeonIMU
 
     public void enterTemperatureCalibrationMode()
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.enterCalibrationMode(CalibrationMode.Temperature),
             "PigeonIMU.enterTemperatureCalibrationMode");
     }

@@ -34,14 +34,12 @@ public class OneMotorSRXMechanism implements IMechanism
         this.logger = logger;
         this.motor = provider.getTalonSRX(ElectronicsConstants.ONEMOTOR_PRIMARY_MOTOR_CHANNEL);
 
-        this.motor.setSensorType(TalonXFeedbackDevice.QuadEncoder);
-        this.motor.setNeutralMode(MotorNeutralMode.Brake);
-        this.motor.setInvertOutput(TuningConstants.ONEMOTOR_INVERT_OUTPUT);
+        this.motor.setSensorType(TalonSRXFeedbackDevice.QuadEncoder);
+        this.motor.setMotorOutputSettings(TuningConstants.ONEMOTOR_INVERT_OUTPUT, MotorNeutralMode.Brake);
         this.motor.setInvertSensor(TuningConstants.ONEMOTOR_INVERT_SENSOR);
-        this.motor.setForwardLimitSwitch(
+        this.motor.updateLimitSwitchConfig(
             TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED,
-            TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN);
-        this.motor.setReverseLimitSwitch(
+            TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN,
             TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_ENABLED,
             TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_NORMALLY_OPEN);
 
@@ -51,7 +49,7 @@ public class OneMotorSRXMechanism implements IMechanism
             {
                 if (TuningConstants.ONEMOTOR_PID_POSITIONAL_MM)
                 {
-                    this.motor.setControlMode(TalonXControlMode.MotionMagicPosition);
+                    this.motor.setControlMode(TalonSRXControlMode.MotionMagicPosition);
 
                     this.motor.setMotionMagicPIDF(
                         TuningConstants.ONEMOTOR_PID_KP,
@@ -64,7 +62,7 @@ public class OneMotorSRXMechanism implements IMechanism
                 }
                 else
                 {
-                    this.motor.setControlMode(TalonXControlMode.Position);
+                    this.motor.setControlMode(TalonSRXControlMode.Position);
 
                     this.motor.setPIDF(
                         TuningConstants.ONEMOTOR_PID_KP,
@@ -76,7 +74,7 @@ public class OneMotorSRXMechanism implements IMechanism
             }
             else
             {
-                this.motor.setControlMode(TalonXControlMode.Velocity);
+                this.motor.setControlMode(TalonSRXControlMode.Velocity);
 
                 this.motor.setPIDF(
                     TuningConstants.ONEMOTOR_PID_KP,
@@ -90,7 +88,7 @@ public class OneMotorSRXMechanism implements IMechanism
         }
         else
         {
-            this.motor.setControlMode(TalonXControlMode.PercentOutput);
+            this.motor.setControlMode(TalonSRXControlMode.PercentOutput);
         }
 
         this.velocity = 0.0;

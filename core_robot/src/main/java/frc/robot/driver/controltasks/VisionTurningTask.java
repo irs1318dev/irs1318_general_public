@@ -12,7 +12,6 @@ public class VisionTurningTask extends PIDTurnTaskBase
     public enum TurnType
     {
         None,
-        RetroreflectiveCentering,
         AprilTagCentering,
         AprilTagParallelizing,
     }
@@ -62,7 +61,6 @@ public class VisionTurningTask extends PIDTurnTaskBase
 
         this.visionManager = this.getInjector().getInstance(OffboardVisionManager.class);
 
-        this.setDigitalOperationState(DigitalOperation.VisionEnableRetroreflectiveProcessing, this.isRetroReflective());
         this.setDigitalOperationState(DigitalOperation.VisionEnableAprilTagProcessing, this.isAprilTag());
     }
 
@@ -74,18 +72,12 @@ public class VisionTurningTask extends PIDTurnTaskBase
     {
         super.end();
 
-        this.setDigitalOperationState(DigitalOperation.VisionEnableRetroreflectiveProcessing, false);
         this.setDigitalOperationState(DigitalOperation.VisionEnableAprilTagProcessing, false);
     }
 
     protected boolean isAprilTag()
     {
         return this.rotateType == TurnType.AprilTagCentering || this.rotateType == TurnType.AprilTagParallelizing;
-    }
-
-    protected boolean isRetroReflective()
-    {
-        return this.rotateType == TurnType.RetroreflectiveCentering;
     }
 
     @Override
@@ -117,10 +109,6 @@ public class VisionTurningTask extends PIDTurnTaskBase
                     angle = -Helpers.atan2d(yOffset, xOffset);
                 }
 
-                break;
-
-            case RetroreflectiveCentering:
-                angle = this.visionManager.getVisionTargetHorizontalAngle();
                 break;
 
             default:

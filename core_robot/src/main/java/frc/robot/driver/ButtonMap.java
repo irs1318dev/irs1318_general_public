@@ -170,13 +170,6 @@ public class ButtonMap implements IButtonMap
             EnumSet.of(Shift.Test1Debug),
             EnumSet.noneOf(Shift.class),
             ButtonType.Toggle),
-        new DigitalOperationDescription(
-            DigitalOperation.VisionEnableRetroreflectiveProcessing,
-            UserInputDevice.Test1,
-            UserInputDeviceButton.XBONE_A_BUTTON,
-            EnumSet.of(Shift.Test1Debug),
-            EnumSet.of(Shift.Test1Debug),
-            ButtonType.Toggle),
 
         // Wrist operations:
         new DigitalOperationDescription(
@@ -450,7 +443,6 @@ public class ButtonMap implements IButtonMap
                 DigitalOperation.DriveTrainUseRobotOrientation,
                 DigitalOperation.VisionDisableStream,
                 DigitalOperation.VisionEnableAprilTagProcessing,
-                DigitalOperation.VisionEnableRetroreflectiveProcessing,
                 DigitalOperation.VisionForceDisable,
             }),
 
@@ -500,7 +492,6 @@ public class ButtonMap implements IButtonMap
                 DigitalOperation.DriveTrainUseRobotOrientation,
                 DigitalOperation.VisionDisableStream,
                 DigitalOperation.VisionEnableAprilTagProcessing,
-                DigitalOperation.VisionEnableRetroreflectiveProcessing,
                 DigitalOperation.VisionForceDisable,
             }),
 
@@ -549,7 +540,6 @@ public class ButtonMap implements IButtonMap
                 DigitalOperation.DriveTrainUseRobotOrientation,
                 DigitalOperation.VisionDisableStream,
                 DigitalOperation.VisionEnableAprilTagProcessing,
-                DigitalOperation.VisionEnableRetroreflectiveProcessing,
                 DigitalOperation.VisionForceDisable,
             }),
 
@@ -598,7 +588,6 @@ public class ButtonMap implements IButtonMap
                 DigitalOperation.DriveTrainUseRobotOrientation,
                 DigitalOperation.VisionDisableStream,
                 DigitalOperation.VisionEnableAprilTagProcessing,
-                DigitalOperation.VisionEnableRetroreflectiveProcessing,
                 DigitalOperation.VisionForceDisable,
             })
     };

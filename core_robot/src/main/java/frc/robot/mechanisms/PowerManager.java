@@ -99,9 +99,6 @@ public class PowerManager implements IMechanism
     @Override
     public void update()
     {
-        boolean enableVision = !this.driver.getDigital(DigitalOperation.VisionForceDisable);
-        boolean enableRetroreflectiveProcessing = this.driver.getDigital(DigitalOperation.VisionEnableRetroreflectiveProcessing);
-        this.powerDistribution.setSwitchableChannel(enableVision && enableRetroreflectiveProcessing);
     }
 
     @Override

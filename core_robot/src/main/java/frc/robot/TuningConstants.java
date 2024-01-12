@@ -495,8 +495,7 @@ public class TuningConstants
     public static final double INTAKE_MOTOR_VELOCITY_PID_KF = 0.0;
     public static final double INTAKE_MIN_THRESHOLD = 0.5;
 
-    public static final boolean INTAKE_MOTOR_USE_VELOCITY_CONTROL = true; 
-    
+    public static final boolean INTAKE_MOTOR_USE_VELOCITY_CONTROL = false; 
 
     public static final double WRIST_INPUT_TO_TICK_ADJUSTMENT = 25.0;
     public static final double WRIST_MIN_THRESHOLD = 5.0;

@@ -736,7 +736,7 @@ public class TalonFXWrapper implements ITalonFX
         }
 
         this.velocity.refresh();
-        CTREStatusCodeHelper.printError(this.position.getStatus(), "TalonFX.getVelocity");
+        CTREStatusCodeHelper.printError(this.velocity.getStatus(), "TalonFX.getVelocity");
 
         return this.velocity.getValue();
     }

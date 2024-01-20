@@ -21,7 +21,7 @@ public class RevDriveTrainMechanism implements IDriveTrainMechanism
     private static final int NUM_MODULES = 4;
 
     private static final int DefaultPidSlotId = 0;
-    private static final int SMPidSlotId = 1;
+    private static final int AltPidSlotId = 1;
 
     private static final LoggingKey[] DRIVE_VELOCITY_LOGGING_KEYS = { LoggingKey.DriveTrainDriveVelocity1, LoggingKey.DriveTrainDriveVelocity2, LoggingKey.DriveTrainDriveVelocity3, LoggingKey.DriveTrainDriveVelocity4 };
     private static final LoggingKey[] DRIVE_POSITION_LOGGING_KEYS = { LoggingKey.DriveTrainDrivePosition1, LoggingKey.DriveTrainDrivePosition2, LoggingKey.DriveTrainDrivePosition3, LoggingKey.DriveTrainDrivePosition4 };
@@ -197,7 +197,7 @@ public class RevDriveTrainMechanism implements IDriveTrainMechanism
                 TuningConstants.REVDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KI,
                 TuningConstants.REVDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KD,
                 TuningConstants.REVDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KF,
-                RevDriveTrainMechanism.SMPidSlotId);
+                RevDriveTrainMechanism.AltPidSlotId);
             this.driveMotors[i].setControlMode(SparkMaxControlMode.Velocity);
             this.driveMotors[i].setSelectedSlot(RevDriveTrainMechanism.DefaultPidSlotId);
             this.driveMotors[i].burnFlash();
@@ -220,30 +220,28 @@ public class RevDriveTrainMechanism implements IDriveTrainMechanism
                 TuningConstants.REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KD,
                 TuningConstants.REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KF,
                 RevDriveTrainMechanism.DefaultPidSlotId);
-            this.steerMotors[i].setPIDFSmartMotion(
-                TuningConstants.REVDRIVETRAIN_STEER_MOTORS_SM_PID_KP,
-                TuningConstants.REVDRIVETRAIN_STEER_MOTORS_SM_PID_KI,
-                TuningConstants.REVDRIVETRAIN_STEER_MOTORS_SM_PID_KD,
-                TuningConstants.REVDRIVETRAIN_STEER_MOTORS_SM_PID_KF,
-                TuningConstants.REVDRIVETRAIN_STEER_MOTORS_SM_PID_IZONE,
-                TuningConstants.REVDRIVETRAIN_STEER_MOTORS_SM_PID_CRUISE_VELOC,
-                TuningConstants.REVDRIVETRAIN_STEER_MOTORS_SM_PID_ACCEL,
-                RevDriveTrainMechanism.SMPidSlotId);
+            this.steerMotors[i].setPIDF(
+                TuningConstants.REVDRIVETRAIN_STEER_MOTORS_TMP_PID_KP,
+                TuningConstants.REVDRIVETRAIN_STEER_MOTORS_TMP_PID_KI,
+                TuningConstants.REVDRIVETRAIN_STEER_MOTORS_TMP_PID_KD,
+                TuningConstants.REVDRIVETRAIN_STEER_MOTORS_TMP_PID_KF,
+                RevDriveTrainMechanism.AltPidSlotId);
             this.steerMotors[i].setPositionPIDWrappingSettings(
                 TuningConstants.REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_WRAPPING_ENABLED,
                 TuningConstants.REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_WRAPPING_MIN,
                 TuningConstants.REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_WRAPPING_MAX);
             this.steerMotors[i].setControlMode(SparkMaxControlMode.Position);
-            this.steerMotors[i].burnFlash();
 
-            if (TuningConstants.REVDRIVETRAIN_STEER_MOTORS_USE_SMART_MOTION)
+            if (TuningConstants.REVDRIVETRAIN_STEER_MOTORS_USE_TRAPEZOIDAL_MOTION_PROFILE)
             {
-                this.steerMotors[i].setSelectedSlot(RevDriveTrainMechanism.SMPidSlotId);
+                this.steerMotors[i].setSelectedSlot(RevDriveTrainMechanism.AltPidSlotId);
             }
             else
             {
                 this.steerMotors[i].setSelectedSlot(RevDriveTrainMechanism.DefaultPidSlotId);
             }
+            
+            this.steerMotors[i].burnFlash();
         }
 
         this.driveVelocities = new double[RevDriveTrainMechanism.NUM_MODULES];
@@ -463,7 +461,7 @@ public class RevDriveTrainMechanism implements IDriveTrainMechanism
             {
                 driveSetpoint = drivePositionSetpoint;
                 driveControlMode = SparkMaxControlMode.Position;
-                driveDesiredPidSlotId = RevDriveTrainMechanism.SMPidSlotId;
+                driveDesiredPidSlotId = RevDriveTrainMechanism.AltPidSlotId;
             }
 
             this.logger.logNumber(RevDriveTrainMechanism.DRIVE_GOAL_LOGGING_KEYS[i], driveSetpoint);

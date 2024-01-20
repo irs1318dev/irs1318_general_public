@@ -68,7 +68,7 @@ public class HardwareConstants
     public static final double REVDRIVETRAIN_STEER_DEGREES = 360.0;
     public static final double REVDRIVETRAIN_STEER_TICK_DISTANCE = HardwareConstants.REVDRIVETRAIN_STEER_DEGREES / (HardwareConstants.REVDRIVETRAIN_STEER_GEAR_RATIO * HardwareConstants.REVDRIVETRAIN_STEER_TICKS_PER_REVOLUTION); // in degrees
     public static final double REVDRIVETRAIN_STEER_TICKS_PER_DEGREE = (HardwareConstants.REVDRIVETRAIN_STEER_GEAR_RATIO * HardwareConstants.REVDRIVETRAIN_STEER_TICKS_PER_REVOLUTION) / HardwareConstants.REVDRIVETRAIN_STEER_DEGREES; // in ticks
-    public static final double REVDRIVETRAIN_STEER_MOTOR_VELOCITY_TO_DEGREES_PER_SECOND = HardwareConstants.REVDRIVETRAIN_DRIVE_TICK_DISTANCE / 60.0; // converts RPM into degrees per second.
+    public static final double REVDRIVETRAIN_STEER_MOTOR_VELOCITY_TO_DEGREES_PER_SECOND = HardwareConstants.REVDRIVETRAIN_STEER_TICK_DISTANCE; // converts RPS into degrees per second.  NOTE: SPARK MAX Absolute encoder provides velocity in Rotations per Second.
 
     public static final double REVDRIVETRAIN_DRIVE_TICKS_PER_REVOLUTION = 1.0;
     public static final double REVDRIVETRAIN_DRIVE_GEAR_RATIO = (45.0 * 22.0) / (14.0 * 15.0); // Gear ratios according to Rev (14 may instead be 12 or 13 depending on the chosen pinion gear)
@@ -76,7 +76,7 @@ public class HardwareConstants
     public static final double REVDRIVETRAIN_DRIVE_WHEEL_CIRCUMFERENCE = Math.PI * HardwareConstants.REVDRIVETRAIN_DRIVE_WHEEL_DIAMETER;
     public static final double REVDRIVETRAIN_DRIVE_TICK_DISTANCE = HardwareConstants.REVDRIVETRAIN_DRIVE_WHEEL_CIRCUMFERENCE / (HardwareConstants.REVDRIVETRAIN_DRIVE_GEAR_RATIO * HardwareConstants.REVDRIVETRAIN_DRIVE_TICKS_PER_REVOLUTION);
     public static final double REVDRIVETRAIN_DRIVE_TICKS_PER_INCH = (HardwareConstants.REVDRIVETRAIN_DRIVE_GEAR_RATIO * HardwareConstants.REVDRIVETRAIN_DRIVE_TICKS_PER_REVOLUTION) / HardwareConstants.REVDRIVETRAIN_DRIVE_WHEEL_CIRCUMFERENCE;
-    public static final double REVDRIVETRAIN_DRIVE_MOTOR_VELOCITY_TO_INCHES_PER_SECOND = HardwareConstants.REVDRIVETRAIN_DRIVE_TICK_DISTANCE / 60.0; // converts RPM into inches per second.
+    public static final double REVDRIVETRAIN_DRIVE_MOTOR_VELOCITY_TO_INCHES_PER_SECOND = HardwareConstants.REVDRIVETRAIN_DRIVE_TICK_DISTANCE / 60.0; // converts RPM into inches per second. NOTE: SPARK MAX Relative/Alternate encoder provides velocity in Rotations per Minute.
 
     public static final double REVDRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE = 22.75; // (in inches) 35" side-to-side with bumpers
     public static final double REVDRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE = 22.75; // (in inches) 38" front-to-back with bumpers

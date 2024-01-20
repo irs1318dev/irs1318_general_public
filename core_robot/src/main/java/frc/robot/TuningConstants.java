@@ -330,7 +330,7 @@ public class TuningConstants
 
     //================================================== REV DriveTrain ==============================================================
 
-    public static final boolean REVDRIVETRAIN_STEER_MOTORS_USE_SMART_MOTION = false;
+    public static final boolean REVDRIVETRAIN_STEER_MOTORS_USE_TRAPEZOIDAL_MOTION_PROFILE = false;
 
     public static final boolean REVDRIVETRAIN_USE_ODOMETRY = true;
     public static final boolean REVDRIVETRAIN_RESET_ON_ROBOT_START = true;
@@ -356,26 +356,26 @@ public class TuningConstants
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_WRAPPING_MIN = 0.0;
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_WRAPPING_MAX = 360.0;
 
-    public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KP = 0.02;
+    public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KP = 0.0166; // try to go full speed for a 60deg difference (or .016 power for a 1deg error)
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KI = 0.0;
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KD = 0.0;
     public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KF = 0.0;
 
-    public static final double REVDRIVETRAIN_STEER_MOTORS_SM_PID_KP = 0.5;
-    public static final double REVDRIVETRAIN_STEER_MOTORS_SM_PID_KI = 0.0;
-    public static final double REVDRIVETRAIN_STEER_MOTORS_SM_PID_KD = 0.0;
-    public static final double REVDRIVETRAIN_STEER_MOTORS_SM_PID_KF = 0.34; // 1023 over max speed (3000 ticks per 100ms)
-    public static final int REVDRIVETRAIN_STEER_MOTORS_SM_PID_IZONE = 0;
-    public static final int REVDRIVETRAIN_STEER_MOTORS_SM_PID_CRUISE_VELOC = 48000;
-    public static final int REVDRIVETRAIN_STEER_MOTORS_SM_PID_ACCEL = 48000;
+    // Offboard TrapezoidalMotionProfile system...
+    public static final double REVDRIVETRAIN_STEER_MOTORS_TMP_PID_KP = 0.0166;
+    public static final double REVDRIVETRAIN_STEER_MOTORS_TMP_PID_KI = 0.0;
+    public static final double REVDRIVETRAIN_STEER_MOTORS_TMP_PID_KD = 0.0;
+    public static final double REVDRIVETRAIN_STEER_MOTORS_TMP_PID_KF = 0.0;
+    public static final int REVDRIVETRAIN_STEER_MOTORS_TMP_PID_CRUISE_VELOC = 60; // deg/sec
+    public static final int REVDRIVETRAIN_STEER_MOTORS_TMP_PID_ACCEL = 60; // deg/sec/sec
 
     // Velocity PID (drive) per-module
-    public static final double REVDRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS = 208.0; // 208.0 was highest speed at full throttle FF on blocks. this is inches/second
+    public static final double REVDRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS = 200.0; // 200.0 was highest speed at full throttle FF on blocks. this is inches/second
 
-    public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KP = 0.0; //0.1;
+    public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KP = 0.006;
     public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KI = 0.0;
     public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KD = 0.0;
-    public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KF = 0.0048076923076923;
+    public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KF = 0.005;
 
     public static final double REVDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KP = 1.0;
     public static final double REVDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KI = 0.0;

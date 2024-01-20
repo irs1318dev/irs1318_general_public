@@ -500,6 +500,8 @@ public class SparkMaxWrapper implements ISparkMax
 
     public double getVelocity()
     {
+        // NOTE: SparkMAX Absolute encoder provides velocity in Rotations per Second,
+        // but SparkMAX Relative/Alternative encoder provides velocity in Rotations per Minute.
         if (this.useAbsoluteEncoder)
         {
             return this.wrappedAbsoluteEncoder.getVelocity();

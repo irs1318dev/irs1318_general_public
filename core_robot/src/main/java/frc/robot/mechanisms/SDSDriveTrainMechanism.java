@@ -375,7 +375,7 @@ public class SDSDriveTrainMechanism implements IDriveTrainMechanism
             this.driveErrors[i] = this.driveMotors[i].getError();
             this.steerVelocities[i] = this.steerMotors[i].getVelocity();
             this.steerPositions[i] = this.steerMotors[i].getPosition();
-            this.steerAngles[i] = Helpers.updateAngleRange(this.steerPositions[i] * HardwareConstants.SDSDRIVETRAIN_STEER_TICK_DISTANCE);
+            this.steerAngles[i] = Helpers.updateAngleRange180(this.steerPositions[i] * HardwareConstants.SDSDRIVETRAIN_STEER_TICK_DISTANCE);
             this.steerErrors[i] = this.steerMotors[i].getError();
             this.encoderAngles[i] = this.absoluteEncoders[i].getAbsolutePosition();
 

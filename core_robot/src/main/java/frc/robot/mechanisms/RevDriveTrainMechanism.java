@@ -1,8 +1,7 @@
 package frc.robot.mechanisms;
 
 import frc.robot.*;
-import frc.lib.*;
-import frc.lib.controllers.PIDHandler;
+import frc.lib.controllers.*;
 import frc.lib.driver.*;
 import frc.lib.filters.*;
 import frc.lib.helpers.AnglePair;
@@ -68,6 +67,10 @@ public class RevDriveTrainMechanism implements IDriveTrainMechanism
     private final SlewRateLimiter xVelocityLimiter;
     private final SlewRateLimiter yVelocityLimiter;
     private final SlewRateLimiter angularVelocityLimiter;
+
+    private final TrapezoidProfile[] steerTrapezoidMotionProfile;
+    private final TrapezoidProfile.State[] steerTMPCurrState;
+    private final TrapezoidProfile.State[] steerTMPGoalState;
 
     private boolean firstRun;
 
@@ -173,6 +176,19 @@ public class RevDriveTrainMechanism implements IDriveTrainMechanism
                 HardwareConstants.REVDRIVETRAIN_STEER_MOTOR4_INVERT_SENSOR
             };
 
+        if (TuningConstants.REVDRIVETRAIN_STEER_MOTORS_USE_TRAPEZOIDAL_MOTION_PROFILE)
+        {
+            this.steerTrapezoidMotionProfile = new TrapezoidProfile[RevDriveTrainMechanism.NUM_MODULES];
+            this.steerTMPCurrState = new TrapezoidProfile.State[RevDriveTrainMechanism.NUM_MODULES];
+            this.steerTMPGoalState = new TrapezoidProfile.State[RevDriveTrainMechanism.NUM_MODULES];
+        }
+        else
+        {
+            this.steerTrapezoidMotionProfile = null;
+            this.steerTMPCurrState = null;
+            this.steerTMPGoalState = null;
+        }
+
         for (int i = 0; i < RevDriveTrainMechanism.NUM_MODULES; i++)
         {
             this.driveMotors[i] = provider.getSparkMax(driveMotorCanIds[i], SparkMaxMotorType.Brushless);
@@ -234,6 +250,12 @@ public class RevDriveTrainMechanism implements IDriveTrainMechanism
 
             if (TuningConstants.REVDRIVETRAIN_STEER_MOTORS_USE_TRAPEZOIDAL_MOTION_PROFILE)
             {
+                this.steerTrapezoidMotionProfile[i] = new TrapezoidProfile(
+                    TuningConstants.REVDRIVETRAIN_STEER_MOTORS_TMP_PID_CRUISE_VELOC,
+                    TuningConstants.REVDRIVETRAIN_STEER_MOTORS_TMP_PID_ACCEL);
+                this.steerTMPCurrState[i] = new TrapezoidProfile.State(0.0, 0.0);
+                this.steerTMPGoalState[i] = new TrapezoidProfile.State(0.0, 0.0);
+
                 this.steerMotors[i].setSelectedSlot(RevDriveTrainMechanism.AltPidSlotId);
             }
             else
@@ -484,6 +506,44 @@ public class RevDriveTrainMechanism implements IDriveTrainMechanism
             if (steerSetpoint != null)
             {
                 this.logger.logNumber(RevDriveTrainMechanism.STEER_GOAL_LOGGING_KEYS[i], steerSetpoint);
+                if (TuningConstants.REVDRIVETRAIN_STEER_MOTORS_USE_TRAPEZOIDAL_MOTION_PROFILE)
+                {
+                    TrapezoidProfile.State curr = this.steerTMPCurrState[i];
+                    TrapezoidProfile.State goal = this.steerTMPGoalState[i];
+
+                    if (goal.updatePosition((double)steerSetpoint))
+                    {
+                        // NOTE: we only update based on current positions if we are changing the goal
+                        // otherwise we may fail to actually get the "oomph" to start moving because the
+                        // initial acceleration could be very slow and lead to a very small velocity and
+                        // very small position changes
+                        // ALSO: we don't want to update the curr position directly to the steer angles because we want to
+                        // make use of the SparkMAX's absolute positional PID mode.
+                        double diff = steerSetpoint - this.steerAngles[i];
+                        if (diff > 180.0)
+                        {
+                            // updating from low value to high value.  add 360 to the low value
+                            curr.updatePosition(this.steerAngles[i] + 360.0);
+                        }
+                        else if (diff < -180.0)
+                        {
+                            // updating from high value to low value.  sub 360 from the high value
+                            curr.updatePosition(this.steerAngles[i] - 360.0);
+                        }
+                        else
+                        {
+                            curr.updatePosition(this.steerAngles[i]);
+                        }
+
+                        curr.setVelocity(this.steerVelocities[i]);
+                    }
+
+                    if (this.steerTrapezoidMotionProfile[i].update(this.deltaT, curr, goal))
+                    {
+                        steerSetpoint = Helpers.updateAngleRange360(curr.getPosition());
+                    }
+                }
+
                 this.steerMotors[i].set(steerSetpoint);
             }
         }

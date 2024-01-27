@@ -463,7 +463,7 @@ public class TuningConstants
     public static final boolean ONEMOTOR_USE_PID = false;
     public static final boolean ONEMOTOR_PID_POSITIONAL = false;
     public static final boolean ONEMOTOR_PID_POSITIONAL_MM = false;
-    public static final boolean ONEMOTOR_HAS_FOLLOWER = true;
+    public static final boolean ONEMOTOR_HAS_FOLLOWER = false;
 
     public static final double ONEMOTOR_PID_KP = 0.5 / 40.0; // 0.1 / 6000.0;
     public static final double ONEMOTOR_PID_KI = 0.0;

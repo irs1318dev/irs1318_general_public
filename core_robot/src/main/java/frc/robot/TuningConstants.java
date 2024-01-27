@@ -330,7 +330,7 @@ public class TuningConstants
 
     //================================================== REV DriveTrain ==============================================================
 
-    public static final boolean REVDRIVETRAIN_STEER_MOTORS_USE_TRAPEZOIDAL_MOTION_PROFILE = false;
+    public static final boolean REVDRIVETRAIN_STEER_MOTORS_USE_TRAPEZOIDAL_MOTION_PROFILE = true;
 
     public static final boolean REVDRIVETRAIN_USE_ODOMETRY = true;
     public static final boolean REVDRIVETRAIN_RESET_ON_ROBOT_START = true;

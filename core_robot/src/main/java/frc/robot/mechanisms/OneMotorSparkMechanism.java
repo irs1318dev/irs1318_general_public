@@ -32,21 +32,25 @@ public class OneMotorSparkMechanism implements IMechanism
         this.driver = driver;
         this.logger = logger;
         this.motor = provider.getSparkMax(ElectronicsConstants.ONEMOTOR_PRIMARY_MOTOR_CHANNEL, SparkMaxMotorType.Brushless);
+        this.motor.setAbsoluteEncoder();
+        this.motor.setPositionConversionFactor(1.0);
+        this.motor.setVelocityConversionFactor(1.0);
         this.motor.setNeutralMode(MotorNeutralMode.Brake);
         this.motor.setInvertOutput(TuningConstants.ONEMOTOR_INVERT_OUTPUT);
-        this.motor.reset();
+        this.motor.burnFlash();
+        // this.motor.reset();
 
-        ISparkMax follower = provider.getSparkMax(ElectronicsConstants.ONEMOTOR_FOLLOWER_MOTOR_CHANNEL, SparkMaxMotorType.Brushless);
-        follower.setNeutralMode(MotorNeutralMode.Brake);
-        follower.reset();
-        follower.follow(this.motor);
+        // ISparkMax follower = provider.getSparkMax(ElectronicsConstants.ONEMOTOR_FOLLOWER_MOTOR_CHANNEL, SparkMaxMotorType.Brushless);
+        // follower.setNeutralMode(MotorNeutralMode.Brake);
+        // follower.reset();
+        // follower.follow(this.motor);
 
-        this.motor.setForwardLimitSwitch(
-            TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED,
-            TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN);
-        this.motor.setReverseLimitSwitch(
-            TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_ENABLED,
-            TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_NORMALLY_OPEN);
+        // this.motor.setForwardLimitSwitch(
+        //     TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED,
+        //     TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN);
+        // this.motor.setReverseLimitSwitch(
+        //     TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_ENABLED,
+        //     TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_NORMALLY_OPEN);
 
         if (TuningConstants.ONEMOTOR_USE_PID)
         {
@@ -113,16 +117,16 @@ public class OneMotorSparkMechanism implements IMechanism
         this.velocity = this.motor.getVelocity();
         this.position = this.motor.getPosition();
 
-        if (TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED || TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_ENABLED)
-        {
-            this.forwardLimitSwitchStatus = this.motor.getForwardLimitSwitchStatus();
-            this.reverseLimitSwtichStatus = this.motor.getReverseLimitSwitchStatus();
-        }
+        // if (TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED || TuningConstants.ONEMOTOR_REVERSE_LIMIT_SWITCH_ENABLED)
+        // {
+        //     this.forwardLimitSwitchStatus = this.motor.getForwardLimitSwitchStatus();
+        //     this.reverseLimitSwtichStatus = this.motor.getReverseLimitSwitchStatus();
+        // }
 
         this.logger.logNumber(LoggingKey.OneMotorSparkVelocity, this.velocity);
         this.logger.logNumber(LoggingKey.OneMotorSparkPosition, this.position);
-        this.logger.logBoolean(LoggingKey.OneMotorSparkReverseLimit, this.reverseLimitSwtichStatus);
-        this.logger.logBoolean(LoggingKey.OneMotorSparkForwardLimit, this.forwardLimitSwitchStatus);
+        // this.logger.logBoolean(LoggingKey.OneMotorSparkReverseLimit, this.reverseLimitSwtichStatus);
+        // this.logger.logBoolean(LoggingKey.OneMotorSparkForwardLimit, this.forwardLimitSwitchStatus);
     }
 
     @Override
@@ -152,7 +156,7 @@ public class OneMotorSparkMechanism implements IMechanism
     @Override
     public void stop()
     {
-        this.motor.reset();
+        // this.motor.reset();
         this.motor.stop();
     }
 }

@@ -71,6 +71,7 @@ public enum LoggingKey
     DriveTrainSteerAngle1("dt.steer_ang1"),
     DriveTrainSteerError1("dt.steer_err1"), // SDS-only
     DriveTrainSteerPositionGoal1("dt.steer_goal1"),
+    DriveTrainSteerPositionGoal1b("dt.steer_goal1b"),
 
     DriveTrainAbsoluteEncoderAngle2("dt.absenc_ang2"),
     DriveTrainDriveVelocity2("dt.drive_vel2"),
@@ -82,6 +83,7 @@ public enum LoggingKey
     DriveTrainSteerAngle2("dt.steer_ang2"),
     DriveTrainSteerError2("dt.steer_err2"), // SDS-only
     DriveTrainSteerPositionGoal2("dt.steer_goal2"),
+    DriveTrainSteerPositionGoal2b("dt.steer_goal2b"),
 
     DriveTrainAbsoluteEncoderAngle3("dt.absenc_ang3"),
     DriveTrainDriveVelocity3("dt.drive_vel3"),
@@ -93,6 +95,7 @@ public enum LoggingKey
     DriveTrainSteerAngle3("dt.steer_ang3"),
     DriveTrainSteerError3("dt.steer_err3"), // SDS-only
     DriveTrainSteerPositionGoal3("dt.steer_goal3"),
+    DriveTrainSteerPositionGoal3b("dt.steer_goal3b"),
 
     DriveTrainAbsoluteEncoderAngle4("dt.absenc_ang4"),
     DriveTrainDriveVelocity4("dt.drive_vel4"),
@@ -104,6 +107,7 @@ public enum LoggingKey
     DriveTrainSteerAngle4("dt.steer_ang4"),
     DriveTrainSteerError4("dt.steer_err4"), // SDS-only
     DriveTrainSteerPositionGoal4("dt.steer_goal4"),
+    DriveTrainSteerPositionGoal4b("dt.steer_goal4b"),
 
     WristMotorVelocity("w.wrist_vel"),
     WristMotorAngle("w.wrist_ang"),

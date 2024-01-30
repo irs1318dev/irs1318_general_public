@@ -55,7 +55,7 @@ public class OneMotorSRXMechanism implements IMechanism
                         TuningConstants.ONEMOTOR_PID_KP,
                         TuningConstants.ONEMOTOR_PID_KI,
                         TuningConstants.ONEMOTOR_PID_KD,
-                        TuningConstants.ONEMOTOR_PID_KF,
+                        TuningConstants.ONEMOTOR_PID_KFV,
                         TuningConstants.ONEMOTOR_PID_MM_CRUISE_VELOC,
                         TuningConstants.ONEMOTOR_PID_MM_ACCEL,
                         OneMotorSRXMechanism.slotId);
@@ -68,7 +68,7 @@ public class OneMotorSRXMechanism implements IMechanism
                         TuningConstants.ONEMOTOR_PID_KP,
                         TuningConstants.ONEMOTOR_PID_KI,
                         TuningConstants.ONEMOTOR_PID_KD,
-                        TuningConstants.ONEMOTOR_PID_KF,
+                        TuningConstants.ONEMOTOR_PID_KFV,
                         OneMotorSRXMechanism.slotId);
                 }
             }
@@ -80,7 +80,7 @@ public class OneMotorSRXMechanism implements IMechanism
                     TuningConstants.ONEMOTOR_PID_KP,
                     TuningConstants.ONEMOTOR_PID_KI,
                     TuningConstants.ONEMOTOR_PID_KD,
-                    TuningConstants.ONEMOTOR_PID_KF,
+                    TuningConstants.ONEMOTOR_PID_KFV,
                     OneMotorSRXMechanism.slotId);
             }
 

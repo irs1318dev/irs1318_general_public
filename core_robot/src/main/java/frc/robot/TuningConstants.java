@@ -465,16 +465,21 @@ public class TuningConstants
     public static final boolean ONEMOTOR_USE_PID = false;
     public static final boolean ONEMOTOR_PID_POSITIONAL = false;
     public static final boolean ONEMOTOR_PID_POSITIONAL_MM = false;
+
+    public static final boolean ONEMOTOR_USE_ABSOLUTE = false;
+
     public static final boolean ONEMOTOR_HAS_FOLLOWER = false;
 
-    public static final double ONEMOTOR_PID_KP = 0.5 / 40.0; // 0.1 / 6000.0;
+    public static final double ONEMOTOR_PID_KP = 0.5 / 40.0;
     public static final double ONEMOTOR_PID_KI = 0.0;
     public static final double ONEMOTOR_PID_KD = 0.0;
-    public static final double ONEMOTOR_PID_KF = 0.0; // 1.0 / 6000.0;
-    public static final double ONEMOTOR_PID_MIN_OUTPUT = -0.1; // 1.0 / 6000.0;
-    public static final double ONEMOTOR_PID_MAX_OUTPUT = 0.1; // 1.0 / 6000.0;
+    public static final double ONEMOTOR_PID_KFV = 0.0;
+    public static final double ONEMOTOR_PID_KS = 0.0;
+    public static final double ONEMOTOR_PID_MIN_OUTPUT = -0.1;
+    public static final double ONEMOTOR_PID_MAX_OUTPUT = 0.1;
     public static final int ONEMOTOR_PID_MM_CRUISE_VELOC = 0;
     public static final int ONEMOTOR_PID_MM_ACCEL = 0;
+    public static final int ONEMOTOR_PID_MM_JERK = 0;
 
     public static final double ONEMOTOR_PID_MAX_POSITION = 25.0; // (SPARK MAX NEO: in rotations) (Talon SRX: in ticks. 36 inches / (4.75 inches/rotation) * (4096 ticks/rotation))
     public static final double ONEMOTOR_PID_MAX_VELOCITY = 6000.0;
@@ -482,7 +487,10 @@ public class TuningConstants
     public static final boolean ONEMOTOR_INVERT_OUTPUT = false;
     public static final boolean ONEMOTOR_INVERT_SENSOR = false;
 
-    public static final boolean FOLLOWER_INVERT_OUTPUT = true;
+    public static final boolean ONEMOTOR_FOLLOWER_INVERT_OUTPUT = true;
+
+    public static final boolean ONEMOTOR_USE_VOLTAGE_COMPENSATION = false;
+    public static final double ONEMOTOR_VOLTAGE_COMPENSATION = 12.0;
 
     public static final boolean ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED = false;
     public static final boolean ONEMOTOR_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN = true;

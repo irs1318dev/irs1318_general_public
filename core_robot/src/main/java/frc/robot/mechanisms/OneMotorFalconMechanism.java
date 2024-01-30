@@ -35,6 +35,7 @@ public class OneMotorFalconMechanism implements IMechanism
         this.motor = provider.getTalonFX(ElectronicsConstants.ONEMOTOR_PRIMARY_MOTOR_CHANNEL);
 
         this.motor.setMotorOutputSettings(TuningConstants.ONEMOTOR_INVERT_OUTPUT, MotorNeutralMode.Brake);
+        this.motor.setVoltageCompensation(TuningConstants.ONEMOTOR_USE_VOLTAGE_COMPENSATION, TuningConstants.ONEMOTOR_VOLTAGE_COMPENSATION);
         this.motor.updateLimitSwitchConfig(
             TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_ENABLED,
             TuningConstants.ONEMOTOR_FORWARD_LIMIT_SWITCH_NORMALLY_OPEN,
@@ -49,13 +50,15 @@ public class OneMotorFalconMechanism implements IMechanism
                 {
                     this.motor.setControlMode(TalonFXControlMode.MotionMagicPosition);
 
-                    this.motor.setMotionMagicPIDF(
+                    this.motor.setMotionMagicPIDVS(
                         TuningConstants.ONEMOTOR_PID_KP,
                         TuningConstants.ONEMOTOR_PID_KI,
                         TuningConstants.ONEMOTOR_PID_KD,
-                        TuningConstants.ONEMOTOR_PID_KF,
+                        TuningConstants.ONEMOTOR_PID_KFV,
+                        TuningConstants.ONEMOTOR_PID_KS,
                         TuningConstants.ONEMOTOR_PID_MM_CRUISE_VELOC,
                         TuningConstants.ONEMOTOR_PID_MM_ACCEL,
+                        TuningConstants.ONEMOTOR_PID_MM_JERK,
                         OneMotorFalconMechanism.slotId);
                 }
                 else
@@ -66,7 +69,7 @@ public class OneMotorFalconMechanism implements IMechanism
                         TuningConstants.ONEMOTOR_PID_KP,
                         TuningConstants.ONEMOTOR_PID_KI,
                         TuningConstants.ONEMOTOR_PID_KD,
-                        TuningConstants.ONEMOTOR_PID_KF,
+                        TuningConstants.ONEMOTOR_PID_KFV,
                         OneMotorFalconMechanism.slotId);
                 }
             }
@@ -78,7 +81,7 @@ public class OneMotorFalconMechanism implements IMechanism
                     TuningConstants.ONEMOTOR_PID_KP,
                     TuningConstants.ONEMOTOR_PID_KI,
                     TuningConstants.ONEMOTOR_PID_KD,
-                    TuningConstants.ONEMOTOR_PID_KF,
+                    TuningConstants.ONEMOTOR_PID_KFV,
                     OneMotorFalconMechanism.slotId);
             }
 
@@ -92,7 +95,7 @@ public class OneMotorFalconMechanism implements IMechanism
         if (TuningConstants.ONEMOTOR_HAS_FOLLOWER)
         {
             ITalonFX follower = provider.getTalonFX(ElectronicsConstants.ONEMOTOR_FOLLOWER_MOTOR_CHANNEL);
-            follower.setMotorOutputSettings(TuningConstants.FOLLOWER_INVERT_OUTPUT, MotorNeutralMode.Brake);
+            follower.setMotorOutputSettings(TuningConstants.ONEMOTOR_FOLLOWER_INVERT_OUTPUT, MotorNeutralMode.Brake);
             follower.follow(this.motor);
         }
 

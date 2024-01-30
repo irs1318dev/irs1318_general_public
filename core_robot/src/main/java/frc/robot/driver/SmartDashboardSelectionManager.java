@@ -16,9 +16,11 @@ public class SmartDashboardSelectionManager
     private final IDoubleSubscriber kpSlider;
     private final IDoubleSubscriber kiSlider;
     private final IDoubleSubscriber kdSlider;
-    private final IDoubleSubscriber kfSlider;
-    private final IIntegerSubscriber kAccelSlider;
+    private final IDoubleSubscriber kfvSlider;
+    private final IDoubleSubscriber ksSlider;
     private final IIntegerSubscriber kCruiseVelSlider;
+    private final IIntegerSubscriber kAccelSlider;
+    private final IIntegerSubscriber kJerkSlider;
     private final IBooleanSubscriber invertOutputCheckbox;
     private final IBooleanSubscriber brakeModeCheckbox;
     private final IDoubleSubscriber kMinOutputSlider;
@@ -91,9 +93,11 @@ public class SmartDashboardSelectionManager
         this.kpSlider = networkTableProvider.getNumberSlider("kP", TuningConstants.ONEMOTOR_PID_KP);
         this.kiSlider = networkTableProvider.getNumberSlider("kI", TuningConstants.ONEMOTOR_PID_KI);
         this.kdSlider = networkTableProvider.getNumberSlider("kD", TuningConstants.ONEMOTOR_PID_KD);
-        this.kfSlider = networkTableProvider.getNumberSlider("kF", TuningConstants.ONEMOTOR_PID_KF);
-        this.kAccelSlider = networkTableProvider.getIntegerSlider("kAccel", TuningConstants.ONEMOTOR_PID_MM_ACCEL);
+        this.kfvSlider = networkTableProvider.getNumberSlider("kFV", TuningConstants.ONEMOTOR_PID_KFV);
+        this.ksSlider = networkTableProvider.getNumberSlider("kS", TuningConstants.ONEMOTOR_PID_KS);
         this.kCruiseVelSlider = networkTableProvider.getIntegerSlider("kCruiseVel", TuningConstants.ONEMOTOR_PID_MM_CRUISE_VELOC);
+        this.kAccelSlider = networkTableProvider.getIntegerSlider("kAccel", TuningConstants.ONEMOTOR_PID_MM_ACCEL);
+        this.kJerkSlider = networkTableProvider.getIntegerSlider("kJerk", TuningConstants.ONEMOTOR_PID_MM_JERK);
         this.kMinOutputSlider = networkTableProvider.getNumberSlider("kMinOutput", TuningConstants.ONEMOTOR_PID_MIN_OUTPUT);
         this.kMaxOutputSlider = networkTableProvider.getNumberSlider("kMaxOutput", TuningConstants.ONEMOTOR_PID_MAX_OUTPUT);
 
@@ -131,9 +135,19 @@ public class SmartDashboardSelectionManager
         return this.kdSlider.get();
     }
 
-    public double getSelectedKF()
+    public double getSelectedKFV()
     {
-        return this.kfSlider.get();
+        return this.kfvSlider.get();
+    }
+
+    public double getSelectedKS()
+    {
+        return this.ksSlider.get();
+    }
+
+    public long getSelectedCruiseVelocity()
+    {
+        return this.kCruiseVelSlider.get();
     }
 
     public long getSelectedAcceleration()
@@ -141,9 +155,9 @@ public class SmartDashboardSelectionManager
         return this.kAccelSlider.get();
     }
 
-    public long getSelectedCruiseVelocity()
+    public long getSelectedJerk()
     {
-        return this.kCruiseVelSlider.get();
+        return this.kJerkSlider.get();
     }
 
     public double getSelectedMinOutput()

@@ -11,6 +11,7 @@ import frc.robot.TuningConstants;
 import frc.robot.driver.AnalogOperation;
 import frc.robot.driver.DigitalOperation;
 import frc.robot.mechanisms.IDriveTrainMechanism;
+import frc.robot.mechanisms.RevDriveTrainMechanism;
 
 /**
  * Task that follows a path
@@ -78,7 +79,7 @@ public class FollowPathTask extends ControlTaskBase
 
         if (this.type != Type.Absolute)
         {
-            IDriveTrainMechanism driveTrain = this.getInjector().getInstance(IDriveTrainMechanism.class);
+            IDriveTrainMechanism driveTrain = this.getInjector().getInstance(RevDriveTrainMechanism.class);
             this.initialPose = driveTrain.getPose();
         }
         else

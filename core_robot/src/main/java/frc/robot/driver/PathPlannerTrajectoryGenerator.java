@@ -19,21 +19,22 @@ public class PathPlannerTrajectoryGenerator
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
                 0.0,
                 new PathPlannerWaypoint(0.0, 0.0, 180.0, 0.0),
+                new PathPlannerWaypoint(-15.0, 0.0, 180.0, 0.0),
                 new PathPlannerWaypoint(-30.0, 0.0, 180.0, 0.0)),
                 "goBackwards30in");
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
                 0.0,
                 new PathPlannerWaypoint(0.0, 0.0, 180.0, 0.0),
                 new PathPlannerWaypoint(-12.0, 0.0, 180.0, 0.0)),
@@ -41,10 +42,10 @@ public class PathPlannerTrajectoryGenerator
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(
-                TuningConstants.SDSDRIVETRAIN_TRUE_MAX_PATH_TRANSLATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_TRUE_MAX_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
                 0.0,
                 new PathPlannerWaypoint(0.0, 0.0, 180.0, 0.0),
                 new PathPlannerWaypoint(-12.0, 0.0, 180.0, 0.0)),
@@ -52,10 +53,10 @@ public class PathPlannerTrajectoryGenerator
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(
-                TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
                 0.0,
                 new PathPlannerWaypoint(0.0, 0.0, 90.0, 0.0),
                 new PathPlannerWaypoint(18.0, 32.0, 0.0, 0.0)),
@@ -63,10 +64,10 @@ public class PathPlannerTrajectoryGenerator
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(
-                TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
                 0.0,
                 new PathPlannerWaypoint(0.0, 0.0, 270.0, 0.0),
                 new PathPlannerWaypoint(18.0, -32.0, 0.0, 0.0)),
@@ -74,10 +75,10 @@ public class PathPlannerTrajectoryGenerator
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(
-                TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
                 0.0,
                 new PathPlannerWaypoint(0.0, 0.0, 90.0, 0.0),
                 new PathPlannerWaypoint(0.0, 22.0, 90.0, 0.0)),
@@ -85,10 +86,10 @@ public class PathPlannerTrajectoryGenerator
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(
-                TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
                 0.0,
                 new PathPlannerWaypoint(0.0, 0.0, 270.0, 0.0),
                 new PathPlannerWaypoint(0.0, -22.0, 270.0, 0.0)),
@@ -100,8 +101,8 @@ public class PathPlannerTrajectoryGenerator
             pathPlanner.buildTrajectory(
                 TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY,
                 TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
                 0.0,
                 new PathPlannerWaypoint(0.0, 0.0, 0.0, 0.0),
                 new PathPlannerWaypoint(150.0, 0.0, 0.0, 0.0)),
@@ -156,10 +157,10 @@ public class PathPlannerTrajectoryGenerator
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(
-                TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
                 0.0,
                 new PathPlannerWaypoint(P3, getOrientationOrHeading(isRed, 135), getOrientationOrHeading(isRed, 0)),
                 new PathPlannerWaypoint(P7M, getOrientationOrHeading(isRed, 180), getOrientationOrHeading(isRed, 0)),
@@ -173,10 +174,10 @@ public class PathPlannerTrajectoryGenerator
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(
-                TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
-                TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
                 0.0,
                 
                 

@@ -462,13 +462,13 @@ public class ButtonMap implements IButtonMap
                     new ResetLevelTask(),
                     new PositionStartingTask(
                         // Change tour x - axis value based on is red
-                        250.5 + halfFramePreremetere,
-                        306 - halfFramePreremetere,
+                        0.0,
+                        0.0,
                         0.0,
                         true,
                         true)),
                 
-                new FollowPathTask("P3toP5", Type.Absolute)),
+                new FollowPathTask("goBackwards30in", Type.RobotRelativeFromCurrentPose)),
             new IOperation[]
             {
                 DigitalOperation.PositionResetFieldOrientation,

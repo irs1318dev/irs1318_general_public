@@ -454,6 +454,8 @@ public class TuningConstants
     public static final double REVDRIVETRAIN_MAX_PATH_TURN_VELOCITY = 180.0; // in degrees per second
     public static final double REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY = 0.60 * TuningConstants.REVDRIVETRAIN_MAX_VELOCITY; // in inches per second
     public static final double REVDRIVETRAIN_TRUE_MAX_PATH_TRANSLATIONAL_VELOCITY = 0.75 * TuningConstants.REVDRIVETRAIN_MAX_VELOCITY; // in inches per second
+    public static final double REVDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY = 0.60 * TuningConstants.REVDRIVETRAIN_MAX_PATH_TURN_VELOCITY; // in degrees per second
+    public static final double REVDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION = 0.75 * TuningConstants.REVDRIVETRAIN_MAX_PATH_TURN_VELOCITY; // in degrees per second per second
     public static final double REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION = 0.75 * TuningConstants.REVDRIVETRAIN_MAX_VELOCITY; // in inches per second per second
     public static final double REVDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY = TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY / 1.4; // in inches per second
     public static final double REVDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION = TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION / 1.25; // in inches per second per second

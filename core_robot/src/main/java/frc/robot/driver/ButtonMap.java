@@ -35,7 +35,7 @@ public class ButtonMap implements IButtonMap
         //     UserInputDeviceButton.XBONE_LEFT_BUTTON),
     };
 
-    static double framePreremetere = 34; //With bumpers
+    static double framePreremetere = 22; //With bumpers
     static double halfFramePreremetere = framePreremetere / 2.0;
 
     public static AnalogOperationDescription[] AnalogOperationSchema = new AnalogOperationDescription[]

@@ -110,7 +110,7 @@ public class PathPlannerTrajectoryGenerator
 
     public static void generateTrajectories(boolean isRed, TrajectoryManager trajectoryManager, IPathPlanner pathPlanner)
     {
-        double framePreremetere = 34; //With bumpers
+        double framePreremetere = 22; //With bumpers
         double halfFramePreremetere = framePreremetere / 2.0;
 
         Point2d P1 = new Point2d(getXPosition(isRed, 250 + halfFramePreremetere), 23 + halfFramePreremetere); // Need to add starting position
@@ -161,13 +161,13 @@ public class PathPlannerTrajectoryGenerator
                 TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
                 TuningConstants.SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
                 0.0,
-                new PathPlannerWaypoint(P3, getOrientationOrHeading(isRed, 0), getOrientationOrHeading(isRed, 135)),
-                new PathPlannerWaypoint(P7M, getOrientationOrHeading(isRed, 0), getOrientationOrHeading(isRed, 180)),
-                new PathPlannerWaypoint(P7, getOrientationOrHeading(isRed, 0), getOrientationOrHeading(isRed, 180)),
-                new PathPlannerWaypoint(P6M, getOrientationOrHeading(isRed, 0), getOrientationOrHeading(isRed, 180)),
-                new PathPlannerWaypoint(P6, getOrientationOrHeading(isRed, 0), getOrientationOrHeading(isRed, 180)),
-                new PathPlannerWaypoint(P5M, getOrientationOrHeading(isRed, 0), getOrientationOrHeading(isRed, 180)),
-                new PathPlannerWaypoint(P5, getOrientationOrHeading(isRed, 0), getOrientationOrHeading(isRed, 180))),
+                new PathPlannerWaypoint(P3, getOrientationOrHeading(isRed, 135), getOrientationOrHeading(isRed, 0)),
+                new PathPlannerWaypoint(P7M, getOrientationOrHeading(isRed, 180), getOrientationOrHeading(isRed, 0)),
+                new PathPlannerWaypoint(P7, getOrientationOrHeading(isRed, 180), getOrientationOrHeading(isRed, 0)),
+                new PathPlannerWaypoint(P6M, getOrientationOrHeading(isRed, 180), getOrientationOrHeading(isRed, 0)),
+                new PathPlannerWaypoint(P6, getOrientationOrHeading(isRed, 180), getOrientationOrHeading(isRed, 0)),
+                new PathPlannerWaypoint(P5M, getOrientationOrHeading(isRed, 180), getOrientationOrHeading(isRed, 0)),
+                new PathPlannerWaypoint(P5, getOrientationOrHeading(isRed, 180), getOrientationOrHeading(isRed, 0))),
                 "P3toP5");
 
         addTrajectory(
@@ -186,10 +186,8 @@ public class PathPlannerTrajectoryGenerator
                 new PathPlannerWaypoint(P5M, getOrientationOrHeading(isRed, 202.5), getOrientationOrHeading(isRed, 0)),
                 new PathPlannerWaypoint(P16, getOrientationOrHeading(isRed, 202.5), getOrientationOrHeading(isRed, 0)),
                 new PathPlannerWaypoint(P8M, getOrientationOrHeading(isRed, 135), getOrientationOrHeading(isRed, 0)),
-                new PathPlannerWaypoint(P8, getOrientationOrHeading(isRed, 180), getOrientationOrHeading(isRed, 0))),
-                
-                
-                "P3toP5");
+                new PathPlannerWaypoint(P8, getOrientationOrHeading(isRed, 180), getOrientationOrHeading(isRed, 0))),                
+                "P2toP8");
     
     }
 

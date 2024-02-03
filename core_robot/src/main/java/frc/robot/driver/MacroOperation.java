@@ -26,5 +26,6 @@ public enum MacroOperation implements IOperation
     HighCubeDrop,
     WristStowed,
     SubstationPickup,
-    GroundPickup,
+    GroundPickup, 
+    Test2024,
 }

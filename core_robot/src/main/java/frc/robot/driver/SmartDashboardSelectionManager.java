@@ -22,7 +22,8 @@ public class SmartDashboardSelectionManager
     {
         None,
         PlaceDriveBack,
-        Place
+        Place, 
+        Test2024
     }
 
     /**

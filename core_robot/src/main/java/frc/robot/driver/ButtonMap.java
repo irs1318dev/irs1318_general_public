@@ -35,6 +35,9 @@ public class ButtonMap implements IButtonMap
         //     UserInputDeviceButton.XBONE_LEFT_BUTTON),
     };
 
+    static double framePreremetere = 34; //With bumpers
+    static double halfFramePreremetere = framePreremetere / 2.0;
+
     public static AnalogOperationDescription[] AnalogOperationSchema = new AnalogOperationDescription[]
     {
         new AnalogOperationDescription(
@@ -395,16 +398,77 @@ public class ButtonMap implements IButtonMap
                 AnalogOperation.WristSetAngle
             }),
 
+        // new MacroOperationDescription(
+        //     MacroOperation.FollowPathTest1,
+        //     UserInputDevice.Test1,
+        //     0,
+        //     EnumSet.of(Shift.Test1Debug),
+        //     EnumSet.noneOf(Shift.class),
+        //     ButtonType.Toggle,
+        //     () -> SequentialTask.Sequence(
+        //         new FollowPathTask("goLeft32inForward18in", Type.RobotRelativeFromCurrentPose)
+        //     ),
+        //     new IOperation[]
+        //     {
+        //         DigitalOperation.PositionResetFieldOrientation,
+        //         DigitalOperation.PositionResetRobotLevel,
+        //         AnalogOperation.PositionStartingAngle,
+        //         DigitalOperation.DriveTrainResetXYPosition,
+        //         DigitalOperation.DriveTrainEnableMaintainDirectionMode,
+        //         AnalogOperation.DriveTrainStartingXPosition,
+        //         AnalogOperation.DriveTrainStartingYPosition,
+        //         AnalogOperation.DriveTrainMoveForward,
+        //         AnalogOperation.DriveTrainMoveRight,
+        //         AnalogOperation.DriveTrainTurnAngleGoal,
+        //         AnalogOperation.DriveTrainSpinLeft,
+        //         AnalogOperation.DriveTrainSpinRight,
+        //         AnalogOperation.DriveTrainRotationA,
+        //         AnalogOperation.DriveTrainRotationB,
+        //         AnalogOperation.DriveTrainPathXGoal,
+        //         AnalogOperation.DriveTrainPathYGoal,
+        //         AnalogOperation.DriveTrainPathXVelocityGoal,
+        //         AnalogOperation.DriveTrainPathYVelocityGoal,
+        //         AnalogOperation.DriveTrainPathAngleVelocityGoal,
+        //         AnalogOperation.DriveTrainPositionDrive1,
+        //         AnalogOperation.DriveTrainPositionDrive2,
+        //         AnalogOperation.DriveTrainPositionDrive3,
+        //         AnalogOperation.DriveTrainPositionDrive4,
+        //         AnalogOperation.DriveTrainPositionSteer1,
+        //         AnalogOperation.DriveTrainPositionSteer2,
+        //         AnalogOperation.DriveTrainPositionSteer3,
+        //         AnalogOperation.DriveTrainPositionSteer4,
+        //         DigitalOperation.DriveTrainSteerMode,
+        //         DigitalOperation.DriveTrainMaintainPositionMode,
+        //         DigitalOperation.DriveTrainPathMode,
+        //         DigitalOperation.DriveTrainReset,
+        //         DigitalOperation.DriveTrainEnableFieldOrientation,
+        //         DigitalOperation.DriveTrainDisableFieldOrientation,
+        //         DigitalOperation.DriveTrainUseRobotOrientation,
+        //         DigitalOperation.VisionDisableStream,
+        //         DigitalOperation.VisionEnableAprilTagProcessing,
+        //         DigitalOperation.VisionForceDisable,
+        //     }),
+
+
         new MacroOperationDescription(
-            MacroOperation.FollowPathTest1,
+            MacroOperation.Test2024,
             UserInputDevice.Test1,
-            0,
+            UserInputDeviceButton.XBONE_SELECT_BUTTON,
             EnumSet.of(Shift.Test1Debug),
             EnumSet.noneOf(Shift.class),
             ButtonType.Toggle,
             () -> SequentialTask.Sequence(
-                new FollowPathTask("goLeft32inForward18in", Type.RobotRelativeFromCurrentPose)
-            ),
+                ConcurrentTask.AllTasks(
+                    new ResetLevelTask(),
+                    new PositionStartingTask(
+                        // Change tour x - axis value based on is red
+                        250.5 + halfFramePreremetere,
+                        306 - halfFramePreremetere,
+                        0.0,
+                        true,
+                        true)),
+                
+                new FollowPathTask("P3toP5", Type.Absolute)),
             new IOperation[]
             {
                 DigitalOperation.PositionResetFieldOrientation,

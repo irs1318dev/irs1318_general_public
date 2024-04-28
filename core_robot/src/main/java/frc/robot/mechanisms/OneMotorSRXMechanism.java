@@ -120,7 +120,7 @@ public class OneMotorSRXMechanism implements IMechanism
     }
 
     @Override
-    public void update()
+    public void update(RobotMode mode)
     {
         double setpoint = this.driver.getAnalog(AnalogOperation.OneMotorPower);
 

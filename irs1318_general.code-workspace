@@ -4,7 +4,13 @@
 			"path": "core_robot"
 		},
 		{
-			"path": "fauxbot_ui"
+			"path": "fauxbot_common"
+		},
+		{
+			"path": "fauxbot_core"
+		},
+		{
+			"path": "fauxbot_desktop"
 		},
 		{
 			"path": "robot_roborio"
@@ -23,13 +29,13 @@
 		"configurations": [
 			{
 				"type": "java",
-				"name": "Fauxbot Debug",
+				"name": "Fauxbot libGDX Debug",
 				"request": "launch",
 				"console": "internalConsole",
 				"stopOnEntry": false,
-				"mainClass": "Fauxbot",
+				"mainClass": "DesktopLauncher",
 				"args": "",
-				"projectName": "fauxbot_ui"
+				"projectName": "fauxbot_desktop"
 			}
 		]
 	}

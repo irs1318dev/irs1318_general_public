@@ -166,7 +166,7 @@ public class OneMotorSparkMechanism implements IMechanism
     }
 
     @Override
-    public void update()
+    public void update(RobotMode mode)
     {
         double currTime = this.timer.get();
         double deltaT = currTime - this.prevTime;

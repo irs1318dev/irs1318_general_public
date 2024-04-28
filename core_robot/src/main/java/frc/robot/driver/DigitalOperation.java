@@ -9,14 +9,15 @@ public enum DigitalOperation implements IOperation
 
     // Driver interaction operations
     ForceLightDriverRumble,
-    ForcePurpleStrobe,
-    ForceRainbow,
 
     // Vision operations:
     VisionForceDisable,
-    VisionDisableStream,
-    VisionEnableAprilTagProcessing,
-    VisionEnableRetroreflectiveProcessing,
+    VisionEnableStream,
+    VisionFindSpecificAprilTagRear,
+    VisionFindSpecificAprilTagFront,
+    VisionFindAnyAprilTagRear,
+    VisionFindAnyAprilTagFront,
+    VisionFindAbsolutePosition,
 
     // Compressor operations:
     CompressorForceDisable,

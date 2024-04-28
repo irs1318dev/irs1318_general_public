@@ -3,13 +3,13 @@ package frc.lib.robotprovider;
 public interface ITalonFX extends ITalonXBase
 {
     void set(double value);
-
+    void set(double value, double feedForward);
     void set(TalonFXControlMode mode, double value);
-
     void set(TalonFXControlMode mode, int slotId, double value);
+    void set(TalonFXControlMode mode, double value, double feedForward);
+    void set(TalonFXControlMode mode, int slotId, double value, double feedForward);
 
     void follow(ITalonFX talonFX);
-
     void follow(ITalonFX talonFX, boolean invertDirection);
 
     void setControlMode(TalonFXControlMode mode);
@@ -19,8 +19,10 @@ public interface ITalonFX extends ITalonXBase
     void setRemoteSensor(int sensorId, double ratio);
 
     void setFeedbackUpdateRate(double frequencyHz);
-
     void setErrorUpdateRate(double frequencyHz);
+    void setForwardLimitSwitchUpdateRate(double frequencyHz);
+    void setReverseLimitSwitchUpdateRate(double frequencyHz);
+    void optimizeCanbus();
 
     void setSelectedSlot(int slotId);
 
@@ -46,7 +48,10 @@ public interface ITalonFX extends ITalonXBase
     double getPosition();
     double getVelocity();
     double getError();
+    boolean getForwardLimitSwitchClosed();
+    boolean getReverseLimitSwitchClosed();
     TalonXLimitSwitchStatus getLimitSwitchStatus();
 
-    void setSupplyCurrentLimit(boolean enabled, double currentLimit, double triggerThresholdCurrent, double triggerThresholdTime);
+    void setCurrentLimit(boolean enabled, double currentLimit, double triggerThresholdCurrent, double triggerThresholdTime);
+    void setCurrentLimit(boolean enabled, double currentLimit, double triggerThresholdCurrent, double triggerThresholdTime, boolean statorLimiting, double statorCurrentLimit);
 }

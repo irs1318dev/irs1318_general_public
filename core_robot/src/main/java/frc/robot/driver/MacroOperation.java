@@ -11,6 +11,9 @@ public enum MacroOperation implements IOperation
     PIDHeavyBrake,
     FaceForward,
     FaceBackward,
+    FaceLeft,
+    FaceRight,
+    FaceSomething,
 
     // Vision operations
 

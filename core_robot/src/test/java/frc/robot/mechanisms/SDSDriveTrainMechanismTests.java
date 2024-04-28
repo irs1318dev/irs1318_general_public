@@ -22,7 +22,7 @@ import frc.robot.driver.DigitalOperation;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-// import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Test;
 
 public class SDSDriveTrainMechanismTests
 {
@@ -44,7 +44,7 @@ public class SDSDriveTrainMechanismTests
             HardwareConstants.SDSDRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE, // module 4 (back-right)
         };
 
-    // @Test
+    @Test
     public void testStill()
     {
         TestProvider provider = new TestProvider();
@@ -297,7 +297,7 @@ public class SDSDriveTrainMechanismTests
         assertEquals(0.0, pose.y, 0.5);
     }
 
-    // @Test
+    @Test
     public void testTwist1Rad()
     {
         TestProvider provider = new TestProvider();
@@ -520,6 +520,18 @@ public class SDSDriveTrainMechanismTests
         }
 
         @Override
+        public boolean getForwardLimitSwitchClosed()
+        {
+            return false;
+        }
+
+        @Override
+        public boolean getReverseLimitSwitchClosed()
+        {
+            return false;
+        }
+
+        @Override
         public TalonXLimitSwitchStatus getLimitSwitchStatus()
         {
             return null;
@@ -532,7 +544,19 @@ public class SDSDriveTrainMechanismTests
         }
 
         @Override
+        public void set(double value, double feedForward)
+        {
+            this.currentValue = value;
+        }
+
+        @Override
         public void set(TalonFXControlMode mode, double value)
+        {
+            this.currentValue = value;
+        }
+
+        @Override
+        public void set(TalonFXControlMode mode, double value, double feedForward)
         {
             this.currentValue = value;
         }
@@ -544,7 +568,18 @@ public class SDSDriveTrainMechanismTests
         }
 
         @Override
-        public void setSupplyCurrentLimit(boolean enabled, double currentLimit, double triggerThresholdCurrent, double triggerThresholdTime)
+        public void set(TalonFXControlMode mode, int slotId, double value, double feedForward)
+        {
+            this.currentValue = value;
+        }
+
+        @Override
+        public void setCurrentLimit(boolean enabled, double currentLimit, double triggerThresholdCurrent, double triggerThresholdTime)
+        {
+        }
+
+        @Override
+        public void setCurrentLimit(boolean enabled, double currentLimit, double triggerThresholdCurrent, double triggerThresholdTime, boolean statorLimiting, double statorCurrentLimit)
         {
         }
 
@@ -580,6 +615,21 @@ public class SDSDriveTrainMechanismTests
 
         @Override
         public void setErrorUpdateRate(double frequencyHz)
+        {
+        }
+
+        @Override
+        public void setForwardLimitSwitchUpdateRate(double frequencyHz)
+        {
+        }
+
+        @Override
+        public void setReverseLimitSwitchUpdateRate(double frequencyHz)
+        {
+        }
+
+        @Override
+        public void optimizeCanbus()
         {
         }
 

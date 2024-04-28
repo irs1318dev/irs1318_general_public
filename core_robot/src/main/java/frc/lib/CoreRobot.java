@@ -43,7 +43,11 @@ public class CoreRobot<T extends AbstractModule>
     private ITimer timer;
     private boolean timerStarted;
 
+    private RobotMode currentMode;
     private int loggerUpdates;
+
+    private int disabledCount;
+    private boolean completedCostlyTasks;
 
     public CoreRobot(T module)
     {
@@ -75,6 +79,8 @@ public class CoreRobot<T extends AbstractModule>
 
         // reset number of logger updates
         this.loggerUpdates = 0;
+
+        this.completedCostlyTasks = false;
     }
 
     /**
@@ -83,6 +89,8 @@ public class CoreRobot<T extends AbstractModule>
      */
     public void disabledInit()
     {
+        this.currentMode = RobotMode.Disabled;
+
         this.timer.stop();
         this.timer.reset();
         this.timerStarted = false;
@@ -100,6 +108,7 @@ public class CoreRobot<T extends AbstractModule>
         this.logger.logString(LoggingKey.RobotState, "Disabled");
         this.logger.update();
         this.logger.flush();
+        this.disabledCount = 0;
     }
 
     /**
@@ -145,6 +154,67 @@ public class CoreRobot<T extends AbstractModule>
      */
     public void disabledPeriodic()
     {
+        if (!TuningConstants.LOG_NULL_WHILE_DISABLED)
+        {
+            return;
+        }
+
+        this.disabledCount++;
+        if ((this.disabledCount % 500) == 0)
+        {
+            if (!this.completedCostlyTasks)
+            {
+                if (TuningConstants.PERFORM_COSTLY_TASKS_WHILE_DISABLED)
+                {
+                    // perform costly tasks here
+                }
+
+                this.completedCostlyTasks = true;
+            }
+
+            this.disabledCount = 0;
+        }
+
+        for (LoggingKey key : LoggingKey.values())
+        {
+            if (key == LoggingKey.RobotState)
+            {
+                this.logger.logString(LoggingKey.RobotState, "Disabled");
+            }
+
+            switch (key.type)
+            {
+                case Boolean:
+                    this.logger.logBoolean(key, false);
+                    break;
+
+                case Integer:
+                    this.logger.logInteger(key, 0);
+                    break;
+
+                case NullableInteger:
+                    this.logger.logInteger(key, null);
+                    break;
+
+                case Number:
+                    this.logger.logNumber(key, 0.0);
+                    break;
+
+                case NullableNumber:
+                    this.logger.logNumber(key, null);
+                    break;
+
+                case String:
+                    this.logger.logString(key, "");
+                    break;
+
+                default:
+                    // skip
+                    break;
+            }
+        }
+
+        this.logger.update();
     }
 
     /**
@@ -204,6 +274,7 @@ public class CoreRobot<T extends AbstractModule>
     {
         try
         {
+            this.currentMode = robotMode;
             this.driver.startMode(robotMode);
 
             Injector injector = this.getInjector();
@@ -245,7 +316,7 @@ public class CoreRobot<T extends AbstractModule>
             this.driver.update();
 
             // run each mechanism
-            this.mechanisms.update();
+            this.mechanisms.update(this.currentMode);
 
             this.logger.logNumber(LoggingKey.RobotTime, this.timer.get());
             this.logger.update();

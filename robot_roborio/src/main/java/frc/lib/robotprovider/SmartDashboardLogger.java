@@ -1,5 +1,6 @@
 package frc.lib.robotprovider;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,6 +14,8 @@ import frc.robot.LoggingKey;
 public class SmartDashboardLogger implements ISmartDashboardLogger
 {
     private int loggingCounter;
+
+    @Inject
     public SmartDashboardLogger()
     {
         this.loggingCounter = 0;
@@ -139,7 +142,14 @@ public class SmartDashboardLogger implements ISmartDashboardLogger
     {
         if ((this.loggingCounter % key.loggingFrequency) == 0)
         {
-            if (SmartDashboard.getString(key.value, null) != value)
+            if (value == null)
+            {
+                value = "";
+            }
+
+            String currValue = SmartDashboard.getString(key.value, "");
+            if ((value != null && currValue != null && !currValue.equals(value)) ||
+                (value != null) != (currValue != null))
             {
                 SmartDashboard.putString(key.value, value);
             }

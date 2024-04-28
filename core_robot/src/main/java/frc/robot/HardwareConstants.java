@@ -1,5 +1,7 @@
 package frc.robot;
 
+import frc.lib.helpers.Helpers;
+
 /**
  * All constants describing the physical structure of the robot (distances and sizes of things).
  * 
@@ -8,10 +10,12 @@ package frc.robot;
  */
 public class HardwareConstants
 {
-    public static final double MAX_ROBOT_HEIGHT = 78.0; // inches, max overall height
-    public static final double MAX_ROBOT_EXTENSION = 48.0; // inches, max extension beyond frame perimeter
+    public static final double MAX_ROBOT_HEIGHT = 45.5;//44.75; // inches, max overall height
+    public static final double MAX_ROBOT_EXTENSION = 10.0;//9.75; // inches, max extension beyond frame perimeter
+    public static final double ROBOT_FRAME_DIMENSION = 28.0; // frame perimeter / 4.0
+    public static final double ROBOT_HALF_FRAME_PERIMETER = 17.0; // "half frame dimension" + 3.0"
 
-    //================================================== DriveTrain ==============================================================
+    //================================================== SDS DriveTrain ==============================================================
 
     public static final boolean SDSDRIVETRAIN_STEER_MOTOR1_INVERT = true;
     public static final boolean SDSDRIVETRAIN_STEER_MOTOR2_INVERT = true;
@@ -29,7 +33,7 @@ public class HardwareConstants
     public static final double SDSDRIVETRAIN_STEER_TICKS_PER_DEGREE = HardwareConstants.SDSDRIVETRAIN_STEER_GEAR_RATIO / HardwareConstants.SDSDRIVETRAIN_STEER_DEGREES; // in rotations
 
     public static final double SDSDRIVETRAIN_DRIVE_GEAR_RATIO = 36000.0 / 5880; // According to SDS Mk4i Very Fast code: (50.0 / 14.0) * (16.0 / 28.0) * (45.0 / 15.0) == ~6.12 : 1
-    public static final double SDSDRIVETRAIN_DRIVE_WHEEL_DIAMETER = 3.725; // SDS Mk4i code claims their 4-inch wheels are actually 3.95 inches now (in inches) We think its 3.95 - main 3.97
+    public static final double SDSDRIVETRAIN_DRIVE_WHEEL_DIAMETER = 3.95; // SDS Mk4i code claims their 4-inch wheels are actually 3.95 inches now (in inches) We think its 3.95 - main 3.97
     public static final double SDSDRIVETRAIN_DRIVE_WHEEL_CIRCUMFERENCE = Math.PI * HardwareConstants.SDSDRIVETRAIN_DRIVE_WHEEL_DIAMETER;
     public static final double SDSDRIVETRAIN_DRIVE_TICK_DISTANCE = HardwareConstants.SDSDRIVETRAIN_DRIVE_WHEEL_CIRCUMFERENCE / HardwareConstants.SDSDRIVETRAIN_DRIVE_GEAR_RATIO;
     public static final double SDSDRIVETRAIN_DRIVE_TICKS_PER_INCH = HardwareConstants.SDSDRIVETRAIN_DRIVE_GEAR_RATIO / HardwareConstants.SDSDRIVETRAIN_DRIVE_WHEEL_CIRCUMFERENCE;
@@ -38,10 +42,12 @@ public class HardwareConstants
 
     public static final double SDSDRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE = 22.75; // (in inches) 35" side-to-side with bumpers
     public static final double SDSDRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE = 22.75; // (in inches) 38" front-to-back with bumpers
+    public static final double SDSDRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE_INV = 1.0 / HardwareConstants.SDSDRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE; // inverse of the horizontal wheel separation
+    public static final double SDSDRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE_INV = 1.0 / HardwareConstants.SDSDRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE; // inverse of the vertical wheel separation
     public static final double SDSDRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE = HardwareConstants.SDSDRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE / 2.0; // (in inches)
     public static final double SDSDRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE = HardwareConstants.SDSDRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE / 2.0; // (in inches)
 
-    //================================================== DriveTrainNeo ==============================================================
+    //================================================== REV DriveTrain ==============================================================
 
     public static final boolean REVDRIVETRAIN_STEER_MOTOR1_INVERT_OUTPUT = false;
     public static final boolean REVDRIVETRAIN_STEER_MOTOR2_INVERT_OUTPUT = false;
@@ -80,6 +86,8 @@ public class HardwareConstants
 
     public static final double REVDRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE = 22.75; // (in inches) 35" side-to-side with bumpers
     public static final double REVDRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE = 22.75; // (in inches) 38" front-to-back with bumpers
+    public static final double REVDRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE_INV = 1.0 / HardwareConstants.REVDRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE; // (in inches) 35" side-to-side with bumpers
+    public static final double REVDRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE_INV = 1.0 / HardwareConstants.REVDRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE; // (in inches) 38" front-to-back with bumpers
     public static final double REVDRIVETRAIN_HORIZONTAL_WHEEL_CENTER_DISTANCE = HardwareConstants.REVDRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE / 2.0; // (in inches)
     public static final double REVDRIVETRAIN_VERTICAL_WHEEL_CENTER_DISTANCE = HardwareConstants.REVDRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE / 2.0; // (in inches)
 }

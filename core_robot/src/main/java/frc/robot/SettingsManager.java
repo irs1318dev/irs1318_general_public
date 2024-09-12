@@ -15,10 +15,12 @@ public class SettingsManager
     {
         List<IMechanism> mechanismList = new ArrayList<IMechanism>();
         mechanismList.add(injector.getInstance(PowerManager.class));
-        // mechanismList.add(injector.getInstance(CompressorMechanism.class));
+        mechanismList.add(injector.getInstance(CompressorMechanism.class));
         // mechanismList.add(injector.getInstance(PigeonManager.class)); // PigeonManager/NavxManager should come before DriveTrainMechanism
-        // mechanismList.add(injector.getInstance(OffboardVisionManager.class));
-        // mechanismList.add(injector.getInstance(SDSDriveTrainMechanism.class));
+        mechanismList.add(injector.getInstance(SimpleTankDriveTrainMechanism.class));
+        mechanismList.add(injector.getInstance(StingerMechanism.class));
+        mechanismList.add(injector.getInstance(IntakeMechanism.class));
+        mechanismList.add(injector.getInstance(ShooterMechanism.class));
         // mechanismList.add(injector.getInstance(DriverFeedbackManager.class)); // DriverFeedbackManager should always be the last mechanism on the list
         return mechanismList;
     }

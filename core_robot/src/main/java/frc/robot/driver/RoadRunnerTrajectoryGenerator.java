@@ -14,17 +14,16 @@ import frc.robot.TuningConstants;
 public class RoadRunnerTrajectoryGenerator
 {
     private static final TrajectoryVelocityConstraint velocityConstraint =
-        new MinVelocityConstraint(
-            Arrays.asList(
-                new SwerveVelocityConstraint(
-                    TuningConstants.SDSDRIVETRAIN_MAX_MODULE_PATH_VELOCITY,
-                    HardwareConstants.SDSDRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE,
-                    HardwareConstants.SDSDRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE),
-                new AngularVelocityConstraint(TuningConstants.SDSDRIVETRAIN_MAX_PATH_TURN_VELOCITY * Helpers.DEGREES_TO_RADIANS),
-                new TranslationalVelocityConstraint(TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY)));
+            new MinVelocityConstraint(
+                Arrays.asList(
+                    new TankVelocityConstraint(
+                        TuningConstants.TANK_DRIVETRAIN_PATH_MAX_VELOCITY_INCHES_PER_SECOND,
+                        HardwareConstants.TANK_DRIVETRAIN_WHEEL_SEPARATION_DISTANCE),
+                    new AngularVelocityConstraint(TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TURN_VELOCITY * Helpers.DEGREES_TO_RADIANS),
+                    new TranslationalVelocityConstraint(TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY)));
 
     private static final TrajectoryAccelerationConstraint accelerationConstraint =
-            new ProfileAccelerationConstraint(TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION);
+            new ProfileAccelerationConstraint(TuningConstants.TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION);
 
     public static void main(String[] args)
     {

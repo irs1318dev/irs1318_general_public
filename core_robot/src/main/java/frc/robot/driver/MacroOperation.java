@@ -7,13 +7,22 @@ public enum MacroOperation implements IOperation
     AutonomousRoutine,
 
     // DriveTrain operations:
-    PIDLightBrake,
-    PIDHeavyBrake,
+    PIDBrake,
     FaceForward,
     FaceBackward,
     FaceLeft,
     FaceRight,
     FaceSomething,
+
+    // Intake operations
+    IntakeIn,
+    IntakeOut,
+
+    // Shooter operations
+    SpinClose,
+    SpinMiddle,
+    SpinFar,
+    Shoot,
 
     // Vision operations
 

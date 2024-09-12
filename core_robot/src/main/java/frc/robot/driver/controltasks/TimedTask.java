@@ -1,6 +1,6 @@
 package frc.robot.driver.controltasks;
 
-import frc.lib.robotprovider.ITimer;
+import frc.robot.common.robotprovider.ITimer;
 
 /**
  * Abstract class defining a task that lasts only for a certain duration.

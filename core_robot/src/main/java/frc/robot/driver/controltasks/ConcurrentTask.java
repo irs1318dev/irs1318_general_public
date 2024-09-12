@@ -1,12 +1,10 @@
 package frc.robot.driver.controltasks;
 
-import java.util.EnumMap;
+import java.util.Map;
 
-import frc.lib.driver.IControlTask;
-import frc.lib.driver.states.AnalogOperationState;
-import frc.lib.driver.states.DigitalOperationState;
-import frc.robot.driver.AnalogOperation;
-import frc.robot.driver.DigitalOperation;
+import frc.robot.driver.IOperation;
+import frc.robot.driver.common.IControlTask;
+import frc.robot.driver.common.states.OperationState;
 
 import com.google.inject.Injector;
 
@@ -45,23 +43,16 @@ public class ConcurrentTask extends ControlTaskBase
 
     /**
      * Initialize the task with the mapping of operations to states
-     * @param analogOperationStateMap indicating the mapping of an analog operation to its current state
-     * @param digitalOperationStateMap indicating the mapping of a digital operation to its current state
-     * @param injector used to retrieve components to utilize for making any decisions
+     * @param operationStateMap indicating the mapping of an operation to its current state
+     * @param injector used to retrieve the components to utilize for making any decisions
      */
     @Override
-    public void initialize(
-        EnumMap<AnalogOperation, AnalogOperationState> analogOperationStateMap,
-        EnumMap<DigitalOperation, DigitalOperationState> digitalOperationStateMap,
-        Injector injector)
+    public void initialize(Map<IOperation, OperationState> operationStateMap, Injector injector)
     {
-        super.initialize(analogOperationStateMap, digitalOperationStateMap, injector);
+        super.initialize(operationStateMap, injector);
         for (IControlTask task : this.tasks)
         {
-            if (task != null)
-            {
-                task.initialize(analogOperationStateMap, digitalOperationStateMap, injector);
-            }
+            task.initialize(operationStateMap, injector);
         }
     }
 
@@ -93,10 +84,7 @@ public class ConcurrentTask extends ControlTaskBase
     {
         for (IControlTask task : this.tasks)
         {
-            if (task != null)
-            {
-                task.begin();
-            }
+            task.begin();
         }
     }
 
@@ -113,27 +101,20 @@ public class ConcurrentTask extends ControlTaskBase
                 continue;
             }
 
-            IControlTask task = this.tasks[i];
-            if (task == null)
+            if (this.tasks[i].hasCompleted())
             {
                 this.completedTasks[i] = true;
+                this.tasks[i].end();
                 continue;
             }
 
-            if (task.hasCompleted())
-            {
-                this.completedTasks[i] = true;
-                task.end();
-                continue;
-            }
-
-            if (task.shouldCancel())
+            if (this.tasks[i].shouldCancel())
             {
                 this.shouldCancelTasks = true;
                 continue;
             }
 
-            task.update();
+            this.tasks[i].update();
         }
     }
 
@@ -147,11 +128,7 @@ public class ConcurrentTask extends ControlTaskBase
         {
             if (!this.completedTasks[i])
             {
-                IControlTask task = this.tasks[i];
-                if (task != null)
-                {
-                    task.end();
-                }
+                this.tasks[i].end();
             }
         }
     }

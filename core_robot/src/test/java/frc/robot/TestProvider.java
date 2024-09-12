@@ -4,7 +4,7 @@ import static org.mockito.Mockito.mock;
 
 import java.util.HashMap;
 
-import frc.lib.robotprovider.*;
+import frc.robot.common.robotprovider.*;
 
 public class TestProvider implements IRobotProvider
 {
@@ -15,7 +15,6 @@ public class TestProvider implements IRobotProvider
     private HashMap<Integer, IDigitalInput> digitalInputMap = new HashMap<Integer, IDigitalInput>();
     private HashMap<Integer, IDigitalOutput> digitalOutputMap = new HashMap<Integer, IDigitalOutput>();
     private HashMap<Integer, ICounter> counterMap = new HashMap<Integer, ICounter>();
-    private HashMap<Integer, IDutyCycleEncoder> dutyCycleEncoderMap = new HashMap<Integer, IDutyCycleEncoder>();
     private HashMap<Integer, IDutyCycle> dutyCycleMap = new HashMap<Integer, IDutyCycle>();
     private HashMap<Integer, ITalonSRX> talonSrxMap = new HashMap<Integer, ITalonSRX>();
     private HashMap<Integer, ITalonFX> talonFxMap = new HashMap<Integer, ITalonFX>();
@@ -85,17 +84,6 @@ public class TestProvider implements IRobotProvider
         }
 
         return this.dutyCycleMap.get(channel);
-    }
-
-    @Override
-    public IDutyCycleEncoder getDutyCycleEncoder(int channel)
-    {
-        if (!this.dutyCycleEncoderMap.containsKey(channel))
-        {
-            this.dutyCycleEncoderMap.put(channel, mock(IDutyCycleEncoder.class));
-        }
-
-        return this.dutyCycleEncoderMap.get(channel);
     }
 
     @Override
@@ -357,6 +345,19 @@ public class TestProvider implements IRobotProvider
     {
         return mock(ICANdle.class);
     }
+
+    @Override
+    public IVideoStream getMJPEGStream(String name, int width, int height)
+    {
+        return null;
+    }
+
+    @Override
+    public IUsbCamera getUsbCamera(String name, int dev)
+    {
+        return null;
+    }
+
     @Override
     public IDriverStation getDriverStation()
     {
@@ -364,13 +365,13 @@ public class TestProvider implements IRobotProvider
     }
 
     @Override
-    public INetworkTableProvider getNetworkTableProvider()
+    public IOpenCVProvider getOpenCVProvider()
     {
         return null;
     }
 
     @Override
-    public IPathPlanner getPathPlanner()
+    public INetworkTableProvider getNetworkTableProvider()
     {
         return null;
     }

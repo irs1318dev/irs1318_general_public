@@ -11,7 +11,7 @@ public class CompressorDisableTask extends CompositeOperationTask
 
     public CompressorDisableTask()
     {
-        super(DigitalOperation.CompressorForceDisable, CompressorDisableTask.possibleOperations);
+        super(1.0, DigitalOperation.CompressorForceDisable, CompressorDisableTask.possibleOperations);
     }
 
     @Override

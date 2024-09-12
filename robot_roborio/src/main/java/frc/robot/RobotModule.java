@@ -2,10 +2,10 @@ package frc.robot;
 
 import javax.inject.Singleton;
 
-import frc.lib.driver.*;
-import frc.lib.mechanisms.MechanismManager;
-import frc.lib.robotprovider.*;
+import frc.robot.common.*;
+import frc.robot.common.robotprovider.*;
 import frc.robot.driver.*;
+import frc.robot.driver.common.*;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
@@ -20,16 +20,8 @@ public class RobotModule extends AbstractModule
         this.bind(IRobotProvider.class).to(RobotProvider.class);
         this.bind(ITimer.class).to(TimerWrapper.class);
         this.bind(IButtonMap.class).to(ButtonMap.class);
+        this.bind(ISmartDashboardLogger.class).to(SmartDashboardLogger.class);
         this.bind(IFile.class).to(FileWrapper.class);
-
-        if (TuningConstants.USE_ADVANTAGE_KIT)
-        {
-            this.bind(ISmartDashboardLogger.class).to(AdvantageKitLogger.class);
-        }
-        else
-        {
-            this.bind(ISmartDashboardLogger.class).to(SmartDashboardLogger.class);
-        }
     }
 
     @Singleton

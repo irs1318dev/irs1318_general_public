@@ -1,14 +1,12 @@
 package frc.robot.driver.controltasks;
 
-import java.util.EnumMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 
-import frc.lib.driver.IControlTask;
-import frc.lib.driver.states.AnalogOperationState;
-import frc.lib.driver.states.DigitalOperationState;
-import frc.robot.driver.AnalogOperation;
-import frc.robot.driver.DigitalOperation;
+import frc.robot.driver.IOperation;
+import frc.robot.driver.common.IControlTask;
+import frc.robot.driver.common.states.OperationState;
 
 import com.google.inject.Injector;
 
@@ -48,34 +46,29 @@ public abstract class DecisionSequentialTask extends ControlTaskBase
 
         if (this.isInitialized)
         {
-            task.initialize(this.getAnalogOperationStateMap(), this.getDigitalOperationStateMap(), this.getInjector());
+            task.initialize(this.getOperationStateMap(), this.getInjector());
         }
     }
 
     /**
      * Extension point that will be available so that child classes can decide what to do after any given task ends
-     * @param finishedTask the task that just finished executing
      */
-    protected void finishedTask(IControlTask finishedTask)
+    protected void finishedTask()
     {
     }
 
     /**
      * Initialize the task with the mapping of operations to states
-     * @param analogOperationStateMap indicating the mapping of an analog operation to its current state
-     * @param digitalOperationStateMap indicating the mapping of a digital operation to its current state
-     * @param injector used to retrieve components to utilize for making any decisions
+     * @param operationStateMap indicating the mapping of an operation to its current state
+     * @param injector used to retrieve the components to utilize for making any decisions
      */
     @Override
-    public void initialize(
-        EnumMap<AnalogOperation, AnalogOperationState> analogOperationStateMap,
-        EnumMap<DigitalOperation, DigitalOperationState> digitalOperationStateMap,
-        Injector injector)
+    public void initialize(Map<IOperation, OperationState> operationStateMap, Injector injector)
     {
-        super.initialize(analogOperationStateMap, digitalOperationStateMap, injector);
+        super.initialize(operationStateMap, injector);
         for (IControlTask task : this.orderedTasks)
         {
-            task.initialize(analogOperationStateMap, digitalOperationStateMap, injector);
+            task.initialize(operationStateMap, injector);
         }
 
         this.isInitialized = true;
@@ -114,7 +107,7 @@ public abstract class DecisionSequentialTask extends ControlTaskBase
             if (this.currentTask.hasCompleted())
             {
                 this.currentTask.end();
-                this.finishedTask(this.currentTask);
+                this.finishedTask();
                 this.currentTask = null;
             }
             else if (this.currentTask.shouldCancel())

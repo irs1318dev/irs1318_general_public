@@ -1,7 +1,7 @@
 package frc.robot;
 
-import frc.lib.robotprovider.PneumaticsModuleType;
-import frc.lib.robotprovider.PowerDistributionModuleType;
+import frc.robot.common.robotprovider.PneumaticsModuleType;
+import frc.robot.common.robotprovider.PowerDistributionModuleType;
 
 /**
  * All constants describing how the electronics are plugged together.
@@ -32,19 +32,15 @@ public class ElectronicsConstants
     public static final boolean INVERT_THROTTLE_AXIS = true;
     public static final boolean INVERT_TRIGGER_AXIS = false;
 
-    public static final int POWER_DISTRIBUTION_CAN_ID = 1;
-    public static final PowerDistributionModuleType POWER_DISTRIBUTION_TYPE = PowerDistributionModuleType.PowerDistributionHub;
-
-    public static final double REV_THROUGHBORE_ENCODER_DUTY_CYCLE_MIN = 1.0 / 1024.0;
-    public static final double REV_THROUGHBORE_ENCODER_DUTY_CYCLE_MAX = 1023.0 / 1024.0;
+    public static final int POWER_DISTRIBUTION_CAN_ID = 0;
+    public static final PowerDistributionModuleType POWER_DISTRIBUTION_TYPE = PowerDistributionModuleType.PowerDistributionPanel;
 
     public static final String CANIVORE_NAME = "CANIVORE1"; // Module A
 
-    public static final int PNEUMATICS_MODULE_A = 1; // Module A
-    public static final PneumaticsModuleType PNEUMATICS_MODULE_TYPE_A = PneumaticsModuleType.PneumaticsHub; // Module A
-
-    public static final int PNEUMATICS_MODULE_B = 2; // Module B
-    public static final PneumaticsModuleType PNEUMATICS_MODULE_TYPE_B = PneumaticsModuleType.PneumaticsHub; // Module B
+    public static final int PNEUMATICS_MODULE_A = 0; // Module A
+    public static final PneumaticsModuleType PNEUMATICS_MODULE_TYPE_A = PneumaticsModuleType.PneumaticsControlModule; // Module A
+    public static final int PNEUMATICS_MODULE_B = 1; // Module B
+    public static final PneumaticsModuleType PNEUMATICS_MODULE_TYPE_B = PneumaticsModuleType.PneumaticsControlModule; // Module B
 
     public static final boolean PNEUMATICS_USE_HYBRID = false;
     public static final boolean PNEUMATICS_USE_ANALOG = false;
@@ -55,35 +51,64 @@ public class ElectronicsConstants
 
     public static final int PIGEON_IMU_CAN_ID = 0;
 
+    //================================================== Vision ==============================================================
+
+    public static final int VISION_RING_LIGHT_DIO = 0;
+
     //================================================== Indicator Lights ==============================================================
 
-    public static final int INDICATOR_LIGHT_CANDLE_CAN_ID = 55;
+    public static final int INDICATOR_LIGHT_X_DIO = -1;
 
-    //================================================== SDSDriveTrain ==============================================================
+    //================================================== DriveTrain ==============================================================
 
-    public static final int SDSDRIVETRAIN_DRIVE_MOTOR_1_CAN_ID = 1;
-    public static final int SDSDRIVETRAIN_STEER_MOTOR_1_CAN_ID = 2;
-    public static final int SDSDRIVETRAIN_DRIVE_MOTOR_2_CAN_ID = 3;
-    public static final int SDSDRIVETRAIN_STEER_MOTOR_2_CAN_ID = 4;
-    public static final int SDSDRIVETRAIN_DRIVE_MOTOR_3_CAN_ID = 5;
-    public static final int SDSDRIVETRAIN_STEER_MOTOR_3_CAN_ID = 6;
-    public static final int SDSDRIVETRAIN_DRIVE_MOTOR_4_CAN_ID = 7;
-    public static final int SDSDRIVETRAIN_STEER_MOTOR_4_CAN_ID = 8;
+    public static final int DRIVETRAIN_STEER_MOTOR_1_CAN_ID = 1;
+    public static final int DRIVETRAIN_DRIVE_MOTOR_1_CAN_ID = 2;
+    public static final int DRIVETRAIN_STEER_MOTOR_2_CAN_ID = 3;
+    public static final int DRIVETRAIN_DRIVE_MOTOR_2_CAN_ID = 4;
+    public static final int DRIVETRAIN_STEER_MOTOR_3_CAN_ID = 5;
+    public static final int DRIVETRAIN_DRIVE_MOTOR_3_CAN_ID = 6;
+    public static final int DRIVETRAIN_STEER_MOTOR_4_CAN_ID = 7;
+    public static final int DRIVETRAIN_DRIVE_MOTOR_4_CAN_ID = 8;
 
-    public static final int SDSDRIVETRAIN_ABSOLUTE_ENCODER_1_CAN_ID = 1;
-    public static final int SDSDRIVETRAIN_ABSOLUTE_ENCODER_2_CAN_ID = 2;
-    public static final int SDSDRIVETRAIN_ABSOLUTE_ENCODER_3_CAN_ID = 3;
-    public static final int SDSDRIVETRAIN_ABSOLUTE_ENCODER_4_CAN_ID = 4;
+    public static final int DRIVETRAIN_ABSOLUTE_ENCODER_1_ANALOG_INPUT = 0;
+    public static final int DRIVETRAIN_ABSOLUTE_ENCODER_2_ANALOG_INPUT = 1;
+    public static final int DRIVETRAIN_ABSOLUTE_ENCODER_3_ANALOG_INPUT = 2;
+    public static final int DRIVETRAIN_ABSOLUTE_ENCODER_4_ANALOG_INPUT = 3;
 
-    //================================================== RevDriveTrain ==============================================================
+    //================================================== Intake ==============================================================
 
-    public static final int REVDRIVETRAIN_DRIVE_MOTOR_1_CAN_ID = 1;
-    public static final int REVDRIVETRAIN_STEER_MOTOR_1_CAN_ID = 2;
-    public static final int REVDRIVETRAIN_DRIVE_MOTOR_2_CAN_ID = 3;
-    public static final int REVDRIVETRAIN_STEER_MOTOR_2_CAN_ID = 4;
-    public static final int REVDRIVETRAIN_DRIVE_MOTOR_3_CAN_ID = 5;
-    public static final int REVDRIVETRAIN_STEER_MOTOR_3_CAN_ID = 6;
-    public static final int REVDRIVETRAIN_DRIVE_MOTOR_4_CAN_ID = 7;
-    public static final int REVDRIVETRAIN_STEER_MOTOR_4_CAN_ID = 8;
+    public static final int POWERCELL_INTAKE_FORWARD_PCM = 3;
+    public static final int POWERCELL_INTAKE_REVERSE_PCM = 2;
+    public static final int POWERCELL_KICKER_FORWARD_PCM = 1;
+    public static final int POWERCELL_KICKER_REVERSE_PCM = 0;
+    public static final int POWERCELL_OUTER_HOOD_FORWARD_PCM = 4;
+    public static final int POWERCELL_OUTER_HOOD_REVERSE_PCM = 5;
+    public static final int POWERCELL_INNER_HOOD_FORWARD_PCM = 6;
+    public static final int POWERCELL_INNER_HOOD_REVERSE_PCM = 7;
+
+    public static final int POWERCELL_ROLLER_MOTOR_CAN_ID = 9;
+    public static final int POWERCELL_FLYWHEEL_MASTER_CAN_ID = 10;
+    public static final int POWERCELL_FLYWHEEL_FOLLOWER_CAN_ID = 11;
+    public static final int POWERCELL_CAROUSEL_MOTOR_CAN_ID = 12;
+    public static final int POWERCELL_KICKER_MOTOR_CAN_ID = 13;
+
+    public static final int POWERCELL_CAROUSEL_COUNTER_DIO = 0;
+    public static final int POWERCELL_THROUGHBEAM_ANALOG_INPUT = 0;
+    public static final int POWERCELL_CAROUSEL_ENCODER_CHANNEL_A = 2;
+    public static final int POWERCELL_CAROUSEL_ENCODER_CHANNEL_B = 3;
+
+    //================================================== Climber ==============================================================
+
+    public static final int CLIMBER_EXTEND_FORWARD_PCM = 42;
+    public static final int CLIMBER_EXTEND_REVERSE_PCM = 43;
+    public static final int CLIMBER_GRAB_FORWARD_PCM = 44;
+    public static final int CLIMBER_GRAB_REVERSE_PCM = 45;
+
+    public static final int CLIMBER_WINCH_MASTER_CAN_ID = 14;
+
+    //================================================== Control Panel Spinner ==============================================================
+
+    public static final int CONTROLPANEL_SPINNER_CAN_ID = 15;
+    public static final int CONTROLPANEL_EXTENDER_FORWARD_PCM = 16;
+    public static final int CONTROLPANEL_EXTENDER_REVERSE_PCM = 17;
 }
-

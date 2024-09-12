@@ -1,38 +1,52 @@
 package frc.robot.driver;
 
-import frc.lib.driver.IOperation;
-
 public enum DigitalOperation implements IOperation
 {
     PositionResetFieldOrientation,
-    PositionResetRobotLevel,
-
-    // Driver interaction operations
-    ForceLightDriverRumble,
+    PositionBeginTemperatureCalibration,
 
     // Vision operations:
     VisionForceDisable,
-    VisionEnableStream,
-    VisionFindSpecificAprilTagRear,
-    VisionFindSpecificAprilTagFront,
-    VisionFindAnyAprilTagRear,
-    VisionFindAnyAprilTagFront,
-    VisionFindAbsolutePosition,
+    VisionDisableStream,
+    VisionEnablePowercellProcessing,
+    VisionEnableRetroreflectiveProcessing,
 
     // Compressor operations:
     CompressorForceDisable,
 
     // DriveTrain operations:
-    DriveTrainSlowMode,
     DriveTrainPathMode,
-    DriveTrainSteerMode,
-    DriveTrainMaintainPositionMode,
+    DriveTrainPositionMode,
     DriveTrainReset,
     DriveTrainEnableFieldOrientation,
     DriveTrainDisableFieldOrientation,
-    DriveTrainUseRobotOrientation,
     DriveTrainEnableMaintainDirectionMode,
     DriveTrainDisableMaintainDirectionMode,
-    DriveTrainResetXYPosition,
-    DriveTrainIgnoreSlewRateLimitingMode,
+
+    // Intake operations:
+    PowerCellIntakeExtend,
+    PowerCellIntakeRetract,
+    PowerCellIntake,
+    PowerCellOuttake,
+
+    PowerCellHoodPointBlank,
+    PowerCellHoodShort,
+    PowerCellHoodMedium,
+    PowerCellHoodLong,
+
+    PowerCellKick,
+    PowerCellKickerSpin,
+    PowerCellKickerSpinReverse,
+    PowerCellRotateCarousel,
+    PowerCellFlywheelReverse,
+
+    // Climber operations:
+    ClimberExtend,
+    ClimberRetract,
+    ClimberHookLock,
+    ClimberHookRelease,
+
+    // Control Panel
+    ControlPanelExtend,
+    ControlPanelRetract,
 }

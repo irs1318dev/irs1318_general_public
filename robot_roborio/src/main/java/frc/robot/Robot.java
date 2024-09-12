@@ -1,7 +1,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import frc.lib.CoreRobot;
 
 /**
  * Robot wraps CoreRobot to allow for the basic autonomous/teleop and switching logic to be shared between
@@ -72,16 +71,6 @@ public class Robot extends TimedRobot
     }
 
     /**
-     * Initialization code for simulation mode should go here.
-     * This code will be called each time the robot enters simulation mode.
-     */
-    @Override
-    public void simulationInit()
-    {
-        this.robot.simulationInit();
-    }
-
-    /**
      * Periodic code for disabled mode should go here.
      * This code will be called periodically at a regular rate while the robot is in disabled mode.
      */
@@ -119,15 +108,5 @@ public class Robot extends TimedRobot
     public void testPeriodic()
     {
         this.robot.testPeriodic();
-    }
-  
-    /**
-     * Periodic code for simulation mode should go here.
-     * This code will be called periodically at a regular rate while the robot is in simulation mode.
-     */
-    @Override
-    public void simulationPeriodic()
-    {
-        this.robot.simulationPeriodic();
     }
 }

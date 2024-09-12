@@ -1,6 +1,6 @@
 package frc.robot.driver.controltasks;
 
-import frc.lib.driver.IControlTask;
+import frc.robot.driver.common.IControlTask;
 
 /**
  * Task that holds multiple other tasks and executes them sequentially (in order).
@@ -18,10 +18,7 @@ public class SequentialTask extends DecisionSequentialTask
 
         for (IControlTask task : tasks)
         {
-            if (task != null)
-            {
-                this.AppendTask(task);
-            }
+            this.AppendTask(task);
         }
     }
 

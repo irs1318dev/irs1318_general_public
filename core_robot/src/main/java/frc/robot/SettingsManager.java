@@ -1,12 +1,14 @@
 package frc.robot;
 
 import java.io.IOException;
+import java.lang.Class;
+import java.lang.reflect.*;
 import java.util.*;
 
 import com.google.inject.Injector;
 
-import frc.lib.mechanisms.IMechanism;
-import frc.lib.robotprovider.*;
+import frc.robot.common.*;
+import frc.robot.common.robotprovider.*;
 import frc.robot.mechanisms.*;
 
 public class SettingsManager
@@ -14,12 +16,15 @@ public class SettingsManager
     public static List<IMechanism> getActiveMechanisms(Injector injector)
     {
         List<IMechanism> mechanismList = new ArrayList<IMechanism>();
+        // PigeonManager/NavxManager should come before DriveTrainMechanism
+        mechanismList.add(injector.getInstance(PigeonManager.class));
+        // mechanismList.add(injector.getInstance(NavxManager.class));
         mechanismList.add(injector.getInstance(PowerManager.class));
-        // mechanismList.add(injector.getInstance(CompressorMechanism.class));
-        // mechanismList.add(injector.getInstance(PigeonManager.class)); // PigeonManager/NavxManager should come before DriveTrainMechanism
-        // mechanismList.add(injector.getInstance(OffboardVisionManager.class));
-        // mechanismList.add(injector.getInstance(SDSDriveTrainMechanism.class));
-        // mechanismList.add(injector.getInstance(DriverFeedbackManager.class)); // DriverFeedbackManager should always be the last mechanism on the list
+        mechanismList.add(injector.getInstance(DriveTrainMechanism.class));
+        mechanismList.add(injector.getInstance(CompressorMechanism.class));
+        mechanismList.add(injector.getInstance(PowerCellMechanism.class));
+        mechanismList.add(injector.getInstance(OffboardVisionManager.class));
+        // mechanismList.add(injector.getInstance(IndicatorLightManager.class));
         return mechanismList;
     }
 
@@ -52,14 +57,15 @@ public class SettingsManager
         String eventName = driverStation.getEventName();
         int matchNumber = driverStation.getMatchNumber();
         int replayNumber = driverStation.getReplayNumber();
-        Optional<Alliance> alliance = driverStation.getAlliance();
-        OptionalInt location = driverStation.getLocation();
+        Alliance alliance = driverStation.getAlliance();
+        int location = driverStation.getLocation();
         IFile file;
         if (eventName == null ||
             matchType == MatchType.None ||
             matchNumber == 0 ||
-            !alliance.isPresent() ||
-            !location.isPresent())
+            alliance == Alliance.Invalid ||
+            location <= 0 ||
+            location >= 4)
         {
             if (TuningConstants.LOG_FILE_ONLY_COMPETITION_MATCHES)
             {
@@ -99,8 +105,8 @@ public class SettingsManager
                     matchType.value,
                     matchNumber,
                     replayNumber == 0 ? "" : String.format("R%1$d", replayNumber),
-                    alliance.get().value,
-                    location.getAsInt(),
+                    alliance.value,
+                    location,
                     mode.toString().toLowerCase());
 
             file.open(fileName);
@@ -116,8 +122,8 @@ public class SettingsManager
                             matchType.value,
                             matchNumber,
                             replayNumber == 0 ? "" : String.format("R%1$d", replayNumber),
-                            alliance.get().value,
-                            location.getAsInt(),
+                            alliance.value,
+                            location,
                             mode.toString().toLowerCase(),
                             i);
 
@@ -138,6 +144,89 @@ public class SettingsManager
         catch (IOException ex)
         {
             return smartDashboardLogger;
+        }
+    }
+
+    public static void initAndUpdatePreferences(IPreferences preferences, Class<?> type)
+    {
+        Field[] fields = type.getFields();
+        for (Field field : fields)
+        {
+            String fieldName = field.getName();
+            SettingType fieldType = SettingsManager.getSettingType(field.getType());
+
+            try
+            {
+                Object initialValue = field.get(null);
+
+                switch (fieldType)
+                {
+                    case Boolean:
+                        preferences.initBoolean(fieldName, (boolean)initialValue);
+                        field.set(null, preferences.getBoolean(fieldName, (boolean)initialValue));
+                        break;
+
+                    case Integer:
+                        preferences.initInt(fieldName, (int)initialValue);
+                        field.set(null, preferences.getInt(fieldName, (int)initialValue));
+                        break;
+
+                    case Long:
+                        preferences.initLong(fieldName, (long)initialValue);
+                        field.set(null, preferences.getLong(fieldName, (long)initialValue));
+                        break;
+
+                    case Double:
+                        preferences.initDouble(fieldName, (double)initialValue);
+                        field.set(null, preferences.getDouble(fieldName, (double)initialValue));
+                        break;
+
+                    case String:
+                        preferences.initString(fieldName, (String)initialValue);
+                        field.set(null, preferences.getString(fieldName, (String)initialValue));
+                        break;
+                }
+            }
+            catch (IllegalAccessException ex)
+            {
+                if (TuningConstants.THROW_EXCEPTIONS)
+                {
+                    throw new RuntimeException("Error with field " + fieldName, ex);
+                }
+            }
+        }
+    }
+
+    private static SettingType getSettingType(Class<?> valueClass)
+    {
+        for (SettingType settingType : SettingType.values())
+        {
+            if (valueClass == settingType.getSettingClass())
+            {
+                return settingType;
+            }
+        }
+
+        throw new RuntimeException("Unsupported type " + valueClass.getName());
+    }
+
+    private enum SettingType
+    {
+        Boolean(boolean.class),
+        Integer(int.class),
+        Long(long.class),
+        Double(double.class),
+        String(String.class);
+
+        private final Class<?> settingClass;
+        private SettingType(Class<?> settingClass)
+        {
+            this.settingClass = settingClass;
+        }
+
+        public Class<?> getSettingClass()
+        {
+            return this.settingClass;
         }
     }
 }

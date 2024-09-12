@@ -2,14 +2,13 @@ package frc.robot.mechanisms;
 
 import frc.robot.ElectronicsConstants;
 import frc.robot.LoggingKey;
-import frc.lib.driver.IDriver;
-import frc.lib.mechanisms.IMechanism;
-import frc.lib.mechanisms.LoggingManager;
-import frc.lib.robotprovider.ICompressor;
-import frc.lib.robotprovider.ILogger;
-import frc.lib.robotprovider.IRobotProvider;
-import frc.lib.robotprovider.RobotMode;
+import frc.robot.common.IMechanism;
+import frc.robot.common.LoggingManager;
+import frc.robot.common.robotprovider.ICompressor;
+import frc.robot.common.robotprovider.ILogger;
+import frc.robot.common.robotprovider.IRobotProvider;
 import frc.robot.driver.DigitalOperation;
+import frc.robot.driver.common.IDriver;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -54,15 +53,15 @@ public class CompressorMechanism implements IMechanism
     @Override
     public void readSensors()
     {
-        this.preassureValue = this.compressor.getPressure();
-        this.logger.logNumber(LoggingKey.CompressorPreassure, this.preassureValue);
+        this.preassureValue = 0.0; // this.compressor.getPressure();
+        // this.logger.logNumber(LoggingKey.CompressorPreassure, this.preassureValue);
     }
 
     /**
      * calculate the various outputs to use based on the inputs and apply them to the outputs for the relevant mechanism
      */
     @Override
-    public void update(RobotMode mode)
+    public void update()
     {
         if (this.driver.getDigital(DigitalOperation.CompressorForceDisable))
         {

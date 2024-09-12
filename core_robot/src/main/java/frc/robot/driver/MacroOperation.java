@@ -1,25 +1,19 @@
 package frc.robot.driver;
 
-import frc.lib.driver.IOperation;
-
 public enum MacroOperation implements IOperation
 {
     AutonomousRoutine,
 
     // DriveTrain operations:
-    PIDLightBrake,
-    PIDHeavyBrake,
-    FaceForward,
-    FaceBackward,
-    FaceLeft,
-    FaceRight,
-    FaceSomething,
+    PIDBrake,
 
-    // Vision operations
-
-    // Path testing:
-    FollowPathTest1,
-    FollowPathTest2,
-    FollowPathTest3,
-    FollowPathTest4,
+    // Testing operations
+    PowerCellFlywheelVelocity,
+    VisionCenter,
+    VisionCenterAndAdvance,
+    FollowSomePath,
+    FollowAnotherPath,
+    FollowADifferentPath,
+    ShootHopper,
+    SpinFlywheel,
 }

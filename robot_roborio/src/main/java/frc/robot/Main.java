@@ -27,13 +27,6 @@ public final class Main
      */
     public static void main(String... args)
     {
-        if (TuningConstants.USE_ADVANTAGE_KIT)
-        {
-            RobotBase.startRobot(AKRobot::new);
-        }
-        else
-        {
-            RobotBase.startRobot(Robot::new);
-        }
+        RobotBase.startRobot(Robot::new);
     }
 }

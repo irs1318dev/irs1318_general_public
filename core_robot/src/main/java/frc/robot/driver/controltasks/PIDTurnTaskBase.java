@@ -15,6 +15,8 @@ public abstract class PIDTurnTaskBase extends ControlTaskBase
 
     private final boolean useTime;
     private final boolean bestEffort;
+    private final double noAngleThreshold;
+    private final boolean keepTurningWithNoSample;
 
     private ITimer timer;
     private PIDHandler turnPidHandler;
@@ -30,13 +32,26 @@ public abstract class PIDTurnTaskBase extends ControlTaskBase
      */
     public PIDTurnTaskBase(boolean useTime, boolean bestEffort)
     {
+        this(useTime, bestEffort, PIDTurnTaskBase.NO_ANGLE_THRESHOLD, false);
+    }
+
+    /**
+     * Initializes a new PIDTurnTaskBase
+     * @param useTime whether to make sure we are centered for a second or not
+     * @param bestEffort whether to end (true) or cancel (false, default) when we cannot see the game piece or vision target (for sequential tasks, whether to continue on or not)
+     */
+    protected PIDTurnTaskBase(boolean useTime, boolean bestEffort, double noAngleThreshold, boolean keepTurningWithNoSample)
+    {
         this.useTime = useTime;
         this.bestEffort = bestEffort;
 
         this.turnPidHandler = null;
         this.centeredTime = null;
 
+        this.noAngleThreshold = noAngleThreshold;
         this.noAngleCount = 0;
+
+        this.keepTurningWithNoSample = keepTurningWithNoSample;
     }
 
     /**
@@ -51,8 +66,6 @@ public abstract class PIDTurnTaskBase extends ControlTaskBase
         {
             this.timer = this.getInjector().getInstance(ITimer.class);
         }
-
-        this.setDigitalOperationState(DigitalOperation.VisionDisableStream, false);
     }
 
     /**
@@ -95,7 +108,7 @@ public abstract class PIDTurnTaskBase extends ControlTaskBase
             {
                 this.noAngleCount++;
 
-                return this.noAngleCount >= PIDTurnTaskBase.NO_ANGLE_THRESHOLD;
+                return this.noAngleCount >= this.noAngleThreshold;
             }
 
             this.noAngleCount = 0;
@@ -155,7 +168,7 @@ public abstract class PIDTurnTaskBase extends ControlTaskBase
             this.noAngleCount = 0;
         }
 
-        return this.noAngleCount >= PIDTurnTaskBase.NO_ANGLE_THRESHOLD || super.shouldCancel();
+        return this.noAngleCount >= this.noAngleThreshold || super.shouldCancel();
     }
 
     protected abstract Double getHorizontalAngle();
@@ -163,13 +176,13 @@ public abstract class PIDTurnTaskBase extends ControlTaskBase
     protected PIDHandler createTurnHandler()
     {
         return new PIDHandler(
-            TuningConstants.STATIONARY_PID_TURNING_PID_KP,
-            TuningConstants.STATIONARY_PID_TURNING_PID_KI,
-            TuningConstants.STATIONARY_PID_TURNING_PID_KD,
-            TuningConstants.STATIONARY_PID_TURNING_PID_KF,
-            TuningConstants.STATIONARY_PID_TURNING_PID_KS,
-            TuningConstants.STATIONARY_PID_TURNING_PID_MIN,
-            TuningConstants.STATIONARY_PID_TURNING_PID_MAX,
+            TuningConstants.STATIONARY_SINGLE_TURNING_PID_KP,
+            TuningConstants.STATIONARY_SINGLE_TURNING_PID_KI,
+            TuningConstants.STATIONARY_SINGLE_TURNING_PID_KD,
+            TuningConstants.STATIONARY_SINGLE_TURNING_PID_KF,
+            TuningConstants.STATIONARY_SINGLE_TURNING_PID_KS,
+            TuningConstants.STATIONARY_SINGLE_TURNING_PID_MIN,
+            TuningConstants.STATIONARY_SINGLE_TURNING_PID_MAX,
             this.getInjector().getInstance(ITimer.class));
     }
 }

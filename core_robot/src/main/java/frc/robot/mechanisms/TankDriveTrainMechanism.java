@@ -26,6 +26,7 @@ import com.google.inject.Inject;
 public class TankDriveTrainMechanism implements IMechanism
 {
     private static final int pidSlotId = 0;
+    private static final int FRAME_PERIOD_HZ = 200;
     private static final int FRAME_PERIOD_MS = 5;
 
     private static final double POWERLEVEL_MIN = -1.0;
@@ -78,13 +79,9 @@ public class TankDriveTrainMechanism implements IMechanism
         this.timer = timer;
 
         this.leftMotor = provider.getTalonFX(ElectronicsConstants.TANK_DRIVETRAIN_LEFT_MASTER_CAN_ID);
-        this.leftMotor.setNeutralMode(MotorNeutralMode.Brake);
-        this.leftMotor.setInvertOutput(HardwareConstants.TANK_DRIVETRAIN_LEFT_MASTER_INVERT_OUTPUT);
-        this.leftMotor.setInvertSensor(HardwareConstants.TANK_DRIVETRAIN_LEFT_INVERT_SENSOR);
-        this.leftMotor.setSensorType(TalonXFeedbackDevice.IntegratedSensor);
-        this.leftMotor.setFeedbackFramePeriod(TankDriveTrainMechanism.FRAME_PERIOD_MS);
-        this.leftMotor.setPIDFFramePeriod(TankDriveTrainMechanism.FRAME_PERIOD_MS);
-        this.leftMotor.configureVelocityMeasurements(10, 32);
+        this.leftMotor.setMotorOutputSettings(HardwareConstants.TANK_DRIVETRAIN_LEFT_MASTER_INVERT_OUTPUT, MotorNeutralMode.Brake);
+        this.leftMotor.setFeedbackUpdateRate(TankDriveTrainMechanism.FRAME_PERIOD_HZ);
+        this.leftMotor.setErrorUpdateRate(TankDriveTrainMechanism.FRAME_PERIOD_HZ);
         this.leftMotor.setPIDF(
             TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_LEFT_KP,
             TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_LEFT_KI,
@@ -94,33 +91,28 @@ public class TankDriveTrainMechanism implements IMechanism
         this.leftMotor.setVoltageCompensation(
             TuningConstants.TANK_DRIVETRAIN_VOLTAGE_COMPENSATION_ENABLED,
             TuningConstants.TANK_DRIVETRAIN_VOLTAGE_COMPENSATION);
-        this.leftMotor.setSupplyCurrentLimit(
+        this.leftMotor.setCurrentLimit(
             TuningConstants.TANK_DRIVETRAIN_SUPPLY_CURRENT_LIMITING_ENABLED,
             TuningConstants.TANK_DRIVETRAIN_SUPPLY_CURRENT_MAX,
             TuningConstants.TANK_DRIVETRAIN_SUPPLY_TRIGGER_CURRENT,
             TuningConstants.TANK_DRIVETRAIN_SUPPLY_TRIGGER_DURATION);
 
         ITalonFX leftFollowerMotor1 = provider.getTalonFX(ElectronicsConstants.TANK_DRIVETRAIN_LEFT_FOLLOWER_CAN_ID);
-        leftFollowerMotor1.setNeutralMode(MotorNeutralMode.Brake);
-        leftFollowerMotor1.setInvertOutput(HardwareConstants.TANK_DRIVETRAIN_LEFT_FOLLOWER1_INVERT_OUTPUT);
+        leftFollowerMotor1.setMotorOutputSettings(HardwareConstants.TANK_DRIVETRAIN_LEFT_FOLLOWER1_INVERT_OUTPUT, MotorNeutralMode.Brake);
         leftFollowerMotor1.follow(this.leftMotor);
         leftFollowerMotor1.setVoltageCompensation(
             TuningConstants.TANK_DRIVETRAIN_VOLTAGE_COMPENSATION_ENABLED,
             TuningConstants.TANK_DRIVETRAIN_VOLTAGE_COMPENSATION);
-        leftFollowerMotor1.setSupplyCurrentLimit(
+        leftFollowerMotor1.setCurrentLimit(
             TuningConstants.TANK_DRIVETRAIN_SUPPLY_CURRENT_LIMITING_ENABLED,
             TuningConstants.TANK_DRIVETRAIN_SUPPLY_CURRENT_MAX,
             TuningConstants.TANK_DRIVETRAIN_SUPPLY_TRIGGER_CURRENT,
             TuningConstants.TANK_DRIVETRAIN_SUPPLY_TRIGGER_DURATION);
 
         this.rightMotor = provider.getTalonFX(ElectronicsConstants.TANK_DRIVETRAIN_RIGHT_MASTER_CAN_ID);
-        this.rightMotor.setNeutralMode(MotorNeutralMode.Brake);
-        this.rightMotor.setInvertOutput(HardwareConstants.TANK_DRIVETRAIN_RIGHT_MASTER_INVERT_OUTPUT);
-        this.rightMotor.setInvertSensor(HardwareConstants.TANK_DRIVETRAIN_RIGHT_INVERT_SENSOR);
-        this.rightMotor.setSensorType(TalonXFeedbackDevice.IntegratedSensor);
-        this.rightMotor.setFeedbackFramePeriod(TankDriveTrainMechanism.FRAME_PERIOD_MS);
-        this.rightMotor.setPIDFFramePeriod(TankDriveTrainMechanism.FRAME_PERIOD_MS);
-        this.rightMotor.configureVelocityMeasurements(10, 32);
+        this.rightMotor.setMotorOutputSettings(HardwareConstants.TANK_DRIVETRAIN_RIGHT_MASTER_INVERT_OUTPUT, MotorNeutralMode.Brake);
+        this.leftMotor.setFeedbackUpdateRate(TankDriveTrainMechanism.FRAME_PERIOD_HZ);
+        this.leftMotor.setErrorUpdateRate(TankDriveTrainMechanism.FRAME_PERIOD_HZ);
         this.rightMotor.setPIDF(
             TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_RIGHT_KP,
             TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_RIGHT_KI,
@@ -130,20 +122,19 @@ public class TankDriveTrainMechanism implements IMechanism
         this.rightMotor.setVoltageCompensation(
             TuningConstants.TANK_DRIVETRAIN_VOLTAGE_COMPENSATION_ENABLED,
             TuningConstants.TANK_DRIVETRAIN_VOLTAGE_COMPENSATION);
-        this.rightMotor.setSupplyCurrentLimit(
+        this.rightMotor.setCurrentLimit(
             TuningConstants.TANK_DRIVETRAIN_SUPPLY_CURRENT_LIMITING_ENABLED,
             TuningConstants.TANK_DRIVETRAIN_SUPPLY_CURRENT_MAX,
             TuningConstants.TANK_DRIVETRAIN_SUPPLY_TRIGGER_CURRENT,
             TuningConstants.TANK_DRIVETRAIN_SUPPLY_TRIGGER_DURATION);
 
         ITalonFX rightFollowerMotor1 = provider.getTalonFX(ElectronicsConstants.TANK_DRIVETRAIN_RIGHT_FOLLOWER_CAN_ID);
-        rightFollowerMotor1.setNeutralMode(MotorNeutralMode.Brake);
-        rightFollowerMotor1.setInvertOutput(HardwareConstants.TANK_DRIVETRAIN_RIGHT_FOLLOWER1_INVERT_OUTPUT);
+        rightFollowerMotor1.setMotorOutputSettings(HardwareConstants.TANK_DRIVETRAIN_RIGHT_FOLLOWER1_INVERT_OUTPUT, MotorNeutralMode.Brake);
         rightFollowerMotor1.follow(this.rightMotor);
         rightFollowerMotor1.setVoltageCompensation(
             TuningConstants.TANK_DRIVETRAIN_VOLTAGE_COMPENSATION_ENABLED,
             TuningConstants.TANK_DRIVETRAIN_VOLTAGE_COMPENSATION);
-        rightFollowerMotor1.setSupplyCurrentLimit(
+        rightFollowerMotor1.setCurrentLimit(
             TuningConstants.TANK_DRIVETRAIN_SUPPLY_CURRENT_LIMITING_ENABLED,
             TuningConstants.TANK_DRIVETRAIN_SUPPLY_CURRENT_MAX,
             TuningConstants.TANK_DRIVETRAIN_SUPPLY_TRIGGER_CURRENT,
@@ -281,7 +272,7 @@ public class TankDriveTrainMechanism implements IMechanism
      * calculate the various outputs to use based on the inputs and apply them to the outputs for the relevant mechanism
      */
     @Override
-    public void update()
+    public void update(RobotMode mode)
     {
         if (this.driver.getDigital(DigitalOperation.DriveTrainEnablePID))
         {
@@ -381,7 +372,7 @@ public class TankDriveTrainMechanism implements IMechanism
      */
     private void setControlMode()
     {
-        TalonXControlMode mode = TalonXControlMode.PercentOutput;
+        TalonFXControlMode mode = TalonFXControlMode.PercentOutput;
         if (this.usePID)
         {
             if (this.usePathMode)
@@ -456,7 +447,7 @@ public class TankDriveTrainMechanism implements IMechanism
                 this.rightPID = null;
             }
 
-            mode = TalonXControlMode.Velocity;
+            mode = TalonFXControlMode.Velocity;
             this.leftMotor.setSelectedSlot(TankDriveTrainMechanism.pidSlotId);
             this.rightMotor.setSelectedSlot(TankDriveTrainMechanism.pidSlotId);
         }

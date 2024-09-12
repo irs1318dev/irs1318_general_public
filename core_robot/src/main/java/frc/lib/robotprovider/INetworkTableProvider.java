@@ -5,8 +5,9 @@ public interface INetworkTableProvider
     void startShuffleboardRecording();
     void stopShuffleboardRecording();
     IDoubleSubscriber getNumberSlider(String title, double initialValue);
-    <V> ISendableChooser<V> getSendableChooser();
-    <V> void addChooser(String name, ISendableChooser<V> chooser);
+    IIntegerSubscriber getIntegerSlider(String title, int initialValue);
+    IBooleanSubscriber getCheckbox(String title, boolean initialValue);
+    <V> ISendableChooser<V> getSendableChooser(String name);
     IDoubleSubscriber getDoubleSubscriber(String key);
     IDoubleSubscriber getDoubleSubscriber(String key, double defaultValue);
     IBooleanSubscriber getBooleanSubscriber(String key);

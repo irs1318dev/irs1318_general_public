@@ -1,11 +1,19 @@
 package frc.lib.robotprovider;
 
-public interface ISparkMax
+public interface ISparkMax extends IMotor
 {
+    void set(double value);
+    void set(double value, double feedForward);
+    void set(SparkMaxControlMode controlMode, double value);
+    void set(SparkMaxControlMode controlMode, double value, double feedForward);
     void follow(ISparkMax sparkMax);
     void setControlMode(SparkMaxControlMode mode);
-    void set(double value);
+    void setAbsoluteEncoder();
+    void setRelativeEncoder();
+    void setRelativeEncoder(SparkMaxRelativeEncoderType encoderType, int resolution);
     void setFeedbackFramePeriod(SparkMaxPeriodicFrameType frameType, int periodMS);
+    void setEncoderAverageDepth(int windowSize);
+    void setVelocityMeasurementPeriod(int periodMS);
     void setSelectedSlot(int slotId);
     void setPIDF(double p, double i, double d, double f, int slotId);
     void setPIDF(double p, double i, double d, double f, double minOutput, double maxOutput, int slotId);
@@ -19,12 +27,17 @@ public interface ISparkMax
     void setInvertSensor(boolean invert);
     void setNeutralMode(MotorNeutralMode neutralMode);
     void setCurrentLimit(int stallLimit, int freeLimit, int limitRPM);
-    void setVelocityMeasurements(int periodMS, int windowSize);
     void stop();
+    void setAbsoluteOffset(double zeroOffset);
     void setPosition(double position);
     void reset();
+    void burnFlash();
+    void setPositionConversionFactor(double ratio);
+    void setVelocityConversionFactor(double ratio);
+    void setPositionPIDWrappingSettings(boolean enable, double minInput, double maxInput);
     double getPosition();
     double getVelocity();
+    double getOutput();
     boolean getForwardLimitSwitchStatus();
     boolean getReverseLimitSwitchStatus();
 }

@@ -19,7 +19,7 @@ public class ButtonMap implements IButtonMap
         new ShiftDescription(
             Shift.DriverDebug,
             UserInputDevice.Driver,
-            UserInputDeviceButton.XBONE_SELECT_BUTTON),
+            UserInputDeviceButton.XBONE_X_BUTTON),
         new ShiftDescription(
             Shift.CodriverDebug,
             UserInputDevice.Codriver,
@@ -28,10 +28,10 @@ public class ButtonMap implements IButtonMap
             Shift.Test1Debug,
             UserInputDevice.Test1,
             UserInputDeviceButton.XBONE_LEFT_BUTTON),
-        // new ShiftDescription(
-        //     Shift.Test2Debug,
-        //     UserInputDevice.Test2,
-        //     UserInputDeviceButton.XBONE_LEFT_BUTTON),
+        new ShiftDescription(
+            Shift.Test2Debug,
+            UserInputDevice.Test2,
+            UserInputDeviceButton.XBONE_LEFT_BUTTON),
     };
 
     public static AnalogOperationDescription[] AnalogOperationSchema = new AnalogOperationDescription[]
@@ -42,21 +42,19 @@ public class ButtonMap implements IButtonMap
             UserInputDevice.Driver,
             AnalogAxis.XBONE_LSY,
             ElectronicsConstants.INVERT_XBONE_LEFT_Y_AXIS,
-            TuningConstants.TANK_DRIVETRAIN_Y_DEAD_ZONE),
+            -TuningConstants.TANK_DRIVETRAIN_DEAD_ZONE_VELOCITY_Y,
+            TuningConstants.TANK_DRIVETRAIN_DEAD_ZONE_VELOCITY_Y,
+            1.0,
+            TuningConstants.TANK_DRIVETRAIN_EXPONENTIAL),
         new AnalogOperationDescription(
             AnalogOperation.DriveTrainTurn,
             UserInputDevice.Driver,
             AnalogAxis.XBONE_LSX,
             ElectronicsConstants.INVERT_XBONE_LEFT_X_AXIS,
-            TuningConstants.TANK_DRIVETRAIN_X_DEAD_ZONE),
-
-        // Operations for the OneMotor
-        new AnalogOperationDescription(
-            AnalogOperation.OneMotorPower,
-            UserInputDevice.Driver,
-            AnalogAxis.XBONE_RSY,
-            ElectronicsConstants.INVERT_XBONE_LEFT_Y_AXIS,
-            0.05),
+            -TuningConstants.TANK_DRIVETRAIN_DEAD_ZONE_VELOCITY_X,
+            TuningConstants.TANK_DRIVETRAIN_DEAD_ZONE_VELOCITY_X,
+            1.0,
+            TuningConstants.TANK_DRIVETRAIN_EXPONENTIAL),
     };
 
     public static DigitalOperationDescription[] DigitalOperationSchema = new DigitalOperationDescription[]
@@ -69,30 +67,34 @@ public class ButtonMap implements IButtonMap
             EnumSet.of(Shift.DriverDebug),
             EnumSet.of(Shift.DriverDebug),
             ButtonType.Click),
-
         new DigitalOperationDescription(
-            DigitalOperation.ForceRainbow,
-            UserInputDevice.Codriver,
-            UserInputDeviceButton.XBONE_SELECT_BUTTON,
-            EnumSet.of(Shift.CodriverDebug),
-            EnumSet.of(Shift.CodriverDebug),
+            DigitalOperation.DriveTrainSlowMode,
+            UserInputDevice.Driver,
+            UserInputDeviceButton.XBONE_A_BUTTON,
+            EnumSet.noneOf(Shift.class),
+            EnumSet.noneOf(Shift.class),
             ButtonType.Simple),
 
-        // Test operations:
+        // Vision test operations:
         new DigitalOperationDescription(
-            DigitalOperation.VisionEnableAprilTagProcessing,
+            DigitalOperation.VisionFindAnyAprilTagRear,
             UserInputDevice.Test1,
-            UserInputDeviceButton.XBONE_A_BUTTON,
+            UserInputDeviceButton.XBONE_B_BUTTON,
             EnumSet.of(Shift.Test1Debug),
             EnumSet.noneOf(Shift.class),
-            ButtonType.Toggle),
+            ButtonType.Simple),
         new DigitalOperationDescription(
-            DigitalOperation.VisionEnableRetroreflectiveProcessing,
+            DigitalOperation.VisionFindAnyAprilTagFront,
             UserInputDevice.Test1,
-            UserInputDeviceButton.XBONE_A_BUTTON,
+            UserInputDeviceButton.XBONE_B_BUTTON,
             EnumSet.of(Shift.Test1Debug),
             EnumSet.of(Shift.Test1Debug),
-            ButtonType.Toggle),
+            ButtonType.Simple),
+        new DigitalOperationDescription(
+            DigitalOperation.VisionFindAbsolutePosition,
+            UserInputDevice.Test1,
+            UserInputDeviceButton.XBONE_X_BUTTON,
+            ButtonType.Simple),
     };
 
     public static MacroOperationDescription[] MacroSchema = new MacroOperationDescription[]
@@ -136,49 +138,40 @@ public class ButtonMap implements IButtonMap
         //         DigitalOperation.DriveTrainDisableFieldOrientation,
         //         DigitalOperation.DriveTrainUseRobotOrientation,
         //     }),
-        // new MacroOperationDescription(
-        //     MacroOperation.PIDHeavyBrake,
-        //     UserInputDevice.Driver,
-        //     UserInputDeviceButton.XBONE_LEFT_STICK_BUTTON,
-        //     EnumSet.of(Shift.DriverDebug),
-        //     EnumSet.of(Shift.DriverDebug),
-        //     ButtonType.Simple,
-        //     () -> new PIDBrakeTask(true),
-        //     new IOperation[]
-        //     {
-        //         AnalogOperation.DriveTrainMoveForward,
-        //         AnalogOperation.DriveTrainMoveRight,
-        //         AnalogOperation.DriveTrainTurnAngleGoal,
-        //         AnalogOperation.DriveTrainSpinLeft,
-        //         AnalogOperation.DriveTrainSpinRight,
-        //         AnalogOperation.DriveTrainRotationA,
-        //         AnalogOperation.DriveTrainRotationB,
-        //         AnalogOperation.DriveTrainPathXGoal,
-        //         AnalogOperation.DriveTrainPathYGoal,
-        //         AnalogOperation.DriveTrainPathXVelocityGoal,
-        //         AnalogOperation.DriveTrainPathYVelocityGoal,
-        //         AnalogOperation.DriveTrainPathAngleVelocityGoal,
-        //         AnalogOperation.DriveTrainPositionDrive1,
-        //         AnalogOperation.DriveTrainPositionDrive2,
-        //         AnalogOperation.DriveTrainPositionDrive3,
-        //         AnalogOperation.DriveTrainPositionDrive4,
-        //         AnalogOperation.DriveTrainPositionSteer1,
-        //         AnalogOperation.DriveTrainPositionSteer2,
-        //         AnalogOperation.DriveTrainPositionSteer3,
-        //         AnalogOperation.DriveTrainPositionSteer4,
-        //         DigitalOperation.DriveTrainSteerMode,
-        //         DigitalOperation.DriveTrainMaintainPositionMode,
-        //         DigitalOperation.DriveTrainPathMode,
-        //         DigitalOperation.DriveTrainReset,
-        //         DigitalOperation.DriveTrainEnableFieldOrientation,
-        //         DigitalOperation.DriveTrainDisableFieldOrientation,
-        //         DigitalOperation.DriveTrainUseRobotOrientation,
-        //     }),
+        new MacroOperationDescription(
+            MacroOperation.PIDBrake,
+            UserInputDevice.Driver,
+            90, // DPAD-right
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.of(Shift.DriverDebug),
+            ButtonType.Simple,
+            () -> new PIDBrakeTask(),
+            new IOperation[]
+            {
+                AnalogOperation.DriveTrainMoveForward,
+                AnalogOperation.DriveTrainTurn,
+                AnalogOperation.DriveTrainLeftPosition,
+                AnalogOperation.DriveTrainRightPosition,
+                AnalogOperation.DriveTrainLeftVelocity,
+                AnalogOperation.DriveTrainRightVelocity,
+                AnalogOperation.DriveTrainHeadingCorrection,
+                AnalogOperation.DriveTrainStartingXPosition,
+                AnalogOperation.DriveTrainStartingYPosition,
+                DigitalOperation.DriveTrainSlowMode,
+                DigitalOperation.DriveTrainEnablePID,
+                DigitalOperation.DriveTrainDisablePID,
+                DigitalOperation.DriveTrainSimpleMode,
+                DigitalOperation.DriveTrainUseBrakeMode,
+                DigitalOperation.DriveTrainUsePositionalMode,
+                DigitalOperation.DriveTrainUsePathMode,
+                DigitalOperation.DriveTrainSwapFrontOrientation,
+                DigitalOperation.DriveTrainResetXYPosition,
+            }),
 
         new MacroOperationDescription(
             MacroOperation.FaceForward,
             UserInputDevice.Driver,
-            0, // DPAD-up
+            UserInputDeviceButton.XBONE_B_BUTTON, // DPAD-up
             EnumSet.of(Shift.DriverDebug),
             EnumSet.noneOf(Shift.class),
             ButtonType.Toggle,
@@ -187,6 +180,33 @@ public class ButtonMap implements IButtonMap
             {
                 AnalogOperation.DriveTrainTurn,
             }),
+
+        new MacroOperationDescription(
+            MacroOperation.FaceLeft,
+            UserInputDevice.Driver,
+            270, // DPAD-left
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.noneOf(Shift.class),
+            ButtonType.Toggle,
+            () -> new OrientationTask(90),
+            new IOperation[]
+            {
+                AnalogOperation.DriveTrainTurn,
+            }),
+
+        new MacroOperationDescription(
+            MacroOperation.FaceRight,
+            UserInputDevice.Driver,
+            90, // DPAD-right
+            EnumSet.of(Shift.DriverDebug),
+            EnumSet.noneOf(Shift.class),
+            ButtonType.Toggle,
+            () -> new OrientationTask(-90),
+            new IOperation[]
+            {
+                AnalogOperation.DriveTrainTurn,
+            }),
+
         new MacroOperationDescription(
             MacroOperation.FaceBackward,
             UserInputDevice.Driver,
@@ -230,9 +250,6 @@ public class ButtonMap implements IButtonMap
                 DigitalOperation.DriveTrainUsePositionalMode,
                 DigitalOperation.DriveTrainUsePathMode,
                 DigitalOperation.DriveTrainSwapFrontOrientation,
-                DigitalOperation.VisionDisableStream,
-                DigitalOperation.VisionEnableAprilTagProcessing,
-                DigitalOperation.VisionEnableRetroreflectiveProcessing,
                 DigitalOperation.VisionForceDisable,
             }),
 
@@ -265,11 +282,8 @@ public class ButtonMap implements IButtonMap
                 DigitalOperation.DriveTrainUsePositionalMode,
                 DigitalOperation.DriveTrainUsePathMode,
                 DigitalOperation.DriveTrainSwapFrontOrientation,
-                DigitalOperation.VisionDisableStream,
-                DigitalOperation.VisionEnableAprilTagProcessing,
-                DigitalOperation.VisionEnableRetroreflectiveProcessing,
                 DigitalOperation.VisionForceDisable,
-            })
+            }),
     };
 
     @Override

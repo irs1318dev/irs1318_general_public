@@ -1,13 +1,15 @@
 package frc.lib.robotprovider;
 
-import com.google.inject.Singleton;
+import java.util.Optional;
+import java.util.OptionalInt;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
-@Singleton
 public class DriverStationWrapper implements IDriverStation
 {
-    public DriverStationWrapper()
+    public static final DriverStationWrapper Instance = new DriverStationWrapper();
+
+    private DriverStationWrapper()
     {
     }
 
@@ -18,24 +20,29 @@ public class DriverStationWrapper implements IDriverStation
     }
 
     @Override
-    public Alliance getAlliance()
+    public Optional<Alliance> getAlliance()
     {
-        switch (DriverStation.getAlliance())
+        Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
+        if (!alliance.isPresent())
+        {
+            return Optional.empty();
+        }
+
+        switch (alliance.get())
         {
             case Red:
-                return Alliance.Red;
+                return Optional.of(Alliance.Red);
 
             case Blue:
-                return Alliance.Blue;
+                return Optional.of(Alliance.Blue);
 
             default:
-            case Invalid:
-                return Alliance.Invalid;
+                return Optional.empty();
         }
     }
 
     @Override
-    public int getLocation()
+    public OptionalInt getLocation()
     {
         return DriverStation.getLocation();
     }
@@ -97,6 +104,12 @@ public class DriverStationWrapper implements IDriverStation
         {
             return RobotMode.Teleop;
         }
+    }
+
+    @Override
+    public boolean isFMSMode()
+    {
+        return DriverStation.isFMSAttached();
     }
 
     @Override

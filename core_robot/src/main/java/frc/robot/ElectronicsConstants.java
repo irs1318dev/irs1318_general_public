@@ -35,6 +35,9 @@ public class ElectronicsConstants
     public static final int POWER_DISTRIBUTION_CAN_ID = 1;
     public static final PowerDistributionModuleType POWER_DISTRIBUTION_TYPE = PowerDistributionModuleType.PowerDistributionHub;
 
+    public static final double REV_THROUGHBORE_ENCODER_DUTY_CYCLE_MIN = 1.0 / 1024.0;
+    public static final double REV_THROUGHBORE_ENCODER_DUTY_CYCLE_MAX = 1023.0 / 1024.0;
+
     public static final String CANIVORE_NAME = "CANIVORE1"; // Module A
 
     public static final int PNEUMATICS_MODULE_A = 1; // Module A
@@ -50,7 +53,7 @@ public class ElectronicsConstants
 
     //================================================== IMU ==============================================================
 
-    public static final int PIGEON_IMU_CAN_ID = 42;
+    public static final int PIGEON_IMU_CAN_ID = 0;
 
     //================================================== Indicator Lights ==============================================================
 
@@ -66,9 +69,4 @@ public class ElectronicsConstants
     public static final int TANK_DRIVETRAIN_RIGHT_MASTER_PDP_SLOT = 14;
     public static final int TANK_DRIVETRAIN_RIGHT_FOLLOWER_CAN_ID = 4;
     public static final int TANK_DRIVETRAIN_RIGHT_FOLLOWER_PDP_SLOT = 15;
-
-    //================================================== OneMotor ================================================================
-
-    public static final int ONEMOTOR_PRIMARY_MOTOR_CHANNEL = 9;
-    public static final int ONEMOTOR_FOLLOWER_MOTOR_CHANNEL = 10;
 }

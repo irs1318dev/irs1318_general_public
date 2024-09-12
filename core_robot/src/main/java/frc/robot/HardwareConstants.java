@@ -1,5 +1,7 @@
 package frc.robot;
 
+import frc.lib.helpers.Helpers;
+
 /**
  * All constants describing the physical structure of the robot (distances and sizes of things).
  * 
@@ -8,8 +10,10 @@ package frc.robot;
  */
 public class HardwareConstants
 {
-    public static final double MAX_ROBOT_HEIGHT = 78.0; // inches, max overall height
-    public static final double MAX_ROBOT_EXTENSION = 48.0; // inches, max extension beyond frame perimeter
+    public static final double MAX_ROBOT_HEIGHT = 45.5;//44.75; // inches, max overall height
+    public static final double MAX_ROBOT_EXTENSION = 10.0;//9.75; // inches, max extension beyond frame perimeter
+    public static final double ROBOT_FRAME_DIMENSION = 28.0; // frame perimeter / 4.0
+    public static final double ROBOT_HALF_FRAME_PERIMETER = 17.0; // "half frame dimension" + 3.0"
 
     //================================================== DriveTrain ==============================================================
     // Note: Pulse Distance is the distance moved per tick
@@ -35,9 +39,9 @@ public class HardwareConstants
     public static final boolean TANK_DRIVETRAIN_LEFT_MASTER_INVERT_OUTPUT = false;
     public static final boolean TANK_DRIVETRAIN_LEFT_FOLLOWER1_INVERT_OUTPUT = false;
     //public static final boolean TANK_DRIVETRAIN_LEFT_FOLLOWER2_INVERT_OUTPUT = false;
-    public static final boolean TANK_DRIVETRAIN_LEFT_INVERT_SENSOR = false;
+    //public static final boolean TANK_DRIVETRAIN_LEFT_INVERT_SENSOR = false;
     public static final boolean TANK_DRIVETRAIN_RIGHT_MASTER_INVERT_OUTPUT = true;
     public static final boolean TANK_DRIVETRAIN_RIGHT_FOLLOWER1_INVERT_OUTPUT = true;
     //public static final boolean TANK_DRIVETRAIN_RIGHT_FOLLOWER2_INVERT_OUTPUT = true;
-    public static final boolean TANK_DRIVETRAIN_RIGHT_INVERT_SENSOR = true;
+    //public static final boolean TANK_DRIVETRAIN_RIGHT_INVERT_SENSOR = true;
 }

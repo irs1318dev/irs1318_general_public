@@ -8,6 +8,7 @@ import frc.lib.mechanisms.LoggingManager;
 import frc.lib.robotprovider.ICompressor;
 import frc.lib.robotprovider.ILogger;
 import frc.lib.robotprovider.IRobotProvider;
+import frc.lib.robotprovider.RobotMode;
 import frc.robot.driver.DigitalOperation;
 
 import com.google.inject.Inject;
@@ -61,7 +62,7 @@ public class CompressorMechanism implements IMechanism
      * calculate the various outputs to use based on the inputs and apply them to the outputs for the relevant mechanism
      */
     @Override
-    public void update()
+    public void update(RobotMode mode)
     {
         if (this.driver.getDigital(DigitalOperation.CompressorForceDisable))
         {

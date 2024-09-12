@@ -15,8 +15,5 @@ public enum AnalogOperation implements IOperation
     DriveTrainRightVelocity,
     DriveTrainHeadingCorrection,
     DriveTrainStartingXPosition,
-    DriveTrainStartingYPosition,
-
-    // OneMotor operations:
-    OneMotorPower;
+    DriveTrainStartingYPosition;
 }

@@ -3,7 +3,7 @@ package frc.robot.driver.controltasks;
 import frc.lib.driver.TrajectoryManager;
 import frc.lib.helpers.ExceptionHelpers;
 import frc.lib.helpers.Helpers;
-import frc.lib.mechanisms.IPositionManager;
+import frc.lib.mechanisms.IIMUManager;
 import frc.lib.robotprovider.ITimer;
 import frc.lib.robotprovider.ITrajectory;
 import frc.lib.robotprovider.Pose2d;
@@ -24,7 +24,7 @@ public class FollowPathTask extends ControlTaskBase
 
     protected ITimer timer;
 
-    private IPositionManager positionManager;
+    private IIMUManager positionManager;
     private TankDriveTrainMechanism driveTrain;
 
     private ITrajectory trajectory;
@@ -66,6 +66,13 @@ public class FollowPathTask extends ControlTaskBase
 
         TrajectoryManager pathManager = this.getInjector().getInstance(TrajectoryManager.class);
         this.trajectory = pathManager.getTrajectory(this.pathName);
+        if (this.trajectory == null)
+        {
+            ExceptionHelpers.Assert(false, "Unknown trajectory '" + this.pathName + "'");
+            this.startTime = 0.0;
+            return;
+        }
+
         this.duration = this.trajectory.getDuration();
 
         this.setDigitalOperationState(DigitalOperation.DriveTrainUsePathMode, true);

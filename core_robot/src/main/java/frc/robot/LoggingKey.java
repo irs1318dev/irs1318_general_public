@@ -1,94 +1,110 @@
 package frc.robot;
 
+import frc.lib.robotprovider.LoggingType;
+
 /**
  * Keys describing logging 
  */
 public enum LoggingKey
 {
-    RobotState("r.state", true),
-    RobotTime("r.time", true),
-    RobotMatch("r.match"),
-    RobotCrash("r.crash", true),
-    DriverMode("driver.mode"),
-    DriverActiveMacros("driver.activeMacros", true),
-    DriverActiveShifts("driver.activeShifts"),
-    AutonomousSelection("auto.selected"),
-    AutonomousDSMessage("auto.dsMessage"),
-    OffboardVisionRRTargetDistance("vision.rr_distance"),
-    OffboardVisionRRTargetHorizontalAngle("vision.rr_horizontalAngle"),
-    OffboardVisionAprilTagXOffset("vision.atXOffset"),
-    OffboardVisionAprilTagYOffset("vision.atYOffset"),
-    OffboardVisionAprilTagZOffset("vision.atZOffset"),
-    OffboardVisionAprilTagYaw("vision.atYaw"),
-    OffboardVisionAprilTagPitch("vision.atPitch"),
-    OffboardVisionAprilTagRoll("vision.atRoll"),
-    OffboardVisionAprilTagId("vision.atId"),
-    OffboardVisionProcessingMode("vision.processingMode"),
-    OffboardVisionEnableStream("vision.enableStream"),
-    OffboardVisionMissedHeartbeats("vision.missedHeartbeats"),
-    PowerCurrent("power.curr"),
-    PowerCurrentFloatingAverage("power.currFltAvg"),
-    PowerBatteryVoltage("power.battV"),
-    NavxStartingAngle("navx.startingAngle"),
-    PigeonState("pigeon.state"),
-    PigeonYaw("pigeon.yaw", true),
-    PigeonPitch("pigeon.pitch", true),
-    PigeonPitchOffset("pigeon.pitchOffset"),
-    PigeonRollOffset("pigeon.rollOffset"),
-    PigeonYawOffset("pigeon.yawOffset"),
-    PigeonRoll("pigeon.roll", true),
-    PigeonStartingYaw("pigeon.startingYaw"),
-    PigeonYawRate("pigeon.yawRate", true),
-    PigeonPitchRate("pigeon.pitchRate", true),
-    PigeonRollRate("pigeon.rollRate", true),
-    NavxConnected("navx.isConnected"),
-    NavxAngle("navx.angle"),
-    NavxPitch("navx.pitch"),
-    NavxRoll("navx.roll"),
-    NavxYaw("navx.yaw"),
-    NavxX("navx.x"),
-    NavxY("navx.y"),
-    NavxZ("navx.z"),
+    RobotState("r/state", LoggingType.String, false, 1, true),
+    RobotTime("r/time", LoggingType.Number, false, 1, true),
+    RobotMatch("r/match", LoggingType.String, false, 50),
+    RobotCrash("r/crash", LoggingType.String, false, true),
+    DriverMode("driver/mode", LoggingType.String, false, 1, true),
+    DriverActiveMacros("driver/activeMacros", LoggingType.String, false, 1, true),
+    DriverActiveShifts("driver/activeShifts", LoggingType.String, false),
+    AutonomousSelection("auto/selected", LoggingType.String, false),
+    AutonomousDSMessage("auto/dsMessage", LoggingType.String, false),
+    OffboardVisionAprilTagXOffset("vision/atXOffset", LoggingType.NullableNumber, true, 1),
+    OffboardVisionAprilTagYOffset("vision/atYOffset", LoggingType.NullableNumber, true, 1),
+    OffboardVisionAprilTagZOffset("vision/atZOffset", LoggingType.NullableNumber, true, 1),
+    OffboardVisionAprilTagYaw("vision/atYaw", LoggingType.NullableNumber, true, 1),
+    OffboardVisionAprilTagPitch("vision/atPitch", LoggingType.NullableNumber, true, 1),
+    OffboardVisionAprilTagRoll("vision/atRoll", LoggingType.NullableNumber, true, 1),
+    OffboardVisionAprilTagId("vision/atId", LoggingType.NullableInteger, true, 1),
+    OffboardVisionProcessingMode("vision/processingMode", LoggingType.Integer, false, 1),
+    OffboardVisionEnableStream("vision/enableStream", LoggingType.Boolean, false, 1),
+    OffboardVisionDesiredTarget("vision/desiredTarget", LoggingType.String, false, 1),
+    OffboardVisionMissedHeartbeats("vision/missedHeartbeats", LoggingType.Number, true, 1),
+    OffboardVisionExcessiveMissedHeartbeats("vision/missedTooManyHeartbeats", LoggingType.Boolean, false, 1),
+    PowerCurrent("power/curr", LoggingType.Number, true),
+    PowerCurrentFloatingAverage("power/currFltAvg", LoggingType.Number, false),
+    PowerBatteryVoltage("power/battV", LoggingType.Number, true),
+    // PowerBatteryVoltageFiltered("power/battVFilt", LoggingType.Number, false),
+    NavxStartingAngle("navx/startingAngle", LoggingType.Number, false),
+    PigeonState("pigeon/state", LoggingType.String, true),
+    PigeonYaw("pigeon/yaw", LoggingType.Number, true),
+    PigeonPitch("pigeon/pitch", LoggingType.Number, true),
+    PigeonPitchOffset("pigeon/pitchOffset", LoggingType.Number, false),
+    PigeonRollOffset("pigeon/rollOffset", LoggingType.Number, false),
+    PigeonYawOffset("pigeon/yawOffset", LoggingType.Number, false),
+    PigeonRoll("pigeon/roll", LoggingType.Number, true),
+    PigeonStartingYaw("pigeon/startingYaw", LoggingType.Number, false),
+    PigeonYawRate("pigeon/yawRate", LoggingType.Number, true),
+    PigeonPitchRate("pigeon/pitchRate", LoggingType.Number, true),
+    PigeonRollRate("pigeon/rollRate", LoggingType.Number, true),
+    NavxConnected("navx/isConnected", LoggingType.Boolean, true),
+    NavxAngle("navx/angle", LoggingType.Number, true),
+    NavxPitch("navx/pitch", LoggingType.Number, true),
+    NavxRoll("navx/roll", LoggingType.Number, true),
+    NavxYaw("navx/yaw", LoggingType.Number, true),
+    NavxX("navx/x", LoggingType.Number, true),
+    NavxY("navx/y", LoggingType.Number, true),
+    NavxZ("navx/z", LoggingType.Number, true),
 
-    DriveTrainLeftVelocity("dt.leftVelocity", true),
-    DriveTrainLeftTicks("dt.leftTicks", true),
-    DriveTrainLeftError("dt.leftError", true),
-    DriveTrainRightVelocity("dt.rightVelocity", true),
-    DriveTrainRightTicks("dt.rightTicks", true),
-    DriveTrainRightError("dt.rightError", true),
-    DriveTrainLeftVelocityGoal("dt.leftVelocityGoal", true),
-    DriveTrainRightVelocityGoal("dt.rightVelocityGoal", true),
-    DriveTrainLeftPositionGoal("dt.leftPositionGoal", true),
-    DriveTrainRightPositionGoal("dt.rightPositionGoal", true),
+    DriveTrainLeftVelocity("dt/leftVelocity", LoggingType.Number, true),
+    DriveTrainLeftTicks("dt/leftTicks", LoggingType.Number, true),
+    DriveTrainLeftError("dt/leftError", LoggingType.Number, true),
+    DriveTrainRightVelocity("dt/rightVelocity", LoggingType.Number, true),
+    DriveTrainRightTicks("dt/rightTicks", LoggingType.Number, true),
+    DriveTrainRightError("dt/rightError", LoggingType.Number, true),
+    DriveTrainLeftVelocityGoal("dt/leftVelocityGoal", LoggingType.Number, false),
+    DriveTrainRightVelocityGoal("dt/rightVelocityGoal", LoggingType.Number, false),
+    DriveTrainLeftPositionGoal("dt/leftPositionGoal", LoggingType.Number, false),
+    DriveTrainRightPositionGoal("dt/rightPositionGoal", LoggingType.Number, false),
 
-    DriveTrainXPosition("dt.x", true),
-    DriveTrainYPosition("dt.y", true),
+    DriveTrainXPosition("dt/x", LoggingType.Number, false),
+    DriveTrainYPosition("dt/y", LoggingType.Number, false),
 
-    CompressorPreassure("com.pres"),
-
-    OneMotorSRXVelocity("omsrx.velocity"),
-    OneMotorSRXError("omsrx.error"),
-    OneMotorSRXPosition("omsrx.position"),
-    OneMotorSRXForwardLimit("omsrx.forwardlimit"),
-    OneMotorSRXReverseLimit("omsrx.reverselimit"),
-    OneMotorSRXSetpoint("omsrx.setpoint"),
-    OneMotorSRXErrorPercent("omsrx.error%"),
-    OneMotorSparkVelocity("omspark.velocity"),
-    OneMotorSparkPosition("omspark.position"),
-    OneMotorSparkForwardLimit("omspark.forwardlimit"),
-    OneMotorSparkReverseLimit("omspark.reverselimit"),
-    OneMotorSparkSetpoint("omspark.setpoint");
+    CompressorPreassure("com/pres", LoggingType.Number, true);
 
     public final String value;
-    public final boolean shouldLog;
-    private LoggingKey(String value)
+    public final LoggingType type;
+    public final boolean isInput;
+    public final int loggingFrequency;
+    public final boolean shouldLogToCsv;
+    private LoggingKey(String value, LoggingType type)
     {
-        this(value, false);
+        this(value, type, false, TuningConstants.DEFAULT_LOGGING_FREQUENCY, false);
     }
 
-    private LoggingKey(String value, boolean shouldLog)
+    private LoggingKey(String value, LoggingType type, boolean isInput)
     {
+        this(value, type, isInput, TuningConstants.DEFAULT_LOGGING_FREQUENCY, false);
+    }
+
+    private LoggingKey(String value, LoggingType type, boolean isInput, int loggingFrequency)
+    {
+        this(value, type, isInput, loggingFrequency, false);
+    }
+
+    private LoggingKey(String value, LoggingType type, boolean isInput, boolean shouldLogToCsv)
+    {
+        this(value, type, isInput, TuningConstants.DEFAULT_LOGGING_FREQUENCY, shouldLogToCsv);
+    }
+
+    private LoggingKey(String value, LoggingType type, boolean isInput, int loggingFrequency, boolean shouldLogToCsv)
+    {
+        if (loggingFrequency <= 0)
+        {
+            loggingFrequency = TuningConstants.DEFAULT_LOGGING_FREQUENCY;
+        }
+
         this.value = value;
-        this.shouldLog = shouldLog;
+        this.type = type;
+        this.isInput = isInput;
+        this.loggingFrequency = loggingFrequency;
+        this.shouldLogToCsv = shouldLogToCsv;
     }
 }

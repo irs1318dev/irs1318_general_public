@@ -10,8 +10,7 @@ import frc.lib.robotprovider.TrajectoryState;
 import frc.robot.TuningConstants;
 import frc.robot.driver.AnalogOperation;
 import frc.robot.driver.DigitalOperation;
-import frc.robot.mechanisms.IDriveTrainMechanism;
-import frc.robot.mechanisms.SDSDriveTrainMechanism;
+import frc.robot.mechanisms.DriveTrainMechanism;
 
 /**
  * Task that follows a path
@@ -79,7 +78,7 @@ public class FollowPathTask extends ControlTaskBase
 
         if (this.type != Type.Absolute)
         {
-            IDriveTrainMechanism driveTrain = this.getInjector().getInstance(SDSDriveTrainMechanism.class);
+            DriveTrainMechanism driveTrain = this.getInjector().getInstance(DriveTrainMechanism.class);
             this.initialPose = driveTrain.getPose();
         }
         else
@@ -147,7 +146,7 @@ public class FollowPathTask extends ControlTaskBase
 
         this.setAnalogOperationState(AnalogOperation.DriveTrainPathXGoal, xGoal);
         this.setAnalogOperationState(AnalogOperation.DriveTrainPathYGoal, yGoal);
-        this.setAnalogOperationState(AnalogOperation.DriveTrainPathAngleGoal, angleGoal);
+        this.setAnalogOperationState(AnalogOperation.DriveTrainTurnAngleGoal, angleGoal);
         this.setAnalogOperationState(AnalogOperation.DriveTrainPathXVelocityGoal, xVelGoal);
         this.setAnalogOperationState(AnalogOperation.DriveTrainPathYVelocityGoal, yVelGoal);
         this.setAnalogOperationState(AnalogOperation.DriveTrainPathAngleVelocityGoal, angleVelGoal);
@@ -162,7 +161,7 @@ public class FollowPathTask extends ControlTaskBase
         this.setDigitalOperationState(DigitalOperation.DriveTrainPathMode, false);
         this.setAnalogOperationState(AnalogOperation.DriveTrainPathXGoal, 0.0);
         this.setAnalogOperationState(AnalogOperation.DriveTrainPathYGoal, 0.0);
-        this.setAnalogOperationState(AnalogOperation.DriveTrainPathAngleGoal, TuningConstants.MAGIC_NULL_VALUE);
+        this.setAnalogOperationState(AnalogOperation.DriveTrainTurnAngleGoal, TuningConstants.MAGIC_NULL_VALUE);
         this.setAnalogOperationState(AnalogOperation.DriveTrainPathXVelocityGoal, 0.0);
         this.setAnalogOperationState(AnalogOperation.DriveTrainPathYVelocityGoal, 0.0);
         this.setAnalogOperationState(AnalogOperation.DriveTrainPathAngleVelocityGoal, 0.0);

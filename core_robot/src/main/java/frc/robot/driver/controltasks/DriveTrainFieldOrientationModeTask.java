@@ -9,7 +9,6 @@ public class DriveTrainFieldOrientationModeTask extends CompositeOperationTask
         {
             DigitalOperation.DriveTrainEnableFieldOrientation,
             DigitalOperation.DriveTrainDisableFieldOrientation,
-            DigitalOperation.DriveTrainUseRobotOrientation,
         };
 
     /**

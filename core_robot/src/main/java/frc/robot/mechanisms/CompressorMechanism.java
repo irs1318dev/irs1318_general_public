@@ -55,7 +55,6 @@ public class CompressorMechanism implements IMechanism
     public void readSensors()
     {
         this.preassureValue = this.compressor.getPressure();
-        this.logger.logNumber(LoggingKey.CompressorPreassure, this.preassureValue);
     }
 
     /**

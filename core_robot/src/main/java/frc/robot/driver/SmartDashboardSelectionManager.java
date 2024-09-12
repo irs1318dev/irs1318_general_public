@@ -10,24 +10,27 @@ public class SmartDashboardSelectionManager
 {
     private final ISendableChooser<StartPosition> positionChooser;
     private final ISendableChooser<AutoRoutine> routineChooser;
-    private final ISendableChooser<PriorityPickupSide> pickupChooser;
 
     public enum StartPosition
     {
-        None,
-        Something,
+        Center,
+        Left,
+        Right
     }
 
     public enum AutoRoutine
     {
         None,
-        Something,
-    }
-
-    public enum PriorityPickupSide
-    {
-        None,
-        Something,
+        PathA,
+        PathB,
+        Slalom,
+        Barrel,
+        Bounce,
+        ShootAndTrenchShoot,
+        ShootAndShieldShoot,
+        ShootAndMove,
+        Shoot,
+        Move,
     }
 
     /**
@@ -41,30 +44,31 @@ public class SmartDashboardSelectionManager
 
         this.routineChooser = networkTableProvider.getSendableChooser("Auto Routine");
         this.routineChooser.addDefault("None", AutoRoutine.None);
-        this.routineChooser.addObject("Something", AutoRoutine.Something);
+        this.routineChooser.addObject("PathA", AutoRoutine.PathA);
+        this.routineChooser.addObject("PathB", AutoRoutine.PathB);
+        this.routineChooser.addObject("Slalom", AutoRoutine.Slalom);
+        this.routineChooser.addObject("Barrel", AutoRoutine.Barrel);
+        this.routineChooser.addObject("Bounce", AutoRoutine.Bounce);
+        this.routineChooser.addObject("ShootAndTrenchShoot", AutoRoutine.ShootAndTrenchShoot);
+        this.routineChooser.addObject("ShootAndShieldShoot", AutoRoutine.ShootAndShieldShoot);
+        this.routineChooser.addObject("ShootAndMove", AutoRoutine.ShootAndMove);
+        this.routineChooser.addObject("Shoot", AutoRoutine.Shoot);
+        this.routineChooser.addObject("Move", AutoRoutine.Move);
 
         this.positionChooser = networkTableProvider.getSendableChooser("Start Position");
-        this.positionChooser.addDefault("None", StartPosition.None);
-        this.positionChooser.addObject("Something", StartPosition.Something);
-
-        this.pickupChooser = networkTableProvider.getSendableChooser("Pickup Chooser");
-        this.pickupChooser.addDefault("None", PriorityPickupSide.None);
-        this.pickupChooser.addObject("Something", PriorityPickupSide.Something);
+        this.positionChooser.addDefault("Center", StartPosition.Center);
+        this.positionChooser.addObject("Left", StartPosition.Left);
+        this.positionChooser.addObject("Right", StartPosition.Right);
     }
 
     public StartPosition getSelectedStartPosition()
     {
-        return SmartDashboardSelectionManager.GetSelectedOrDefault(this.positionChooser, StartPosition.None);
+        return SmartDashboardSelectionManager.GetSelectedOrDefault(this.positionChooser, StartPosition.Center);
     }
 
     public AutoRoutine getSelectedAutoRoutine()
     {
         return SmartDashboardSelectionManager.GetSelectedOrDefault(this.routineChooser, AutoRoutine.None);
-    }
-
-    public PriorityPickupSide getPickupSide()
-    {
-        return SmartDashboardSelectionManager.GetSelectedOrDefault(this.pickupChooser, PriorityPickupSide.None);
     }
 
     private static <T> T GetSelectedOrDefault(ISendableChooser<T> chooser, T defaultValue)

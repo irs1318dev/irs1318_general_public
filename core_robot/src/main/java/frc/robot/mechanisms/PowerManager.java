@@ -84,16 +84,11 @@ public class PowerManager implements IMechanism
     public void readSensors()
     {
         this.batteryVoltage = this.powerDistribution.getBatteryVoltage();
-        this.logger.logNumber(LoggingKey.PowerBatteryVoltage, this.batteryVoltage);
 
         this.batteryVoltageFilter.update(this.batteryVoltage);
-        this.logger.logNumber(LoggingKey.PowerBatteryVoltage, this.batteryVoltageFilter.getValue());
 
         double currCurrent = this.powerDistribution.getTotalCurrent();
         this.currentFloatingAverage = this.currentAverageCalculator.update(currCurrent);
-
-        this.logger.logNumber(LoggingKey.PowerCurrent, currCurrent);
-        this.logger.logNumber(LoggingKey.PowerCurrentFloatingAverage, this.currentFloatingAverage);
     }
 
     @Override

@@ -53,7 +53,7 @@ public class DriverTests
             new DigitalOperationDescription[]
             {
                 new DigitalOperationDescription(
-                    DigitalOperation.DriveTrainSlowMode,
+                    DigitalOperation.ClimberExtend,
                     UserInputDevice.Driver,
                     UserInputDeviceButton.XBONE_A_BUTTON,
                     ButtonType.Simple),
@@ -71,7 +71,7 @@ public class DriverTests
             new MacroOperationDescription[]
             {
                 new MacroOperationDescription(
-                    MacroOperation.FollowPathTest1,
+                    MacroOperation.FollowAnotherPath,
                     UserInputDevice.Driver,
                     UserInputDeviceButton.XBONE_B_BUTTON,
                     ButtonType.Toggle,
@@ -80,11 +80,11 @@ public class DriverTests
                     {
                         AnalogOperation.DriveTrainMoveForward,
                         AnalogOperation.DriveTrainMoveRight,
-                        DigitalOperation.DriveTrainSlowMode,
+                        DigitalOperation.ClimberExtend,
                         DigitalOperation.DriveTrainReset,
                     }),
                 new MacroOperationDescription(
-                    MacroOperation.FollowPathTest2,
+                    MacroOperation.FollowADifferentPath,
                     UserInputDevice.Driver,
                     UserInputDeviceButton.XBONE_X_BUTTON,
                     ButtonType.Toggle,
@@ -93,7 +93,7 @@ public class DriverTests
                     {
                         AnalogOperation.DriveTrainMoveForward,
                         AnalogOperation.DriveTrainMoveRight,
-                        DigitalOperation.DriveTrainSlowMode,
+                        DigitalOperation.ClimberExtend,
                         DigitalOperation.DriveTrainReset,
                     }),
             }
@@ -142,23 +142,23 @@ public class DriverTests
         when(driverJoystick.getRawButton(UserInputDeviceButton.XBONE_X_BUTTON.Value)).thenReturn(false);
         when(driverJoystick.getRawButton(UserInputDeviceButton.XBONE_B_BUTTON.Value)).thenReturn(true);
         driver.update();
-        verify(logger, Mockito.times(1)).logString(LoggingKey.DriverActiveMacros, MacroOperation.FollowPathTest1.toString());
+        verify(logger, Mockito.times(1)).logString(LoggingKey.DriverActiveMacros, MacroOperation.FollowAnotherPath.toString());
 
         // test starting other macro cancels original macro
         when(driverJoystick.getRawButton(UserInputDeviceButton.XBONE_X_BUTTON.Value)).thenReturn(true);
         when(driverJoystick.getRawButton(UserInputDeviceButton.XBONE_B_BUTTON.Value)).thenReturn(false);
         driver.update();
-        verify(logger, Mockito.times(1)).logString(LoggingKey.DriverActiveMacros, MacroOperation.FollowPathTest2.toString());
+        verify(logger, Mockito.times(1)).logString(LoggingKey.DriverActiveMacros, MacroOperation.FollowADifferentPath.toString());
 
         // test macro continues running
         when(driverJoystick.getRawButton(UserInputDeviceButton.XBONE_X_BUTTON.Value)).thenReturn(false);
         when(driverJoystick.getRawButton(UserInputDeviceButton.XBONE_B_BUTTON.Value)).thenReturn(false);
         driver.update();
-        verify(logger, Mockito.times(2)).logString(LoggingKey.DriverActiveMacros, MacroOperation.FollowPathTest2.toString());
+        verify(logger, Mockito.times(2)).logString(LoggingKey.DriverActiveMacros, MacroOperation.FollowADifferentPath.toString());
 
         // test macro continues running
         driver.update();
-        verify(logger, Mockito.times(3)).logString(LoggingKey.DriverActiveMacros, MacroOperation.FollowPathTest2.toString());
+        verify(logger, Mockito.times(3)).logString(LoggingKey.DriverActiveMacros, MacroOperation.FollowADifferentPath.toString());
 
         // test cancelling macro with digital operation
         when(driverJoystick.getRawButton(UserInputDeviceButton.XBONE_A_BUTTON.Value)).thenReturn(true);
@@ -181,17 +181,17 @@ public class DriverTests
         when(driverJoystick.getRawButton(UserInputDeviceButton.XBONE_X_BUTTON.Value)).thenReturn(false);
         when(driverJoystick.getRawButton(UserInputDeviceButton.XBONE_B_BUTTON.Value)).thenReturn(true);
         driver.update();
-        verify(logger, Mockito.times(2)).logString(LoggingKey.DriverActiveMacros, MacroOperation.FollowPathTest1.toString());
+        verify(logger, Mockito.times(2)).logString(LoggingKey.DriverActiveMacros, MacroOperation.FollowAnotherPath.toString());
 
         // test macro continues running
         when(driverJoystick.getRawButton(UserInputDeviceButton.XBONE_B_BUTTON.Value)).thenReturn(false);
         driver.update();
-        verify(logger, Mockito.times(3)).logString(LoggingKey.DriverActiveMacros, MacroOperation.FollowPathTest1.toString());
+        verify(logger, Mockito.times(3)).logString(LoggingKey.DriverActiveMacros, MacroOperation.FollowAnotherPath.toString());
 
         // after cancelling the macro, it should appear one last time in the list of active macros...
         firstTask.hasCompleted = true;
         driver.update();
-        verify(logger, Mockito.times(4)).logString(LoggingKey.DriverActiveMacros, MacroOperation.FollowPathTest1.toString());
+        verify(logger, Mockito.times(4)).logString(LoggingKey.DriverActiveMacros, MacroOperation.FollowAnotherPath.toString());
 
         // now it should stop showing up...
         driver.update();

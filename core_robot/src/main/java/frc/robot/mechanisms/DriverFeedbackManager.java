@@ -69,8 +69,8 @@ public class DriverFeedbackManager implements IMechanism
             this.driver.setRumble(UserInputDevice.Driver, JoystickRumbleType.Right, 0.25);
             driverShouldRumble = true;
 
-            this.driver.setRumble(UserInputDevice.Codriver, JoystickRumbleType.Left, 0.0);
-            this.driver.setRumble(UserInputDevice.Codriver, JoystickRumbleType.Right, 0.0);
+            this.driver.setRumble(UserInputDevice.Operator, JoystickRumbleType.Left, 0.0);
+            this.driver.setRumble(UserInputDevice.Operator, JoystickRumbleType.Right, 0.0);
             codriverShouldRumble = true;
         }
 
@@ -82,8 +82,8 @@ public class DriverFeedbackManager implements IMechanism
 
         if (!codriverShouldRumble)
         {
-            this.driver.setRumble(UserInputDevice.Codriver, JoystickRumbleType.Left, 0.0);
-            this.driver.setRumble(UserInputDevice.Codriver, JoystickRumbleType.Right, 0.0);
+            this.driver.setRumble(UserInputDevice.Operator, JoystickRumbleType.Left, 0.0);
+            this.driver.setRumble(UserInputDevice.Operator, JoystickRumbleType.Right, 0.0);
         }
     }
 

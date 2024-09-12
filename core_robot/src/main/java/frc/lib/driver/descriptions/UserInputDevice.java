@@ -8,7 +8,7 @@ public enum UserInputDevice
 {
     None(-1),
     Driver(0),
-    Codriver(1),
+    Operator(1),
     Test1(2),
     Test2(3),
     MaxCount(4);

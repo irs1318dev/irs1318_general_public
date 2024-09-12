@@ -22,17 +22,15 @@ public class OffboardVisionManager implements IMechanism
 {
     public static final DigitalOperation[] PossibleVisionOperations =
     {
-        DigitalOperation.VisionFindAnyAprilTagFront,
-        DigitalOperation.VisionFindAnyAprilTagRear,
-        DigitalOperation.VisionFindSpecificAprilTagFront,
-        DigitalOperation.VisionFindSpecificAprilTagRear,
+        DigitalOperation.VisionFindAnyAprilTag,
+        DigitalOperation.VisionFindSpecificAprilTag,
         DigitalOperation.VisionFindAbsolutePosition,
     };
 
     public static final List<DigitalOperation> PossibleFrontVisionOperations =
         List.of(
-            DigitalOperation.VisionFindAnyAprilTagFront,
-            DigitalOperation.VisionFindSpecificAprilTagFront);
+            DigitalOperation.VisionFindSpecificAprilTag,
+            DigitalOperation.VisionFindAbsolutePosition);
 
     private final IDriver driver;
     private final ILogger logger;
@@ -40,21 +38,13 @@ public class OffboardVisionManager implements IMechanism
     private final INetworkTableProvider networkTable;
     private final IDriverStation ds;
 
-    private IDoubleSubscriber atrXOffsetSubscriber;
-    private IDoubleSubscriber atrYOffsetSubscriber;
-    private IDoubleSubscriber atrZOffsetSubscriber;
-    private IDoubleSubscriber atrYawSubscriber;
-    private IDoubleSubscriber atrPitchSubscriber;
-    private IDoubleSubscriber atrRollSubscriber;
-    private IDoubleSubscriber atrIdSubscriber;
-
-    private IDoubleSubscriber atfXOffsetSubscriber;
-    private IDoubleSubscriber atfYOffsetSubscriber;
-    private IDoubleSubscriber atfZOffsetSubscriber;
-    private IDoubleSubscriber atfYawSubscriber;
-    private IDoubleSubscriber atfPitchSubscriber;
-    private IDoubleSubscriber atfRollSubscriber;
-    private IDoubleSubscriber atfIdSubscriber;
+    private IDoubleSubscriber atXOffsetSubscriber;
+    private IDoubleSubscriber atYOffsetSubscriber;
+    private IDoubleSubscriber atZOffsetSubscriber;
+    private IDoubleSubscriber atYawSubscriber;
+    private IDoubleSubscriber atPitchSubscriber;
+    private IDoubleSubscriber atRollSubscriber;
+    private IIntegerSubscriber atIdSubscriber;
 
     private IDoubleSubscriber absXOffsetSubscriber;
     private IDoubleSubscriber absYOffsetSubscriber;
@@ -105,22 +95,13 @@ public class OffboardVisionManager implements IMechanism
         this.logger = logger;
 
         this.networkTable = provider.getNetworkTableProvider();
-
-        this.atrXOffsetSubscriber = this.networkTable.getDoubleSubscriber("atr.xOffset", TuningConstants.MAGIC_NULL_VALUE);
-        this.atrYOffsetSubscriber = this.networkTable.getDoubleSubscriber("atr.yOffset", TuningConstants.MAGIC_NULL_VALUE);
-        this.atrZOffsetSubscriber = this.networkTable.getDoubleSubscriber("atr.zOffset", TuningConstants.MAGIC_NULL_VALUE);
-        this.atrYawSubscriber = this.networkTable.getDoubleSubscriber("atr.yawAngle", TuningConstants.MAGIC_NULL_VALUE);
-        this.atrPitchSubscriber = this.networkTable.getDoubleSubscriber("atr.pitchAngle", TuningConstants.MAGIC_NULL_VALUE);
-        this.atrRollSubscriber = this.networkTable.getDoubleSubscriber("atr.rollAngle", TuningConstants.MAGIC_NULL_VALUE);
-        this.atrIdSubscriber = this.networkTable.getDoubleSubscriber("atr.tagId", (int)TuningConstants.MAGIC_NULL_VALUE);
-
-        this.atfXOffsetSubscriber = this.networkTable.getDoubleSubscriber("atf.xOffset", TuningConstants.MAGIC_NULL_VALUE);
-        this.atfYOffsetSubscriber = this.networkTable.getDoubleSubscriber("atf.yOffset", TuningConstants.MAGIC_NULL_VALUE);
-        this.atfZOffsetSubscriber = this.networkTable.getDoubleSubscriber("atf.zOffset", TuningConstants.MAGIC_NULL_VALUE);
-        this.atfYawSubscriber = this.networkTable.getDoubleSubscriber("atf.yawAngle", TuningConstants.MAGIC_NULL_VALUE);
-        this.atfPitchSubscriber = this.networkTable.getDoubleSubscriber("atf.pitchAngle", TuningConstants.MAGIC_NULL_VALUE);
-        this.atfRollSubscriber = this.networkTable.getDoubleSubscriber("atf.rollAngle", TuningConstants.MAGIC_NULL_VALUE);
-        this.atfIdSubscriber = this.networkTable.getDoubleSubscriber("atf.tagId", (int)TuningConstants.MAGIC_NULL_VALUE);
+        this.atXOffsetSubscriber = this.networkTable.getDoubleSubscriber("at.xOffset", TuningConstants.MAGIC_NULL_VALUE);
+        this.atYOffsetSubscriber = this.networkTable.getDoubleSubscriber("at.yOffset", TuningConstants.MAGIC_NULL_VALUE);
+        this.atZOffsetSubscriber = this.networkTable.getDoubleSubscriber("at.zOffset", TuningConstants.MAGIC_NULL_VALUE);
+        this.atYawSubscriber = this.networkTable.getDoubleSubscriber("at.yawAngle", TuningConstants.MAGIC_NULL_VALUE);
+        this.atPitchSubscriber = this.networkTable.getDoubleSubscriber("at.pitchAngle", TuningConstants.MAGIC_NULL_VALUE);
+        this.atRollSubscriber = this.networkTable.getDoubleSubscriber("at.rollAngle", TuningConstants.MAGIC_NULL_VALUE);
+        this.atIdSubscriber = this.networkTable.getIntegerSubscriber("at.tagId", (int) TuningConstants.MAGIC_NULL_VALUE);
 
         this.absXOffsetSubscriber = this.networkTable.getDoubleSubscriber("abs.xOffset", TuningConstants.MAGIC_NULL_VALUE);
         this.absYOffsetSubscriber = this.networkTable.getDoubleSubscriber("abs.yOffset", TuningConstants.MAGIC_NULL_VALUE);
@@ -157,21 +138,13 @@ public class OffboardVisionManager implements IMechanism
     @Override
     public void readSensors()
     {
-        double atrXOffset = this.atrXOffsetSubscriber.get();
-        double atrYOffset = this.atrYOffsetSubscriber.get();
-        double atrZOffset = this.atrZOffsetSubscriber.get();
-        double atrYaw = this.atrYawSubscriber.get();
-        double atrPitch = this.atrPitchSubscriber.get();
-        double atrRoll = this.atrRollSubscriber.get();
-        int atrId = (int)this.atrIdSubscriber.get();
-
-        double atfXOffset = this.atfXOffsetSubscriber.get();
-        double atfYOffset = this.atfYOffsetSubscriber.get();
-        double atfZOffset = this.atfZOffsetSubscriber.get();
-        double atfYaw = this.atfYawSubscriber.get();
-        double atfPitch = this.atfPitchSubscriber.get();
-        double atfRoll = this.atfRollSubscriber.get();
-        int atfId = (int)this.atfIdSubscriber.get();
+        double atXOffset = this.atXOffsetSubscriber.get();
+        double atYOffset = this.atYOffsetSubscriber.get();
+        double atZOffset = this.atZOffsetSubscriber.get();
+        double atYaw = this.atYawSubscriber.get();
+        double atPitch = this.atPitchSubscriber.get();
+        double atRoll = this.atRollSubscriber.get();
+        int atId = (int)this.atIdSubscriber.get();
 
         double absXOffset = this.absXOffsetSubscriber.get();
         double absYOffset = this.absYOffsetSubscriber.get();
@@ -223,35 +196,18 @@ public class OffboardVisionManager implements IMechanism
             switch (this.prevMode)
             {
                 case 1:
-                    if (atrXOffset != TuningConstants.MAGIC_NULL_VALUE &&
-                        atrYOffset != TuningConstants.MAGIC_NULL_VALUE &&
-                        atrZOffset != TuningConstants.MAGIC_NULL_VALUE &&
-                        (this.prevTargets == null || this.prevTargets.contains(atrId)))
+                    if (atXOffset != TuningConstants.MAGIC_NULL_VALUE &&
+                        atYOffset != TuningConstants.MAGIC_NULL_VALUE &&
+                        atZOffset != TuningConstants.MAGIC_NULL_VALUE &&
+                        (this.prevTargets == null || this.prevTargets.contains(atId)))
                     {
-                        this.atXOffset = atrXOffset;
-                        this.atYOffset = atrYOffset;
-                        this.atZOffset = atrZOffset;
-                        this.atYaw = atrYaw;
-                        this.atPitch = atrPitch;
-                        this.atRoll = atrRoll;
-                        this.atId = atrId;
-                    }
-
-                    break;
-
-                case 2:
-                    if (atfXOffset != TuningConstants.MAGIC_NULL_VALUE &&
-                        atfYOffset != TuningConstants.MAGIC_NULL_VALUE &&
-                        atfZOffset != TuningConstants.MAGIC_NULL_VALUE &&
-                        (this.prevTargets == null || this.prevTargets.contains(atfId)))
-                    {
-                        this.atXOffset = atfXOffset;
-                        this.atYOffset = atfYOffset;
-                        this.atZOffset = atfZOffset;
-                        this.atYaw = atfYaw;
-                        this.atPitch = atfPitch;
-                        this.atRoll = atfRoll;
-                        this.atId = atfId;
+                        this.atXOffset = atXOffset;
+                        this.atYOffset = atYOffset;
+                        this.atZOffset = atZOffset;
+                        this.atYaw = atYaw;
+                        this.atPitch = atPitch;
+                        this.atRoll = atRoll;
+                        this.atId = atId;
                     }
 
                     break;
@@ -292,10 +248,8 @@ public class OffboardVisionManager implements IMechanism
     {
         boolean enableVision = !this.driver.getDigital(DigitalOperation.VisionForceDisable);
         boolean enableVideoStream = mode == RobotMode.Test || this.driver.getDigital(DigitalOperation.VisionEnableStream);
-        boolean enableAnyRear = this.driver.getDigital(DigitalOperation.VisionFindAnyAprilTagRear);
-        boolean enableAnyFront = this.driver.getDigital(DigitalOperation.VisionFindAnyAprilTagFront);
-        boolean enableSpecificRear = this.driver.getDigital(DigitalOperation.VisionFindSpecificAprilTagRear);
-        boolean enableSpecificFront = this.driver.getDigital(DigitalOperation.VisionFindSpecificAprilTagFront);
+        boolean enableAny = this.driver.getDigital(DigitalOperation.VisionFindAnyAprilTag);
+        boolean enableSpecific = this.driver.getDigital(DigitalOperation.VisionFindSpecificAprilTag);
         boolean enableAbsolutePosition = this.driver.getDigital(DigitalOperation.VisionFindAbsolutePosition);
 
         Optional<Alliance> alliance = this.ds.getAlliance();
@@ -306,20 +260,16 @@ public class OffboardVisionManager implements IMechanism
         int visionProcessingMode = 0;
         if (enableVision)
         {
-            if (enableAnyRear || enableSpecificRear)
+            if (enableAny || enableSpecific)
             {
                 visionProcessingMode = 1;
-            }
-            else if (enableAnyFront || enableSpecificFront)
-            {
-                visionProcessingMode = 2;
             }
             else if (enableAbsolutePosition)
             {
                 visionProcessingMode = 3;
             }
 
-            if (enableSpecificFront || enableSpecificRear)
+            if (enableSpecific)
             {
                 if (isRed)
                 {

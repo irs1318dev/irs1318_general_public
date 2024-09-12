@@ -13,10 +13,8 @@ public enum DigitalOperation implements IOperation
     // Vision operations:
     VisionForceDisable,
     VisionEnableStream,
-    VisionFindSpecificAprilTagRear,
-    VisionFindSpecificAprilTagFront,
-    VisionFindAnyAprilTagRear,
-    VisionFindAnyAprilTagFront,
+    VisionFindSpecificAprilTag,
+    VisionFindAnyAprilTag,
     VisionFindAbsolutePosition,
 
     // Compressor operations:
@@ -24,12 +22,26 @@ public enum DigitalOperation implements IOperation
 
     // DriveTrain operations:
     DriveTrainSlowMode,
-    DriveTrainEnablePID,
-    DriveTrainDisablePID,
-    DriveTrainSimpleMode,
-    DriveTrainUseBrakeMode,
-    DriveTrainUsePositionalMode,
-    DriveTrainUsePathMode,
-    DriveTrainSwapFrontOrientation,
+    DriveTrainPathMode,
+    DriveTrainSteerMode,
+    DriveTrainMaintainPositionMode,
+    DriveTrainReset,
+    DriveTrainEnableFieldOrientation,
+    DriveTrainDisableFieldOrientation,
+    DriveTrainUseRobotOrientation,
+    DriveTrainEnableMaintainDirectionMode,
+    DriveTrainDisableMaintainDirectionMode,
     DriveTrainResetXYPosition,
+    DriveTrainIgnoreSlewRateLimitingMode,
+
+    // Wrist operations:
+    WristEnableSimpleMode, // make a button
+    WristDisableSimpleMode, // make a button
+    IntakeIn, // make a button
+    IntakeOutMedium,
+    IntakeOut, // make a button
+    IntakeOutSlow,
+    IntakeOutSuperSlow,
+    IntakeEnableSimpleMode,
+    IntakeDisableSimpleMode,
 }

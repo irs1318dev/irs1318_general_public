@@ -43,34 +43,6 @@ public class TuningConstants
 
     public static final boolean TRAJECTORY_FORCE_BUILD = false;
 
-    public static final boolean CANCEL_AUTONOMOUS_ROUTINE_ON_DISABLE = true;
-
-    public static final double DRIVETRAIN_POSITIONAL_ACCEPTABLE_DELTA = 1.0;
-
-    // Navx Turn Constants
-    public static final double MAX_NAVX_TURN_RANGE_DEGREES = 5.0;
-    public static final double MAX_NAVX_FAST_TURN_RANGE_DEGREES = 5.0;
-    public static final double NAVX_FAST_TURN_TIMEOUT = 1.25;
-    public static final double NAVX_TURN_COMPLETE_TIME = 0.4;
-    public static final double NAVX_TURN_COMPLETE_CURRENT_VELOCITY_DELTA = 0;
-    public static final double NAVX_TURN_COMPLETE_DESIRED_VELOCITY_DELTA = 0;
-
-    // Navx Turn PID Constants
-    public static final double NAVX_TURN_PID_KP = 0.025; // 0.04
-    public static final double NAVX_TURN_PID_KI = 0.0;
-    public static final double NAVX_TURN_PID_KD = 0.02;
-    public static final double NAVX_TURN_PID_KF = 0.0;
-    public static final double NAVX_TURN_PID_KS = 1.0;
-    public static final double NAVX_TURN_PID_MIN = -0.8;
-    public static final double NAVX_TURN_PID_MAX = 0.8;
-    public static final double NAVX_FAST_TURN_PID_KP = 0.01;
-    public static final double NAVX_FAST_TURN_PID_KI = 0.0;
-    public static final double NAVX_FAST_TURN_PID_KD = 0.0;
-    public static final double NAVX_FAST_TURN_PID_KF = 0.0;
-    public static final double NAVX_FAST_TURN_PID_KS = 1.0;
-    public static final double NAVX_FAST_TURN_PID_MIN = -0.8;
-    public static final double NAVX_FAST_TURN_PID_MAX = 0.8;
-
     //================================================= Power ======================================================
 
     public static final double POWER_OVERCURRENT_TRACKING_DURATION = 5.0; // duration of time to keep track of the average current
@@ -162,18 +134,18 @@ public class TuningConstants
     public static final double MAX_VISION_ACCEPTABLE_MOVING_RR_ANGLE_ERROR = 4.0;
 
     // PID settings for Centering the robot on a vision target from one stationary place, based on a single sample
-    public static final double STATIONARY_SINGLE_TURNING_PID_KP = 0.02;
+    public static final double STATIONARY_SINGLE_TURNING_PID_KP = 0.027;
     public static final double STATIONARY_SINGLE_TURNING_PID_KI = 0.0;
-    public static final double STATIONARY_SINGLE_TURNING_PID_KD = 0.0;
+    public static final double STATIONARY_SINGLE_TURNING_PID_KD = 0.01;
     public static final double STATIONARY_SINGLE_TURNING_PID_KF = 0.0;
     public static final double STATIONARY_SINGLE_TURNING_PID_KS = 1.0;
     public static final double STATIONARY_SINGLE_TURNING_PID_MIN = -0.4;
     public static final double STATIONARY_SINGLE_TURNING_PID_MAX = 0.4;
 
     // PID settings for Centering the robot on a vision target from one stationary place, based on continuous samples
-    public static final double STATIONARY_CONTINUOUS_TURNING_PID_KP = 0.02;
+    public static final double STATIONARY_CONTINUOUS_TURNING_PID_KP = 0.027;
     public static final double STATIONARY_CONTINUOUS_TURNING_PID_KI = 0.0;
-    public static final double STATIONARY_CONTINUOUS_TURNING_PID_KD = 0.0;
+    public static final double STATIONARY_CONTINUOUS_TURNING_PID_KD = 0.01;
     public static final double STATIONARY_CONTINUOUS_TURNING_PID_KF = 0.0;
     public static final double STATIONARY_CONTINUOUS_TURNING_PID_KS = 1.0;
     public static final double STATIONARY_CONTINUOUS_TURNING_PID_MIN = -0.4;
@@ -296,108 +268,426 @@ public class TuningConstants
 
     //================================================== SDS DriveTrain ==============================================================
 
-    // Drivetrain PID keys/default values:
-    public static final boolean TANK_DRIVETRAIN_USE_PID = true;
-    public static final boolean TANK_DRIVETRAIN_USE_CROSS_COUPLING = false;
-    public static final boolean TANK_DRIVETRAIN_USE_HEADING_CORRECTION = true;
+    public static final boolean SDSDRIVETRAIN_STEER_MOTORS_USE_MOTION_MAGIC = true;
+    public static final boolean SDSDRIVETRAIN_USE_POSE_ESTIMATION_INVERSE_TWIST_CORRECTION = true;
+    public static final double SDSDRIVETRAIN_POSE_ESTIMATION_INVERSE_TWIST_CORRECTION_TIMESTEP = 0.02;
 
-    // Velocity PID (right)
-    public static final double TANK_DRIVETRAIN_VELOCITY_PID_RIGHT_KP = 0.09;
-    public static final double TANK_DRIVETRAIN_VELOCITY_PID_RIGHT_KI = 0.0;
-    public static final double TANK_DRIVETRAIN_VELOCITY_PID_RIGHT_KD = 0.0;
-    public static final double TANK_DRIVETRAIN_VELOCITY_PID_RIGHT_KF = 0.0478; // .0478 ==> ~ 1023 / 21400 (100% control authority)
-    public static final double TANK_DRIVETRAIN_VELOCITY_PID_RIGHT_KS = 17000.0; // 21400 was highest speed at full throttle FF on blocks
+    public static final boolean SDSDRIVETRAIN_USE_ODOMETRY = true;
+    public static final boolean SDSDRIVETRAIN_RESET_ON_ROBOT_START = true;
+    public static final boolean SDSDRIVETRAIN_FIELD_ORIENTED_ON_ROBOT_START = true;
+    public static final boolean SDSDRIVETRAIN_MAINTAIN_ORIENTATION_ON_ROBOT_START = true;
 
-    // Velocity PID (left)
-    public static final double TANK_DRIVETRAIN_VELOCITY_PID_LEFT_KP = 0.09;
-    public static final double TANK_DRIVETRAIN_VELOCITY_PID_LEFT_KI = 0.0;
-    public static final double TANK_DRIVETRAIN_VELOCITY_PID_LEFT_KD = 0.0;
-    public static final double TANK_DRIVETRAIN_VELOCITY_PID_LEFT_KF = 0.0478; // .0478 ==> ~ 1023 / 21400 (100% control authority)
-    public static final double TANK_DRIVETRAIN_VELOCITY_PID_LEFT_KS = 17000.0; // 21400 was highest speed at full throttle FF on blocks
+    public static final double SDSDRIVETRAIN_STEER_MOTOR1_ABSOLUTE_OFFSET = TuningConstants.COMPETITION_ROBOT ? 0.3046875 : 0.17212; // -0.198486 + 0.5; // rotations
+    public static final double SDSDRIVETRAIN_STEER_MOTOR2_ABSOLUTE_OFFSET = TuningConstants.COMPETITION_ROBOT ? 0.3129882 : 0.15698;//-0.186768 + 0.5; // rotations
+    public static final double SDSDRIVETRAIN_STEER_MOTOR3_ABSOLUTE_OFFSET = TuningConstants.COMPETITION_ROBOT ? 0.3864746 : -0.28979;//0.46337890625; // rotations
+    public static final double SDSDRIVETRAIN_STEER_MOTOR4_ABSOLUTE_OFFSET = TuningConstants.COMPETITION_ROBOT ? -0.1572265 : -0.35327;//0.336670 + 0.5; // rotations
 
-    // Path PID (right)
-    public static final double TANK_DRIVETRAIN_PATH_PID_RIGHT_KP = 0.0;
-    public static final double TANK_DRIVETRAIN_PATH_PID_RIGHT_KI = 0.0;
-    public static final double TANK_DRIVETRAIN_PATH_PID_RIGHT_KD = 0.0;
-    public static final double TANK_DRIVETRAIN_PATH_PID_RIGHT_KF = 0.0;
-    public static final double TANK_DRIVETRAIN_PATH_PID_RIGHT_KV = 1.0;
-    public static final double TANK_DRIVETRAIN_PATH_PID_RIGHT_KCC = 0.0;
-    public static final double TANK_DRIVETRAIN_PATH_RIGHT_HEADING_CORRECTION = 0.0;
+    public static final boolean SDSDRIVETRAIN_USE_TRANSLATIONAL_RATE_LIMITING = true;
+    public static final double SDSDRIVETRAIN_TRANSLATIONAL_VELOCITY_MAX_NEGATIVE_RATE = -4.0 * TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY;
+    public static final double SDSDRIVETRAIN_TRANSLATIONAL_VELOCITY_MAX_POSITIVE_RATE = 4.0 * TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY;
+    public static final boolean SDSDRIVETRAIN_USE_ROTATIONAL_RATE_LIMITING = true;
+    public static final double SDSDRIVETRAIN_ROTATIONAL_VELOCITY_MAX_NEGATIVE_RATE = -4.0 * TuningConstants.SDSDRIVETRAIN_TURN_SCALE;
+    public static final double SDSDRIVETRAIN_ROTATIONAL_VELOCITY_MAX_POSITIVE_RATE = 4.0 * TuningConstants.SDSDRIVETRAIN_TURN_SCALE;
 
-    // gets the max speed in inches per second
-    // (TalonSRX: 10 * (ticks per 100ms) * (inches per tick) * (10) == in / s)
-    // (SparkMAX: (rotations per second) * (inches per rotation) == in / s)
-    public static final double TANK_DRIVETRAIN_PATH_LEFT_MAX_VELOCITY_INCHES_PER_SECOND = 10.0 * TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_LEFT_KS * HardwareConstants.TANK_DRIVETRAIN_LEFT_PULSE_DISTANCE;
-    public static final double TANK_DRIVETRAIN_PATH_RIGHT_MAX_VELOCITY_INCHES_PER_SECOND = 10.0 * TuningConstants.TANK_DRIVETRAIN_VELOCITY_PID_RIGHT_KS * HardwareConstants.TANK_DRIVETRAIN_RIGHT_PULSE_DISTANCE;
-    public static final double TANK_DRIVETRAIN_PATH_MAX_VELOCITY_INCHES_PER_SECOND = 0.5 * (TuningConstants.TANK_DRIVETRAIN_PATH_LEFT_MAX_VELOCITY_INCHES_PER_SECOND + TuningConstants.TANK_DRIVETRAIN_PATH_RIGHT_MAX_VELOCITY_INCHES_PER_SECOND) / 2.0;
-    public static final double TANK_DRIVETRAIN_MAX_PATH_TURN_VELOCITY = 5.0;
-    public static final double TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY = 100.0;
-    public static final double TANK_DRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION = 200.0;
-    public static final double TANK_DRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY = 100.0;
-    public static final double TANK_DRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION = 200.0;
+    // Position PID (angle) per-module
+    public static final double SDSDRIVETRAIN_STEER_MOTOR_POSITION_PID_KS = HardwareConstants.SDSDRIVETRAIN_STEER_TICKS_PER_DEGREE;
 
-    // Path PID (left)
-    public static final double TANK_DRIVETRAIN_PATH_PID_LEFT_KP = 0.0;
-    public static final double TANK_DRIVETRAIN_PATH_PID_LEFT_KI = 0.0;
-    public static final double TANK_DRIVETRAIN_PATH_PID_LEFT_KD = 0.0;
-    public static final double TANK_DRIVETRAIN_PATH_PID_LEFT_KF = 0.0;
-    public static final double TANK_DRIVETRAIN_PATH_PID_LEFT_KV = 1.0;
-    public static final double TANK_DRIVETRAIN_PATH_PID_LEFT_KCC = 0.0;
-    public static final double TANK_DRIVETRAIN_PATH_LEFT_HEADING_CORRECTION = 0.0;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_POSITION_PID_KP = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_COMP_POSITION_PID_KP : TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_POSITION_PID_KP;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_POSITION_PID_KI = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_COMP_POSITION_PID_KI : TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_POSITION_PID_KI;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_POSITION_PID_KD = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_COMP_POSITION_PID_KD : TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_POSITION_PID_KD;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_POSITION_PID_KF = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_COMP_POSITION_PID_KF : TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_POSITION_PID_KF;
 
-    // Position PID (right)
-    public static final double TANK_DRIVETRAIN_POSITION_PID_RIGHT_KP = 0.0002;
-    public static final double TANK_DRIVETRAIN_POSITION_PID_RIGHT_KI = 0.0;
-    public static final double TANK_DRIVETRAIN_POSITION_PID_RIGHT_KD = 0.0;
-    public static final double TANK_DRIVETRAIN_POSITION_PID_RIGHT_KF = 0.0;
-    public static final double TANK_DRIVETRAIN_POSITION_PID_RIGHT_KCC = 0.0001;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_MM_PID_KP = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_COMP_MM_PID_KP : TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_MM_PID_KP;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_MM_PID_KI = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_COMP_MM_PID_KI : TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_MM_PID_KI;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_MM_PID_KD = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_COMP_MM_PID_KD : TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_MM_PID_KD;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_MM_PID_KV = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_COMP_MM_PID_KV : TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_MM_PID_KV;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_MM_PID_KS = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_COMP_MM_PID_KS : TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_MM_PID_KS;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_MM_PID_CRUISE_VELOC = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_COMP_MM_PID_CRUISE_VELOC : TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_MM_PID_CRUISE_VELOC;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_MM_PID_ACCEL = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_COMP_MM_PID_ACCEL : TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_MM_PID_ACCEL;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_MM_PID_JERK = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_COMP_MM_PID_JERK : TuningConstants.SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_MM_PID_JERK;
 
-    // Position PID (left)
-    public static final double TANK_DRIVETRAIN_POSITION_PID_LEFT_KP = 0.0002;
-    public static final double TANK_DRIVETRAIN_POSITION_PID_LEFT_KI = 0.0;
-    public static final double TANK_DRIVETRAIN_POSITION_PID_LEFT_KD = 0.0;
-    public static final double TANK_DRIVETRAIN_POSITION_PID_LEFT_KF = 0.0;
-    public static final double TANK_DRIVETRAIN_POSITION_PID_LEFT_KCC = 0.0001;
+    // STEER PRACTICE
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_POSITION_PID_KP = 1.0 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_POSITION_PID_KI = 0.0 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_POSITION_PID_KD = 0.0 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_POSITION_PID_KF = 0.0 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
 
-    // Brake PID (right)
-    public static final double TANK_DRIVETRAIN_BRAKE_PID_RIGHT_KP = 0.0004;
-    public static final double TANK_DRIVETRAIN_BRAKE_PID_RIGHT_KI = 0.0;
-    public static final double TANK_DRIVETRAIN_BRAKE_PID_RIGHT_KD = 0.0;
-    public static final double TANK_DRIVETRAIN_BRAKE_PID_RIGHT_KF = 0.0;
+    // STEER RPM ~107.0 was highest speed at full throttle FF on blocks
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_MM_PID_KP = 0.3333333 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_MM_PID_KI = 0.0 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_MM_PID_KD = 0.0 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_MM_PID_KV = 0.00934579 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_MM_PID_KS = 0.0 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_MM_PID_CRUISE_VELOC = 100.0;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_MM_PID_ACCEL = 600.0;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_PRACTICE_MM_PID_JERK = 9999.0;
 
-    // Brake PID (left)
-    public static final double TANK_DRIVETRAIN_BRAKE_PID_LEFT_KP = 0.0004;
-    public static final double TANK_DRIVETRAIN_BRAKE_PID_LEFT_KI = 0.0;
-    public static final double TANK_DRIVETRAIN_BRAKE_PID_LEFT_KD = 0.0;
-    public static final double TANK_DRIVETRAIN_BRAKE_PID_LEFT_KF = 0.0;
+    // STEER COMP
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_COMP_POSITION_PID_KP = 1.0 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_COMP_POSITION_PID_KI = 0.0 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_COMP_POSITION_PID_KD = 0.0 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_COMP_POSITION_PID_KF = 0.0 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
 
-    // Drivetrain choices for one-stick drive
-    public static final double TANK_DRIVETRAIN_K1 = 1.4;
-    public static final double TANK_DRIVETRAIN_K2 = 0.5;
+    // STEER RPM ~107.0 was highest speed at full throttle FF on blocks
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_COMP_MM_PID_KP = 0.3333333 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_COMP_MM_PID_KI = 0.0 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_COMP_MM_PID_KD = 0.0 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_COMP_MM_PID_KV = 0.00934579 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_COMP_MM_PID_KS = 0.0 * (TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_COMP_MM_PID_CRUISE_VELOC = 100.0;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_COMP_MM_PID_ACCEL = 600.0;
+    public static final double SDSDRIVETRAIN_STEER_MOTORS_COMP_MM_PID_JERK = 9999.0;
 
-    // Drivetrain deadzone/max power levels
-    public static final boolean TANK_DRIVETRAIN_VOLTAGE_COMPENSATION_ENABLED = true;
-    public static final double TANK_DRIVETRAIN_VOLTAGE_COMPENSATION = 12.0;
-    public static final boolean TANK_DRIVETRAIN_SUPPLY_CURRENT_LIMITING_ENABLED = true;
-    public static final double TANK_DRIVETRAIN_SUPPLY_CURRENT_MAX = 40.0;
-    public static final double TANK_DRIVETRAIN_SUPPLY_TRIGGER_CURRENT = 40.0;
-    public static final double TANK_DRIVETRAIN_SUPPLY_TRIGGER_DURATION = 0.1;
-    public static final double TANK_DRIVETRAIN_DEAD_ZONE_VELOCITY_X = .05;
-    public static final double TANK_DRIVETRAIN_DEAD_ZONE_VELOCITY_Y = .05;
-    public static final double TANK_DRIVETRAIN_EXPONENTIAL = 1.0;
-    public static final double TANK_DRIVETRAIN_MAX_POWER_LEVEL = 1.0;// max power level (velocity)
-    public static final double TANK_DRIVETRAIN_LEFT_POSITIONAL_NON_PID_MULTIPLICAND = HardwareConstants.TANK_DRIVETRAIN_LEFT_PULSE_DISTANCE / 60.0;
-    public static final double TANK_DRIVETRAIN_RIGHT_POSITIONAL_NON_PID_MULTIPLICAND = HardwareConstants.TANK_DRIVETRAIN_RIGHT_PULSE_DISTANCE / 60.0;
-    public static final double TANK_DRIVETRAIN_MAX_POWER_POSITIONAL_NON_PID = 0.2;// max power level (positional, non-PID)
+    // Velocity PID (drive) per-module
+    public static final double SDSDRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_DRIVE_MOTOR_COMP_VELOCITY_PID_KS : TuningConstants.SDSDRIVETRAIN_DRIVE_MOTOR_PRACTICE_VELOCITY_PID_KS; // RPM ~110.0 was highest speed at full throttle FF on blocks
 
-    public static final double TANK_DRIVETRAIN_CROSS_COUPLING_ZERO_ERROR_RANGE = 100.0; // (in ticks)
-    public static final double TANK_DRIVETRAIN_PATH_MAX_POWER_LEVEL = 1.0;
-    public static final double TANK_DRIVETRAIN_POSITIONAL_MAX_POWER_LEVEL = 0.90; // 0.85
-    public static final double TANK_DRIVETRAIN_BRAKE_MAX_POWER_LEVEL = 0.6;
-    public static final double TANK_DRIVETRAIN_VELOCITY_MAX_POWER_LEVEL = 1.0;
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KP = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_COMP_VELOCITY_PID_KP : TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_PRACTICE_VELOCITY_PID_KP;
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KI = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_COMP_VELOCITY_PID_KI : TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_PRACTICE_VELOCITY_PID_KI;
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KD = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_COMP_VELOCITY_PID_KD : TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_PRACTICE_VELOCITY_PID_KD;
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KF = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_COMP_VELOCITY_PID_KF : TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_PRACTICE_VELOCITY_PID_KF;
 
-    public static final boolean TANK_DRIVETRAIN_REGULAR_MODE_SQUARING = false;
-    public static final boolean TANK_DRIVETRAIN_SIMPLE_MODE_SQUARING = false;
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KP = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_COMP_POSITION_PID_KP : TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_PRACTICE_POSITION_PID_KP;
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KI = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_COMP_POSITION_PID_KI : TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_PRACTICE_POSITION_PID_KI;
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KD = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_COMP_POSITION_PID_KD : TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_PRACTICE_POSITION_PID_KD;
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KF = TuningConstants.COMPETITION_ROBOT ? TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_COMP_POSITION_PID_KF : TuningConstants.SDSDRIVETRAIN_DRIVE_MOTORS_PRACTICE_POSITION_PID_KF;
 
-    public static final double TANK_DRIVETRAIN_ENCODER_ODOMETRY_ANGLE_CORRECTION = 1.0; // account for turning weirdness (any degree offset in the angle)
+    // DRIVE PRACTICE
+    public static final double SDSDRIVETRAIN_DRIVE_MOTOR_PRACTICE_VELOCITY_PID_KS = 88.0; // RPM ~110.0 was highest speed at full throttle FF on blocks
+
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_PRACTICE_VELOCITY_PID_KP = 0.02 * (TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_PRACTICE_VELOCITY_PID_KI = 0.0 * (TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_PRACTICE_VELOCITY_PID_KD = 0.0 * (TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_PRACTICE_VELOCITY_PID_KF = 0.00909 * (TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION : 1.0); // 100% control authority (on blocks)
+
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_PRACTICE_POSITION_PID_KP = 2.0 * (TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_PRACTICE_POSITION_PID_KI = 0.0 * (TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_PRACTICE_POSITION_PID_KD = 0.0 * (TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_PRACTICE_POSITION_PID_KF = 0.0 * (TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION : 1.0);
+
+    // DRIVE COMP
+    public static final double SDSDRIVETRAIN_DRIVE_MOTOR_COMP_VELOCITY_PID_KS = 88.0; // RPM ~104.0 was highest speed at full throttle FF on blocks
+
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_COMP_VELOCITY_PID_KP = 0.02 * (TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_COMP_VELOCITY_PID_KI = 0.0 * (TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_COMP_VELOCITY_PID_KD = 0.0 * (TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_COMP_VELOCITY_PID_KF = 0.00961538 * (TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION : 1.0); // 100% control authority (on blocks)
+
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_COMP_POSITION_PID_KP = 2.0 * (TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_COMP_POSITION_PID_KI = 0.0 * (TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_COMP_POSITION_PID_KD = 0.0 * (TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION : 1.0);
+    public static final double SDSDRIVETRAIN_DRIVE_MOTORS_COMP_POSITION_PID_KF = 0.0 * (TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED ? TuningConstants.SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION : 1.0);
+
+    public static final double SDSDRIVETRAIN_OMEGA_POSITION_PID_KP = 0.1;
+    public static final double SDSDRIVETRAIN_OMEGA_POSITION_PID_KI = 0.0;
+    public static final double SDSDRIVETRAIN_OMEGA_POSITION_PID_KD = 0.0;
+    public static final double SDSDRIVETRAIN_OMEGA_POSITION_PID_KF = 0.0;
+    public static final double SDSDRIVETRAIN_OMEGA_POSITION_PID_KS = 1.0;
+    public static final double SDSDRIVETRAIN_OMEGA_MAX_OUTPUT = 5.0;
+    public static final double SDSDRIVETRAIN_OMEGA_MIN_OUTPUT = -5.0;
+
+    public static final double SDSDRIVETRAIN_PATH_OMEGA_POSITION_PID_KP = 0.1;
+    public static final double SDSDRIVETRAIN_PATH_OMEGA_POSITION_PID_KI = 0.0;
+    public static final double SDSDRIVETRAIN_PATH_OMEGA_POSITION_PID_KD = 0.0;
+    public static final double SDSDRIVETRAIN_PATH_OMEGA_POSITION_PID_KF = 0.0;
+    public static final double SDSDRIVETRAIN_PATH_OMEGA_POSITION_PID_KS = 1.0;
+    public static final double SDSDRIVETRAIN_PATH_OMEGA_MAX_OUTPUT = 4.0;
+    public static final double SDSDRIVETRAIN_PATH_OMEGA_MIN_OUTPUT = -4.0;
+
+    public static final double SDSDRIVETRAIN_PATH_X_POSITION_PID_KP = 1.0;
+    public static final double SDSDRIVETRAIN_PATH_X_POSITION_PID_KI = 0.0;
+    public static final double SDSDRIVETRAIN_PATH_X_POSITION_PID_KD = 0.0;
+    public static final double SDSDRIVETRAIN_PATH_X_POSITION_PID_KF = 0.0;
+    public static final double SDSDRIVETRAIN_PATH_X_POSITION_PID_KS = 1.0;
+    public static final double SDSDRIVETRAIN_PATH_X_MAX_OUTPUT = 10.0;
+    public static final double SDSDRIVETRAIN_PATH_X_MIN_OUTPUT = -10.0;
+
+    public static final double SDSDRIVETRAIN_PATH_Y_POSITION_PID_KP = 1.0;
+    public static final double SDSDRIVETRAIN_PATH_Y_POSITION_PID_KI = 0.0;
+    public static final double SDSDRIVETRAIN_PATH_Y_POSITION_PID_KD = 0.0;
+    public static final double SDSDRIVETRAIN_PATH_Y_POSITION_PID_KF = 0.0;
+    public static final double SDSDRIVETRAIN_PATH_Y_POSITION_PID_KS = 1.0;
+    public static final double SDSDRIVETRAIN_PATH_Y_MAX_OUTPUT = 10.0;
+    public static final double SDSDRIVETRAIN_PATH_Y_MIN_OUTPUT = -10.0;
+
+    public static final boolean SDSDRIVETRAIN_USE_OVERCURRENT_ADJUSTMENT = true;
+    public static final double SDSDRIVETRAIN_OVERCURRENT_ADJUSTMENT = 0.75;
+    public static final double SDSDRIVETRAIN_OVERCURRENT_HIGH_ADJUSTMENT = 0.5;
+
+    public static final boolean SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION_ENABLED = true;
+    public static final double SDSDRIVETRAIN_DRIVE_VOLTAGE_COMPENSATION = 12.0;
+    public static final boolean SDSDRIVETRAIN_DRIVE_SUPPLY_CURRENT_LIMITING_ENABLED = true;
+    public static final double SDSDRIVETRAIN_DRIVE_SUPPLY_CURRENT_MAX = 35.0;
+    public static final double SDSDRIVETRAIN_DRIVE_SUPPLY_TRIGGER_CURRENT = 35.0;
+    public static final double SDSDRIVETRAIN_DRIVE_SUPPLY_TRIGGER_DURATION = 0.25;
+    public static final boolean SDSDRIVETRAIN_DRIVE_STATOR_CURRENT_LIMITING_ENABLED = false;
+    public static final double SDSDRIVETRAIN_DRIVE_STATOR_CURRENT_LIMIT = 80.0;
+
+    public static final boolean SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION_ENABLED = true;
+    public static final double SDSDRIVETRAIN_STEER_VOLTAGE_COMPENSATION = 12.0;
+    public static final boolean SDSDRIVETRAIN_STEER_SUPPLY_CURRENT_LIMITING_ENABLED = true;
+    public static final double SDSDRIVETRAIN_STEER_SUPPLY_CURRENT_MAX = 20.0;
+    public static final double SDSDRIVETRAIN_STEER_SUPPLY_TRIGGER_CURRENT = 30.0;
+    public static final double SDSDRIVETRAIN_STEER_SUPPLY_TRIGGER_DURATION = 0.1;
+    public static final boolean SDSDRIVETRAIN_STEER_STATOR_CURRENT_LIMITING_ENABLED = false;
+    public static final double SDSDRIVETRAIN_STEER_STATOR_CURRENT_LIMIT = 80.0;
+
+    public static final int SDSDRIVETRAIN_FEEDBACK_UPDATE_RATE_HZ = 100;
+    public static final int SDSDRIVETRAIN_ERROR_UPDATE_RATE_HZ = 10;
+
+    public static final boolean SDSDRIVETRAIN_SKIP_ANGLE_ON_ZERO_VELOCITY = true;
+    public static final double SDSDRIVETRAIN_SKIP_ANGLE_ON_ZERO_DELTA = 0.001;
+    public static final double SDSDRIVETRAIN_SKIP_OMEGA_ON_ZERO_DELTA = 0.36;
+
+    public static final double SDSDRIVETRAIN_EXPONENTIAL = 2.0;
+    public static final double SDSDRIVETRAIN_DEAD_ZONE_TURN = 0.1;
+    public static final double SDSDRIVETRAIN_DEAD_ZONE_VELOCITY_X = 0.1;
+    public static final double SDSDRIVETRAIN_DEAD_ZONE_VELOCITY_Y = 0.1;
+    public static final double SDSDRIVETRAIN_DEAD_ZONE_TRIGGER_AB = 0.1;
+
+    public static final double SDSDRIVETRAIN_ROTATION_A_MULTIPLIER = HardwareConstants.SDSDRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE / 2.0;
+    public static final double SDSDRIVETRAIN_ROTATION_B_MULTIPLIER = HardwareConstants.SDSDRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE / 2.0;
+
+    public static final double SDSDRIVETRAIN_MAX_VELOCITY = TuningConstants.SDSDRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS * HardwareConstants.SDSDRIVETRAIN_DRIVE_MOTOR_VELOCITY_TO_INCHES_PER_SECOND; // max velocity in inches per second
+    public static final double SDSDRIVETRAIN_SLOW_MODE_MAX_VELOCITY = 0.3 * TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY; // max velocity in inches per second
+    public static final double SDSDRIVETRAIN_VELOCITY_TO_PERCENTAGE = 1.0 / TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY;
+    public static final double SDSDRIVETRAIN_TURN_GOAL_VELOCITY = 10.0; // degrees per second for turn goal
+    public static final double SDSDRIVETRAIN_TURN_SCALE = 1.6 * Math.PI; // radians per second
+    public static final double SDSDRIVETRAIN_SLOW_MODE_TURN_SCALE = 0.3 * TuningConstants.SDSDRIVETRAIN_TURN_SCALE; // radians per second
+    public static final double SDSDRIVETRAIN_STATIONARY_VELOCITY = 0.1;
+    public static final double SDSDRIVETRAIN_TURN_APPROXIMATION_STATIONARY = 2.0; // number of degrees off at which point we give up trying to face an angle when uncommanded
+    public static final double SDSDRIVETRAIN_TURN_APPROXIMATION = 1.0; // number of degrees off at which point we give up trying to face an angle when uncommanded
+    public static final double SDSDRIVETRAIN_MAX_MODULE_PATH_VELOCITY = 0.85 * TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY; // up to x% of our max controllable speed
+    public static final double SDSDRIVETRAIN_MAX_PATH_TURN_VELOCITY = 180.0; // in degrees per second
+    public static final double SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY = 0.60 * TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY; // in inches per second
+    public static final double SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION = 0.60 * TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY; // in inches per second per second
+    public static final double SDSDRIVETRAIN_TRUE_MAX_PATH_TRANSLATIONAL_VELOCITY = 0.80 * TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY; // in inches per second
+    public static final double SDSDRIVETRAIN_TRUE_MAX_PATH_TRANSLATIONAL_ACCELERATION = 0.80 * TuningConstants.SDSDRIVETRAIN_MAX_VELOCITY; // in inches per second per second
+    public static final double SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY = 0.60 * TuningConstants.SDSDRIVETRAIN_MAX_PATH_TURN_VELOCITY; // in degrees per second
+    public static final double SDSDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION = 0.75 * TuningConstants.SDSDRIVETRAIN_MAX_PATH_TURN_VELOCITY; // in degrees per second per second
+    public static final double SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY = TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY / 1.4; // in inches per second
+    public static final double SDSDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION = TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION / 1.25; // in inches per second per second
+    public static final double SDSDRIVETRAIN_LOW_PATH_TRANSLATIONAL_VELOCITY = TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY / 2.0; // in inches per second
+    public static final double SDSDRIVETRAIN_LOW_PATH_TRANSLATIONAL_ACCELERATION = TuningConstants.SDSDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION / 2.0; // in inches per second per second
+
+    //================================================== REV DriveTrain ==============================================================
+
+    public static final boolean REVDRIVETRAIN_STEER_MOTORS_USE_TRAPEZOIDAL_MOTION_PROFILE = true;
+    public static final boolean REVDRIVETRAIN_USE_POSE_ESTIMATION_INVERSE_CORRECTION = false;
+    public static final double REVDRIVETRAIN_POSE_ESTIMATION_INVERSE_TWIST_CORRECTION_TIMESTEP = 0.02;
+
+    public static final boolean REVDRIVETRAIN_USE_ODOMETRY = true;
+    public static final boolean REVDRIVETRAIN_RESET_ON_ROBOT_START = true;
+    public static final boolean REVDRIVETRAIN_FIELD_ORIENTED_ON_ROBOT_START = true;
+    public static final boolean REVDRIVETRAIN_MAINTAIN_ORIENTATION_ON_ROBOT_START = true;
+
+    public static final double REVDRIVETRAIN_STEER_MOTOR1_ABSOLUTE_OFFSET = 0.0;
+    public static final double REVDRIVETRAIN_STEER_MOTOR2_ABSOLUTE_OFFSET = 0.0;
+    public static final double REVDRIVETRAIN_STEER_MOTOR3_ABSOLUTE_OFFSET = 0.0;
+    public static final double REVDRIVETRAIN_STEER_MOTOR4_ABSOLUTE_OFFSET = 0.0;
+
+    public static final boolean REVDRIVETRAIN_USE_TRANSLATIONAL_RATE_LIMITING = true;
+    public static final double REVDRIVETRAIN_TRANSLATIONAL_VELOCITY_MAX_NEGATIVE_RATE = -3.0 * TuningConstants.REVDRIVETRAIN_MAX_VELOCITY;
+    public static final double REVDRIVETRAIN_TRANSLATIONAL_VELOCITY_MAX_POSITIVE_RATE = 3.0 * TuningConstants.REVDRIVETRAIN_MAX_VELOCITY;
+    public static final boolean REVDRIVETRAIN_USE_ROTATIONAL_RATE_LIMITING = true;
+    public static final double REVDRIVETRAIN_ROTATIONAL_VELOCITY_MAX_NEGATIVE_RATE = -4.0 * TuningConstants.REVDRIVETRAIN_TURN_SCALE;
+    public static final double REVDRIVETRAIN_ROTATIONAL_VELOCITY_MAX_POSITIVE_RATE = 4.0 * TuningConstants.REVDRIVETRAIN_TURN_SCALE;
+
+    // Position PID (angle) per-module
+    public static final double REVDRIVETRAIN_STEER_MOTOR_POSITION_PID_KS = HardwareConstants.REVDRIVETRAIN_STEER_TICKS_PER_DEGREE;
+
+    public static final boolean REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_WRAPPING_ENABLED = true;
+    public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_WRAPPING_MIN = 0.0;
+    public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_WRAPPING_MAX = 360.0;
+
+    public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KP = 0.0166; // try to go full speed for a 60deg difference (or .016 power for a 1deg error)
+    public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KI = 0.0;
+    public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KD = 0.0;
+    public static final double REVDRIVETRAIN_STEER_MOTORS_POSITION_PID_KF = 0.0;
+
+    // Offboard TrapezoidalMotionProfile system...
+    public static final double REVDRIVETRAIN_STEER_MOTORS_TMP_PID_KP = 0.0166;
+    public static final double REVDRIVETRAIN_STEER_MOTORS_TMP_PID_KI = 0.0;
+    public static final double REVDRIVETRAIN_STEER_MOTORS_TMP_PID_KD = 0.0;
+    public static final double REVDRIVETRAIN_STEER_MOTORS_TMP_PID_KF = 0.0;
+    public static final double REVDRIVETRAIN_STEER_MOTORS_TMP_PID_CRUISE_VELOC = 1440.0; // deg/sec
+    public static final double REVDRIVETRAIN_STEER_MOTORS_TMP_PID_ACCEL = 360 * 32; // 4 * 360; // deg/sec/sec
+
+    // Velocity PID (drive) per-module
+    public static final double REVDRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS = 200.0; // 200.0 was highest speed at full throttle FF on blocks. this is inches/second
+
+    public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KP = 0.006;
+    public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KI = 0.0;
+    public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KD = 0.0;
+    public static final double REVDRIVETRAIN_DRIVE_MOTORS_VELOCITY_PID_KF = 0.005;
+
+    public static final double REVDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KP = 1.0;
+    public static final double REVDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KI = 0.0;
+    public static final double REVDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KD = 0.0;
+    public static final double REVDRIVETRAIN_DRIVE_MOTORS_POSITION_PID_KF = 0.0;
+
+    public static final double REVDRIVETRAIN_OMEGA_POSITION_PID_KP = 0.1;
+    public static final double REVDRIVETRAIN_OMEGA_POSITION_PID_KI = 0.0;
+    public static final double REVDRIVETRAIN_OMEGA_POSITION_PID_KD = 0.0;
+    public static final double REVDRIVETRAIN_OMEGA_POSITION_PID_KF = 0.0;
+    public static final double REVDRIVETRAIN_OMEGA_POSITION_PID_KS = 1.0;
+    public static final double REVDRIVETRAIN_OMEGA_MAX_OUTPUT = 5.0;
+    public static final double REVDRIVETRAIN_OMEGA_MIN_OUTPUT = -5.0;
+
+    public static final double REVDRIVETRAIN_PATH_OMEGA_POSITION_PID_KP = 0.1;
+    public static final double REVDRIVETRAIN_PATH_OMEGA_POSITION_PID_KI = 0.0;
+    public static final double REVDRIVETRAIN_PATH_OMEGA_POSITION_PID_KD = 0.0;
+    public static final double REVDRIVETRAIN_PATH_OMEGA_POSITION_PID_KF = 0.0;
+    public static final double REVDRIVETRAIN_PATH_OMEGA_POSITION_PID_KS = 1.0;
+    public static final double REVDRIVETRAIN_PATH_OMEGA_MAX_OUTPUT = 4.0;
+    public static final double REVDRIVETRAIN_PATH_OMEGA_MIN_OUTPUT = -4.0;
+
+    public static final double REVDRIVETRAIN_PATH_X_POSITION_PID_KP = 0.0;
+    public static final double REVDRIVETRAIN_PATH_X_POSITION_PID_KI = 0.0;
+    public static final double REVDRIVETRAIN_PATH_X_POSITION_PID_KD = 0.0;
+    public static final double REVDRIVETRAIN_PATH_X_POSITION_PID_KF = 0.0;
+    public static final double REVDRIVETRAIN_PATH_X_POSITION_PID_KS = 1.0;
+    public static final double REVDRIVETRAIN_PATH_X_MAX_OUTPUT = 10.0;
+    public static final double REVDRIVETRAIN_PATH_X_MIN_OUTPUT = -10.0;
+
+    public static final double REVDRIVETRAIN_PATH_Y_POSITION_PID_KP = 0.0;
+    public static final double REVDRIVETRAIN_PATH_Y_POSITION_PID_KI = 0.0;
+    public static final double REVDRIVETRAIN_PATH_Y_POSITION_PID_KD = 0.0;
+    public static final double REVDRIVETRAIN_PATH_Y_POSITION_PID_KF = 0.0;
+    public static final double REVDRIVETRAIN_PATH_Y_POSITION_PID_KS = 1.0;
+    public static final double REVDRIVETRAIN_PATH_Y_MAX_OUTPUT = 10.0;
+    public static final double REVDRIVETRAIN_PATH_Y_MIN_OUTPUT = -10.0;
+
+    public static final boolean REVDRIVETRAIN_USE_OVERCURRENT_ADJUSTMENT = true;
+    public static final double REVDRIVETRAIN_OVERCURRENT_ADJUSTMENT = 0.75;
+    public static final double REVDRIVETRAIN_OVERCURRENT_HIGH_ADJUSTMENT = 0.5;
+
+    public static final int REVDRIVETRAIN_DRIVE_CURRENT_STALL_LIMIT = 50;
+    public static final int REVDRIVETRAIN_DRIVE_CURRENT_FREE_LIMIT = 0;
+    public static final int REVDRIVETRAIN_DRIVE_CURRENT_LIMIT_RPM = 20000;
+
+    public static final int REVDRIVETRAIN_STEER_CURRENT_STALL_LIMIT = 20;
+    public static final int REVDRIVETRAIN_STEER_CURRENT_FREE_LIMIT = 0;
+    public static final int REVDRIVETRAIN_STEER_CURRENT_LIMIT_RPM = 20000;
+
+    public static final boolean REVDRIVETRAIN_SKIP_ANGLE_ON_ZERO_VELOCITY = true;
+    public static final double REVDRIVETRAIN_SKIP_ANGLE_ON_ZERO_DELTA = 0.001;
+    public static final double REVDRIVETRAIN_SKIP_OMEGA_ON_ZERO_DELTA = 0.36;
+
+    public static final double REVDRIVETRAIN_EXPONENTIAL = 2.0;
+    public static final double REVDRIVETRAIN_DEAD_ZONE_TURN = 0.1;
+    public static final double REVDRIVETRAIN_DEAD_ZONE_VELOCITY_X = 0.1;
+    public static final double REVDRIVETRAIN_DEAD_ZONE_VELOCITY_Y = 0.1;
+    public static final double REVDRIVETRAIN_DEAD_ZONE_TRIGGER_AB = 0.1;
+
+    public static final double REVDRIVETRAIN_ROTATION_A_MULTIPLIER = HardwareConstants.REVDRIVETRAIN_HORIZONTAL_WHEEL_SEPERATION_DISTANCE / 2.0;
+    public static final double REVDRIVETRAIN_ROTATION_B_MULTIPLIER = HardwareConstants.REVDRIVETRAIN_VERTICAL_WHEEL_SEPERATION_DISTANCE / 2.0;
+
+    public static final double REVDRIVETRAIN_MAX_VELOCITY = TuningConstants.REVDRIVETRAIN_DRIVE_MOTOR_VELOCITY_PID_KS; // max velocity in inches per second
+    public static final double REVDRIVETRAIN_SLOW_MODE_MAX_VELOCITY = 0.3 * TuningConstants.REVDRIVETRAIN_MAX_VELOCITY; // max velocity in inches per second
+    public static final double REVDRIVETRAIN_VELOCITY_TO_PERCENTAGE = 1.0 / TuningConstants.REVDRIVETRAIN_MAX_VELOCITY;
+    public static final double REVDRIVETRAIN_TURN_GOAL_VELOCITY = 10.0; // degrees per second for turn goal
+    public static final double REVDRIVETRAIN_TURN_SCALE = 1.6 * Math.PI; // radians per second
+    public static final double REVDRIVETRAIN_SLOW_MODE_TURN_SCALE = 0.3 * TuningConstants.REVDRIVETRAIN_TURN_SCALE; // radians per second
+    public static final double REVDRIVETRAIN_STATIONARY_VELOCITY = 0.1;
+    public static final double REVDRIVETRAIN_TURN_APPROXIMATION_STATIONARY = 2.0; // number of degrees off at which point we give up trying to face an angle when uncommanded
+    public static final double REVDRIVETRAIN_TURN_APPROXIMATION = 1.0; // number of degrees off at which point we give up trying to face an angle when uncommanded
+    public static final double REVDRIVETRAIN_MAX_MODULE_PATH_VELOCITY = 0.85 * TuningConstants.REVDRIVETRAIN_MAX_VELOCITY; // up to x% of our max controllable speed
+    public static final double REVDRIVETRAIN_MAX_PATH_TURN_VELOCITY = 180.0; // in degrees per second
+    public static final double REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY = 0.60 * TuningConstants.REVDRIVETRAIN_MAX_VELOCITY; // in inches per second
+    public static final double REVDRIVETRAIN_TRUE_MAX_PATH_TRANSLATIONAL_VELOCITY = 0.75 * TuningConstants.REVDRIVETRAIN_MAX_VELOCITY; // in inches per second
+    public static final double REVDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY = 0.25 * TuningConstants.REVDRIVETRAIN_MAX_PATH_TURN_VELOCITY; // in degrees per second
+    public static final double REVDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION = 0.5 * TuningConstants.REVDRIVETRAIN_MAX_PATH_TURN_VELOCITY; // in degrees per second per second
+    public static final double REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION = 0.75 * TuningConstants.REVDRIVETRAIN_MAX_VELOCITY; // in inches per second per second
+    public static final double REVDRIVETRAIN_MID_PATH_TRANSLATIONAL_VELOCITY = TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY / 1.4; // in inches per second
+    public static final double REVDRIVETRAIN_MID_PATH_TRANSLATIONAL_ACCELERATION = TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION / 1.25; // in inches per second per second
+    public static final double REVDRIVETRAIN_LOW_PATH_TRANSLATIONAL_VELOCITY = TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_VELOCITY / 2.0; // in inches per second
+    public static final double REVDRIVETRAIN_LOW_PATH_TRANSLATIONAL_ACCELERATION = TuningConstants.REVDRIVETRAIN_MAX_PATH_TRANSLATIONAL_ACCELERATION / 2.0; // in inches per second per second
+
+    //============================================================ AUTONOMOUS POSITIONS ======================================
+
+    public static final double RevStartPositionX = 0.0;
+    public static final double RevStartPositionY = 0.0;
+
+    //======================================================== Electrolite Arm Constants ===================================
+
+    public static final boolean WRIST_MOTOR_USE_SMART_MOTION = false;
+    public static final boolean WRIST_MOTOR_INVERT_SENSOR = true;
+    public static final boolean WRIST_MOTOR_INVERT_OUTPUT = false;
+    public static final boolean INTAKE_MOTOR_INVERT_OUTPUT = false;
+
+    public static final double WRIST_MOTOR_POSITION_PID_KP = 0.015;
+    public static final double WRIST_MOTOR_POSITION_PID_KI = 0;
+    public static final double WRIST_MOTOR_POSITION_PID_KD = 0;
+    public static final double WRIST_MOTOR_POSITION_PID_KF = 0.0;
+    public static final double WRIST_MOTOR_SM_PID_KP = 0.02;
+    public static final double WRIST_MOTOR_SM_PID_KI = 0.0;
+    public static final double WRIST_MOTOR_SM_PID_KD = 0.0;
+    public static final double WRIST_MOTOR_SM_PID_KF = 0.02;
+    public static final int WRIST_MOTOR_SM_IZONE = 0;
+    public static final int WRIST_MOTOR_SM_PID_CRUISE_VELOC = 10;
+    public static final int WRIST_MOTOR_SM_PID_ACCEL = 15;
+
+    public static final double WRIST_INTAKE_IN_POWER = 0.4;
+    public static final double WRIST_INTAKE_OUT_POWER = -0.95;
+    public static final double WRIST_INTAKE_OUT_MEDIUM_POWER = -0.6;
+    public static final double WRIST_INTAKE_OUT_SLOW_POWER = -0.4;
+    public static final double WRIST_INTAKE_OUT_SUPER_SLOW_POWER = -0.2;
+
+    public static final double INTAKE_MOTOR_VELOCITY_PID_KP = 0.015;
+    public static final double INTAKE_MOTOR_VELOCITY_PID_KI = 0;
+    public static final double INTAKE_MOTOR_VELOCITY_PID_KD = 0;
+    public static final double INTAKE_MOTOR_VELOCITY_PID_KF = 0.0;
+    public static final double INTAKE_MIN_THRESHOLD = 0.5;
+
+    public static final boolean INTAKE_MOTOR_USE_VELOCITY_CONTROL = false; 
+
+    public static final double WRIST_INPUT_TO_TICK_ADJUSTMENT = 25.0;
+    public static final double WRIST_MIN_THRESHOLD = 5.0;
+    public static final double WRIST_DEADZONE = 0.1;
+
+    public static final double LOW_CUBE_DROP_POSITION = 230.0;
+    public static final double MID_CUBE_DROP_POSITION = 280.0;
+    public static final double HIGH_CUBE_DROP_POSITION = 330.0;
+    public static final double STOWED_POSITION = 350.0;
+    public static final double GROUND_CUBE_PICKUP = 207.0;
+    public static final double SUBSTATION_CUBE_PICKUP = 320.0;
+
+    public static final boolean WRIST_MOTOR_POSITION_PID_WRAPPING_ENABLED = true;
+    public static final double WRIST_MOTOR_POSITION_PID_WRAPPING_MIN = 0.0;
+    public static final double WRIST_MOTOR_POSITION_PID_WRAPPING_MAX = 360.0;
+
+    // Wrist stall prevention
+    public static final boolean WRIST_STALL_PROTECTION_ENABLED = false;
+    public static final double WRIST_STALLED_CURRENT_THRESHOLD = 2.5; // amount of current being "used" by the wrist motor (despite not moving according to the encoders) to be considered stalled
+    public static final double BATTERY_AVERAGE_EXPECTED_VOLTAGE = 12.0; // expected voltage of battery
+    public static final double WRIST_STALLED_POWER_THRESHOLD = TuningConstants.WRIST_STALLED_CURRENT_THRESHOLD * TuningConstants.BATTERY_AVERAGE_EXPECTED_VOLTAGE; // amount of power that can be "used" by the linear actuators to be considered stalled
+    public static final double WRIST_STALLED_VELOCITY_THRESHOLD = 0.05; // .05 rot/sec is very slow
+
+    // Power sampling for wrist
+    public static final double WRIST_POWER_TRACKING_DURATION = 0.25; // duration of time to keep track of the average current
+    public static final double WRIST_POWER_SAMPLES_PER_LOOP = 1.0;
+    public static final double WRIST_POWER_SAMPLES_PER_SECOND = TuningConstants.LOOPS_PER_SECOND * TuningConstants.WRIST_POWER_SAMPLES_PER_LOOP;
+    public static final double WRIST_NOT_MOVING_POWER_THRESHOLD = 0.25; // amount of power being "used" by the wrist motorr to be considered "not moving"
+
+    // Velocity sampling for wrist
+    public static final double WRIST_VELOCITY_TRACKING_DURATION = TuningConstants.WRIST_POWER_TRACKING_DURATION; // should match the power tracking
+    public static final double WRIST_VELOCITY_SAMPLES_PER_LOOP = TuningConstants.WRIST_POWER_SAMPLES_PER_LOOP; // should match the power tracking
+    public static final double WRIST_VELOCITY_SAMPLES_PER_SECOND = TuningConstants.WRIST_POWER_SAMPLES_PER_SECOND;
+
+    // Intake stall prevention
+    public static final boolean INTAKE_STALL_PROTECTION_ENABLED = true;
+    public static final double INTAKE_STALLED_CURRENT_THRESHOLD = 5.0; // amount of current being "used" by the wrist motor (despite not moving according to the encoders) to be considered stalled
+    public static final double INTAKE_STALLED_POWER_THRESHOLD = TuningConstants.INTAKE_STALLED_CURRENT_THRESHOLD * TuningConstants.BATTERY_AVERAGE_EXPECTED_VOLTAGE; // amount of power that can be "used" by the linear actuators to be considered stalled
+    public static final double INTAKE_STALLED_VELOCITY_THRESHOLD = 1000.0; // 1000 units would be very slow
+
+    // Power sampling for intake
+    public static final double INTAKE_POWER_TRACKING_DURATION = 0.25; // duration of time to keep track of the average current
+    public static final double INTAKE_POWER_SAMPLES_PER_LOOP = 1.0;
+    public static final double INTAKE_POWER_SAMPLES_PER_SECOND = TuningConstants.LOOPS_PER_SECOND * TuningConstants.INTAKE_POWER_SAMPLES_PER_LOOP;
+    public static final double INTAKE_NOT_MOVING_POWER_THRESHOLD = 0.25; // amount of power being "used" by the intake motorr to be considered "not moving"
+
+    // Velocity sampling for intake
+    public static final double INTAKE_VELOCITY_TRACKING_DURATION = TuningConstants.INTAKE_POWER_TRACKING_DURATION; // should match the power tracking
+    public static final double INTAKE_VELOCITY_SAMPLES_PER_LOOP = TuningConstants.INTAKE_POWER_SAMPLES_PER_LOOP; // should match the power tracking
+    public static final double INTAKE_VELOCITY_SAMPLES_PER_SECOND = TuningConstants.INTAKE_POWER_SAMPLES_PER_SECOND;
 }

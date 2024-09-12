@@ -11,9 +11,9 @@ import frc.robot.AutonLocManager;
 import frc.robot.LoggingKey;
 import frc.robot.TuningConstants;
 import frc.robot.driver.SmartDashboardSelectionManager.AutoRoutine;
-import frc.robot.driver.SmartDashboardSelectionManager.PriorityPickupSide;
 import frc.robot.driver.SmartDashboardSelectionManager.StartPosition;
 import frc.robot.driver.controltasks.*;
+import frc.robot.driver.controltasks.FollowPathTask.Type;
 
 @Singleton
 public class AutonomousRoutineSelector
@@ -66,16 +66,58 @@ public class AutonomousRoutineSelector
             this.locManager.updateAlliance();
             StartPosition startPosition = this.selectionManager.getSelectedStartPosition();
             AutoRoutine routine = this.selectionManager.getSelectedAutoRoutine();
-            PriorityPickupSide pickupSide = this.selectionManager.getPickupSide();
 
             boolean isRed = this.locManager.getIsRed();
 
             this.logger.logString(LoggingKey.AutonomousSelection, startPosition.toString() + "." + routine.toString());
 
-            return GetFillerRoutine();
+            if (routine == AutoRoutine.Test2024)
+            {
+                return Test2024();
+            }
+
+            if (routine == AutoRoutine.PlaceDriveBack)
+            {
+                return placeDriveBack(isRed);
+            }
+            else if (routine == AutoRoutine.Place)
+            {
+                return place();
+            }
+            else
+            {
+                return ConcurrentTask.AllTasks(
+                    new ResetLevelTask(),
+                    new PositionStartingTask(
+                        TuningConstants.RevStartPositionX,
+                        TuningConstants.RevStartPositionY,
+                        180.0,
+                        true,
+                        true),
+                    new ResetLevelTask());
+            }
         }
 
         return GetFillerRoutine();
+    }   
+
+    public static IControlTask Test2024()
+    {
+        double framePreremetere = 34; //With bumpers
+        double halfFramePreremetere = framePreremetere / 2.0;
+        
+        return SequentialTask.Sequence(
+            ConcurrentTask.AllTasks(
+                new ResetLevelTask(),
+                new PositionStartingTask(
+                    // Change tour x - axis value based on is red
+                    250.5 + halfFramePreremetere,
+                    306 - halfFramePreremetere,
+                    0.0,
+                    true,
+                    true)),
+            
+            new FollowPathTask("P3toP5", Type.Absolute));
     }
 
     /**
@@ -84,6 +126,58 @@ public class AutonomousRoutineSelector
     private static IControlTask GetFillerRoutine()
     {
         return new WaitTask(0.0);
+    }
+
+    private static IControlTask placeDriveBack(boolean isRed)
+    {
+        return SequentialTask.Sequence(
+            ConcurrentTask.AllTasks(
+                new ResetLevelTask(),
+                new PositionStartingTask(
+                    TuningConstants.RevStartPositionX,
+                    TuningConstants.RevStartPositionY,
+                    0.0,
+                    true,
+                    true)),
+
+            new WristPositionTask(
+                TuningConstants.HIGH_CUBE_DROP_POSITION,
+                true),
+            new IntakeInTask(DigitalOperation.IntakeOutMedium, 1.0),
+            
+            new WaitTask(0.2),
+
+            ConcurrentTask.AllTasks(
+                new FollowPathTask("goForwards5ft" , Type.Absolute),
+                SequentialTask.Sequence(
+                    new WaitTask(0.5),
+                    new WristPositionTask(
+                        TuningConstants.STOWED_POSITION,
+                        false)
+                )
+            )
+        );
+    }
+
+    private static IControlTask place()
+    {
+        return SequentialTask.Sequence(
+            ConcurrentTask.AllTasks(
+                new ResetLevelTask(),
+                new PositionStartingTask(
+                    TuningConstants.RevStartPositionX,
+                    TuningConstants.RevStartPositionY,
+                    180.0,
+                    true,
+                    true)),
+            new WristPositionTask(
+                TuningConstants.HIGH_CUBE_DROP_POSITION,
+                true),
+            new IntakeInTask(DigitalOperation.IntakeOutMedium, 1.0),
+            new WristPositionTask(
+                TuningConstants.STOWED_POSITION,
+                false)
+        );
     }
 }
 

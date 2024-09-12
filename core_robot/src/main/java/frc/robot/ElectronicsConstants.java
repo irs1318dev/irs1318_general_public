@@ -32,8 +32,8 @@ public class ElectronicsConstants
     public static final boolean INVERT_THROTTLE_AXIS = true;
     public static final boolean INVERT_TRIGGER_AXIS = false;
 
-    public static final int POWER_DISTRIBUTION_CAN_ID = 1;
-    public static final PowerDistributionModuleType POWER_DISTRIBUTION_TYPE = PowerDistributionModuleType.PowerDistributionHub;
+    public static final int POWER_DISTRIBUTION_CAN_ID = 0;
+    public static final PowerDistributionModuleType POWER_DISTRIBUTION_TYPE = PowerDistributionModuleType.PowerDistributionPanel;
 
     public static final double REV_THROUGHBORE_ENCODER_DUTY_CYCLE_MIN = 1.0 / 1024.0;
     public static final double REV_THROUGHBORE_ENCODER_DUTY_CYCLE_MAX = 1023.0 / 1024.0;
@@ -59,14 +59,40 @@ public class ElectronicsConstants
 
     public static final int INDICATOR_LIGHT_CANDLE_CAN_ID = 55;
 
-    //================================================== Tank DriveTrain ==============================================================
+    //================================================== SDSDriveTrain ==============================================================
 
-    public static final int TANK_DRIVETRAIN_LEFT_MASTER_CAN_ID = 1;
-    public static final int TANK_DRIVETRAIN_LEFT_MASTER_PDP_SLOT = 1;
-    public static final int TANK_DRIVETRAIN_LEFT_FOLLOWER_CAN_ID = 2;
-    public static final int TANK_DRIVETRAIN_LEFT_FOLLOWER_PDP_SLOT = 0;
-    public static final int TANK_DRIVETRAIN_RIGHT_MASTER_CAN_ID = 3;
-    public static final int TANK_DRIVETRAIN_RIGHT_MASTER_PDP_SLOT = 14;
-    public static final int TANK_DRIVETRAIN_RIGHT_FOLLOWER_CAN_ID = 4;
-    public static final int TANK_DRIVETRAIN_RIGHT_FOLLOWER_PDP_SLOT = 15;
+    public static final int SDSDRIVETRAIN_DRIVE_MOTOR_1_CAN_ID = 1;
+    public static final int SDSDRIVETRAIN_STEER_MOTOR_1_CAN_ID = 2;
+    public static final int SDSDRIVETRAIN_DRIVE_MOTOR_2_CAN_ID = 3;
+    public static final int SDSDRIVETRAIN_STEER_MOTOR_2_CAN_ID = 4;
+    public static final int SDSDRIVETRAIN_DRIVE_MOTOR_3_CAN_ID = 5;
+    public static final int SDSDRIVETRAIN_STEER_MOTOR_3_CAN_ID = 6;
+    public static final int SDSDRIVETRAIN_DRIVE_MOTOR_4_CAN_ID = 7;
+    public static final int SDSDRIVETRAIN_STEER_MOTOR_4_CAN_ID = 8;
+
+    public static final int SDSDRIVETRAIN_ABSOLUTE_ENCODER_1_CAN_ID = 1;
+    public static final int SDSDRIVETRAIN_ABSOLUTE_ENCODER_2_CAN_ID = 2;
+    public static final int SDSDRIVETRAIN_ABSOLUTE_ENCODER_3_CAN_ID = 3;
+    public static final int SDSDRIVETRAIN_ABSOLUTE_ENCODER_4_CAN_ID = 4;
+
+    //================================================== RevDriveTrain ==============================================================
+
+    public static final int REVDRIVETRAIN_DRIVE_MOTOR_1_CAN_ID = 1;
+    public static final int REVDRIVETRAIN_STEER_MOTOR_1_CAN_ID = 2;
+    public static final int REVDRIVETRAIN_DRIVE_MOTOR_2_CAN_ID = 3;
+    public static final int REVDRIVETRAIN_STEER_MOTOR_2_CAN_ID = 4;
+    public static final int REVDRIVETRAIN_DRIVE_MOTOR_3_CAN_ID = 5;
+    public static final int REVDRIVETRAIN_STEER_MOTOR_3_CAN_ID = 6;
+    public static final int REVDRIVETRAIN_DRIVE_MOTOR_4_CAN_ID = 7;
+    public static final int REVDRIVETRAIN_STEER_MOTOR_4_CAN_ID = 8;
+
+    //================================================== Wrist Intake ==============================================================
+
+    public static final int WRIST_MOTOR_CAN_ID = 30;
+    public static final int INTAKE_MOTOR_CAN_ID = 40;
+    // intake wheels Rev can ID is 30
+    // intake wrist Rev CAN ID is 40
+    public static final int WRIST_PDH_CHANNEL = 4;
+    public static final int WRIST_INTAKE_PDH_CHANNEL = 5;
 }
+

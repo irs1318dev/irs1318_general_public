@@ -9,7 +9,7 @@
       2. [Pistons/Pneumatic Cylinders (DoubleSolenoids)](#pistonspneumatic-cylinders-doublesolenoids)
    3. [Sensors](#sensors)
       1. [Limit Switches](#limit-switches)
-      2. [Encoders](#encoders)
+      2. [Encoders](#encoders)S
       3. [Through-Beam Sensors](#through-beam-sensors)
       4. [Distance Sensors](#distance-sensors)
    4. [Other](#other)

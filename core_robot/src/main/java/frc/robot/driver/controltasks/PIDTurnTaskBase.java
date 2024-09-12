@@ -66,6 +66,11 @@ public abstract class PIDTurnTaskBase extends ControlTaskBase
         {
             this.timer = this.getInjector().getInstance(ITimer.class);
         }
+
+        this.setDigitalOperationState(DigitalOperation.DriveTrainEnableFieldOrientation, false);
+        this.setDigitalOperationState(DigitalOperation.DriveTrainDisableFieldOrientation, false);
+        this.setAnalogOperationState(AnalogOperation.DriveTrainSpinLeft, 0.0);
+        this.setAnalogOperationState(AnalogOperation.DriveTrainSpinRight, 0.0);
     }
 
     /**
@@ -74,13 +79,15 @@ public abstract class PIDTurnTaskBase extends ControlTaskBase
     @Override
     public void update()
     {
-        this.setDigitalOperationState(DigitalOperation.DriveTrainUsePositionalMode, false);
-
         Double currentMeasuredAngle = this.getHorizontalAngle();
         if (currentMeasuredAngle != null)
         {
             double turnSpeed = this.turnPidHandler.calculatePosition(0.0, currentMeasuredAngle);
-            this.setAnalogOperationState(AnalogOperation.DriveTrainTurn, turnSpeed);
+            this.setAnalogOperationState(AnalogOperation.DriveTrainSpinLeft, -turnSpeed);
+        }
+        else if (!this.keepTurningWithNoSample)
+        {
+            this.setAnalogOperationState(AnalogOperation.DriveTrainSpinLeft, 0.0);
         }
     }
 
@@ -90,8 +97,11 @@ public abstract class PIDTurnTaskBase extends ControlTaskBase
     @Override
     public void end()
     {
-        this.setDigitalOperationState(DigitalOperation.DriveTrainUsePositionalMode, false);
-        this.setAnalogOperationState(AnalogOperation.DriveTrainTurn, 0.0);
+        this.setAnalogOperationState(AnalogOperation.DriveTrainSpinLeft, 0.0);
+        this.setAnalogOperationState(AnalogOperation.DriveTrainSpinRight, 0.0);
+
+        this.setDigitalOperationState(DigitalOperation.DriveTrainEnableFieldOrientation, false);
+        this.setDigitalOperationState(DigitalOperation.DriveTrainDisableFieldOrientation, false);
     }
 
     /**

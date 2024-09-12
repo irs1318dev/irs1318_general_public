@@ -75,6 +75,8 @@ public class PositionStartingTask extends UpdateCycleTask
     {
         super.begin();
 
+        System.out.println("Hopefully this prints JAMIE 8:26 PM");
+
         this.setEverything();
     }
 
@@ -109,6 +111,7 @@ public class PositionStartingTask extends UpdateCycleTask
             this.setAnalogOperationState(AnalogOperation.DriveTrainStartingYPosition, 0.0);
         }
 
+        this.setDigitalOperationState(DigitalOperation.DriveTrainReset, false);
         this.setDigitalOperationState(DigitalOperation.PositionResetFieldOrientation, false);
     }
 
@@ -126,6 +129,7 @@ public class PositionStartingTask extends UpdateCycleTask
             this.setAnalogOperationState(AnalogOperation.DriveTrainStartingYPosition, this.yPosition);
         }
 
+        this.setDigitalOperationState(DigitalOperation.DriveTrainReset, this.resetDriveTrain);
         this.setDigitalOperationState(DigitalOperation.PositionResetFieldOrientation, this.resetOrientation);
     }
 }

@@ -1,5 +1,6 @@
 package frc.lib.robotprovider;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,6 +13,14 @@ import frc.robot.LoggingKey;
 @Singleton
 public class SmartDashboardLogger implements ISmartDashboardLogger
 {
+    private int loggingCounter;
+
+    @Inject
+    public SmartDashboardLogger()
+    {
+        this.loggingCounter = 0;
+    }
+
     /**
      * Write a boolean to the smart dashboard
      * @param key to write to
@@ -20,9 +29,12 @@ public class SmartDashboardLogger implements ISmartDashboardLogger
     @Override
     public void logBoolean(LoggingKey key, boolean value)
     {
-        if (SmartDashboard.getBoolean(key.value, !value) != value)
+        if ((this.loggingCounter % key.loggingFrequency) == 0)
         {
-            SmartDashboard.putBoolean(key.value, value);
+            if (SmartDashboard.getBoolean(key.value, !value) != value)
+            {
+                SmartDashboard.putBoolean(key.value, value);
+            }
         }
     }
 
@@ -34,7 +46,10 @@ public class SmartDashboardLogger implements ISmartDashboardLogger
     @Override
     public void logBooleanArray(LoggingKey key, boolean[] value)
     {
-        SmartDashboard.putBooleanArray(key.value, value);
+        if ((this.loggingCounter % key.loggingFrequency) == 0)
+        {
+            SmartDashboard.putBooleanArray(key.value, value);
+        }
     }
 
     /**
@@ -45,9 +60,12 @@ public class SmartDashboardLogger implements ISmartDashboardLogger
     @Override
     public void logNumber(LoggingKey key, double value)
     {
-        if (SmartDashboard.getNumber(key.value, value + 0.5) != value)
+        if ((this.loggingCounter % key.loggingFrequency) == 0)
         {
-            SmartDashboard.putNumber(key.value, value);
+            if (SmartDashboard.getNumber(key.value, value + 0.5) != value)
+            {
+                SmartDashboard.putNumber(key.value, value);
+            }
         }
     }
 
@@ -65,7 +83,7 @@ public class SmartDashboardLogger implements ISmartDashboardLogger
             valueString = String.valueOf(value);
         }
 
-        SmartDashboard.putString(key.value, valueString);
+        this.logString(key, valueString);
     }
 
     /**
@@ -93,7 +111,7 @@ public class SmartDashboardLogger implements ISmartDashboardLogger
             valueString = String.valueOf(value);
         }
 
-        SmartDashboard.putString(key.value, valueString);
+        this.logString(key, valueString);
     }
 
     /**
@@ -105,9 +123,12 @@ public class SmartDashboardLogger implements ISmartDashboardLogger
     @Override
     public void logInteger(LoggingKey key, int value, String formatString)
     {
-        if (SmartDashboard.getNumber(key.value, value + 0.5) != value)
+        if ((this.loggingCounter % key.loggingFrequency) == 0)
         {
-            SmartDashboard.putNumber(key.value, value);
+            if (SmartDashboard.getNumber(key.value, value + 0.5) != value)
+            {
+                SmartDashboard.putNumber(key.value, value);
+            }
         }
     }
 
@@ -119,9 +140,19 @@ public class SmartDashboardLogger implements ISmartDashboardLogger
     @Override
     public void logString(LoggingKey key, String value)
     {
-        if (SmartDashboard.getString(key.value, null) != value)
+        if ((this.loggingCounter % key.loggingFrequency) == 0)
         {
-            SmartDashboard.putString(key.value, value);
+            if (value == null)
+            {
+                value = "";
+            }
+
+            String currValue = SmartDashboard.getString(key.value, "");
+            if ((value != null && currValue != null && !currValue.equals(value)) ||
+                (value != null) != (currValue != null))
+            {
+                SmartDashboard.putString(key.value, value);
+            }
         }
     }
 
@@ -131,6 +162,7 @@ public class SmartDashboardLogger implements ISmartDashboardLogger
     @Override
     public void update()
     {
+        this.loggingCounter++;
     }
 
     /**

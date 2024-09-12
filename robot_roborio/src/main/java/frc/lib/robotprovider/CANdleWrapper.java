@@ -43,7 +43,7 @@ public class CANdleWrapper implements ICANdle
 
     public void configBrightnessScalar(double brightness)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configBrightnessScalar(brightness),
             "CANdle.configBrightnessScalar");
     }
@@ -78,21 +78,21 @@ public class CANdleWrapper implements ICANdle
                 break;
         }
 
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configLEDType(stripType),
             "CANdle.configLEDType");
     }
 
     public void configLOSBehavior(boolean disableWhenLOS)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configLOSBehavior(disableWhenLOS),
             "CANdle.configLOSBehavior");
     }
 
     public void configStatusLedState(boolean disableWhenRunning)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configStatusLedState(disableWhenRunning),
             "CANdle.configStatusLedState");
     }
@@ -115,28 +115,28 @@ public class CANdleWrapper implements ICANdle
                 break;
         }
 
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.configVBatOutput(outputMode),
             "CANdle.configVBatOutput");
     }
 
     public void modulateVBatOutput(double dutyCyclePercent)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.modulateVBatOutput(dutyCyclePercent),
             "CANdle.modulateVBatOutput");
     }
 
     public void setLEDs(int r, int g, int b)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.setLEDs(r, g, b),
             "CANdle.setLEDs");
     }
 
     public void setLEDs(int r, int g, int b, int w, int startIdx, int count)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.setLEDs(r, g, b, w, startIdx, count),
             "CANdle.setLEDs");
     }
@@ -179,7 +179,7 @@ public class CANdleWrapper implements ICANdle
                 break;
         }
 
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.animate(new TwinkleAnimation(r, g, b, w, speed, numLed, twinkleDivider, ledOffset), animSlot),
             "CANdle.startTwinkleAnimation");
     }
@@ -222,35 +222,35 @@ public class CANdleWrapper implements ICANdle
                 break;
         }
 
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.animate(new TwinkleOffAnimation(r, g, b, w, speed, numLed, twinkleDivider, ledOffset), animSlot),
             "CANdle.startTwinkleOffAnimation");
     }
 
     public void startStrobeAnimation(int animSlot, int r, int g, int b, int w, double speed, int numLed, int ledOffset)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.animate(new StrobeAnimation(r, g, b, w, speed, numLed, ledOffset), animSlot),
             "CANdle.startStrobeAnimation");
     }
 
     public void startSingleFadeAnimation(int animSlot, int r, int g, int b, int w, double speed, int numLed, int ledOffset)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.animate(new SingleFadeAnimation(r, g, b, w, speed, numLed, ledOffset), animSlot),
             "CANdle.startSingleFadeAnimation");
     }
 
     public void startRgbFadeAnimation(int animSlot, double brightness, double speed, int numLed, int ledOffset)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.animate(new RgbFadeAnimation(brightness, speed, numLed, ledOffset), animSlot),
             "CANdle.startRgbFaseAnimation");
     }
 
     public void startRainbowAnimation(int animSlot, double brightness, double speed, int numLed, boolean reverseDirection, int ledOffset)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.animate(new RainbowAnimation(brightness, speed, numLed, reverseDirection, ledOffset), animSlot),
             "CANdle.startRainbowAnimation");
     }
@@ -273,28 +273,28 @@ public class CANdleWrapper implements ICANdle
                 break;
         }
 
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.animate(new LarsonAnimation(r, g, b, w, speed, numLed, bounceMode, size, ledOffset), animSlot),
             "CANdle.startLarsonAnimation");
     }
 
     public void startFireAnimation(int animSlot, double brightness, double speed, int numLed, double sparking, double cooling, boolean reverseDirection, int ledOffset)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.animate(new FireAnimation(brightness, speed, numLed, sparking, cooling, reverseDirection, ledOffset), animSlot),
             "CANdle.startFireAnimation");
     }
 
     public void startColorFlowAnimation(int animSlot, int r, int g, int b, int w, double speed, int numLed, boolean forward, int ledOffset)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.animate(new ColorFlowAnimation(r, g, b, w, speed, numLed, forward ? ColorFlowAnimation.Direction.Forward : ColorFlowAnimation.Direction.Backward, ledOffset), animSlot),
             "CANdle.startColorFlowAnimation");
     }
 
     public void stopAnimation(int animSlot)
     {
-        CTREErrorCodeHelper.printError(
+        CTREStatusCodeHelper.printError(
             this.wrappedObject.clearAnimation(animSlot),
             "CANdle.stopAnimation");
     }

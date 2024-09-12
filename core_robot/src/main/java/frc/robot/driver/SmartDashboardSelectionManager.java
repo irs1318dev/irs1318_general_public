@@ -13,16 +13,16 @@ public class SmartDashboardSelectionManager
 
     public enum StartPosition
     {
-        Mid,
-        Load,
-        Guard
+        None,
+        Something,
     }
 
     public enum AutoRoutine
     {
         None,
         PlaceDriveBack,
-        Place
+        Place, 
+        Test2024
     }
 
     /**
@@ -34,22 +34,19 @@ public class SmartDashboardSelectionManager
     {
         INetworkTableProvider networkTableProvider = provider.getNetworkTableProvider();
 
-        this.routineChooser = networkTableProvider.getSendableChooser();
+        this.routineChooser = networkTableProvider.getSendableChooser("Auto Routine");
         this.routineChooser.addDefault("None", AutoRoutine.None);
         this.routineChooser.addObject("Place", AutoRoutine.Place);
         this.routineChooser.addObject("Place Drive Back", AutoRoutine.PlaceDriveBack);
-        networkTableProvider.addChooser("Auto Routine", this.routineChooser);
 
-        this.positionChooser = networkTableProvider.getSendableChooser();
-        this.positionChooser.addDefault("middle", StartPosition.Mid);
-        this.positionChooser.addObject("load", StartPosition.Load);
-        this.positionChooser.addObject("guard", StartPosition.Guard);
-        networkTableProvider.addChooser("Start Position", this.positionChooser);
+        this.positionChooser = networkTableProvider.getSendableChooser("Start Position");
+        this.positionChooser.addDefault("None", StartPosition.None);
+        this.positionChooser.addObject("Something", StartPosition.Something);
     }
 
     public StartPosition getSelectedStartPosition()
     {
-        return SmartDashboardSelectionManager.GetSelectedOrDefault(this.positionChooser, StartPosition.Mid);
+        return SmartDashboardSelectionManager.GetSelectedOrDefault(this.positionChooser, StartPosition.None);
     }
 
     public AutoRoutine getSelectedAutoRoutine()

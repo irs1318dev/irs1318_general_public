@@ -35,6 +35,9 @@ public class ElectronicsConstants
     public static final int POWER_DISTRIBUTION_CAN_ID = 0;
     public static final PowerDistributionModuleType POWER_DISTRIBUTION_TYPE = PowerDistributionModuleType.PowerDistributionPanel;
 
+    public static final double REV_THROUGHBORE_ENCODER_DUTY_CYCLE_MIN = 1.0 / 1024.0;
+    public static final double REV_THROUGHBORE_ENCODER_DUTY_CYCLE_MAX = 1023.0 / 1024.0;
+
     public static final String CANIVORE_NAME = "CANIVORE1"; // Module A
 
     public static final int PNEUMATICS_MODULE_A = 1; // Module A
@@ -50,7 +53,7 @@ public class ElectronicsConstants
 
     //================================================== IMU ==============================================================
 
-    public static final int PIGEON_IMU_CAN_ID = 42;
+    public static final int PIGEON_IMU_CAN_ID = 0;
 
     //================================================== Indicator Lights ==============================================================
 
@@ -90,4 +93,6 @@ public class ElectronicsConstants
     // intake wheels Rev can ID is 30
     // intake wrist Rev CAN ID is 40
     public static final int WRIST_PDH_CHANNEL = 4;
+    public static final int WRIST_INTAKE_PDH_CHANNEL = 5;
 }
+

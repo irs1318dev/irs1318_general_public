@@ -11,6 +11,9 @@ public enum MacroOperation implements IOperation
     PIDHeavyBrake,
     FaceForward,
     FaceBackward,
+    FaceLeft,
+    FaceRight,
+    FaceSomething,
 
     // Vision operations
 
@@ -26,5 +29,14 @@ public enum MacroOperation implements IOperation
     HighCubeDrop,
     WristStowed,
     SubstationPickup,
-    GroundPickup,
+    GroundPickup, 
+    Test2024,
+    Test2024_1,
+    Test2024_2,
+    Test2024_3,
+    Test2024_4,
+    Test2024_5,
+    Test2024_6,
+    Test2024_7,
+    Test2024_8
 }

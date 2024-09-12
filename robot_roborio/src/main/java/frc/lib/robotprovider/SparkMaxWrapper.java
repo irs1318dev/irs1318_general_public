@@ -1,34 +1,35 @@
 package frc.lib.robotprovider;
 
 import com.revrobotics.*;
-import com.revrobotics.CANSparkMax.*;
-import com.revrobotics.CANSparkMaxLowLevel.*;
-import com.revrobotics.SparkMaxPIDController.AccelStrategy;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel;
+import com.revrobotics.SparkPIDController.AccelStrategy;
+import com.revrobotics.SparkPIDController.ArbFFUnits;
 
 public class SparkMaxWrapper implements ISparkMax
 {
     final CANSparkMax wrappedObject;
-    private SparkMaxPIDController pidController;
+    private SparkPIDController pidController;
     private boolean useAbsoluteEncoder;
     private RelativeEncoder wrappedRelativeEncoder;
     private AbsoluteEncoder wrappedAbsoluteEncoder;
-    private SparkMaxLimitSwitch wrappedFwdLimitSwitch;
-    private SparkMaxLimitSwitch wrappedRevLimitSwitch;
+    private SparkLimitSwitch wrappedFwdLimitSwitch;
+    private SparkLimitSwitch wrappedRevLimitSwitch;
 
     private SparkMaxControlMode currentMode;
     private int selectedSlot;
 
     public SparkMaxWrapper(int deviceID, SparkMaxMotorType motorType)
     {
-        MotorType type = MotorType.kBrushless;
+        CANSparkLowLevel.MotorType type = CANSparkLowLevel.MotorType.kBrushless;
         switch (motorType)
         {
             case Brushed:
-                type = MotorType.kBrushed;
+                type = CANSparkLowLevel.MotorType.kBrushed;
                 break;
 
             case Brushless:
-                type = MotorType.kBrushless;
+                type = CANSparkLowLevel.MotorType.kBrushless;
                 break;
         }
 
@@ -45,7 +46,7 @@ public class SparkMaxWrapper implements ISparkMax
     public void setAbsoluteEncoder()
     {
         this.useAbsoluteEncoder = true;
-        this.wrappedAbsoluteEncoder = this.wrappedObject.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
+        this.wrappedAbsoluteEncoder = this.wrappedObject.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
     }
 
     public void setRelativeEncoder()
@@ -55,20 +56,20 @@ public class SparkMaxWrapper implements ISparkMax
 
     public void setRelativeEncoder(SparkMaxRelativeEncoderType encoderType, int resolution)
     {
-        SparkMaxRelativeEncoder.Type type;
+        SparkRelativeEncoder.Type type;
         switch (encoderType)
         {
             case HallEffect:
-                type = SparkMaxRelativeEncoder.Type.kHallSensor;
+                type = SparkRelativeEncoder.Type.kHallSensor;
                 break;
 
             case Quadrature:
-                type = SparkMaxRelativeEncoder.Type.kQuadrature;
+                type = SparkRelativeEncoder.Type.kQuadrature;
                 break;
 
             case None:
             default:
-                type = SparkMaxRelativeEncoder.Type.kNoSensor;
+                type = SparkRelativeEncoder.Type.kNoSensor;
                 break;
         }
 
@@ -78,7 +79,22 @@ public class SparkMaxWrapper implements ISparkMax
 
     public void set(double value)
     {
-        if (this.currentMode == SparkMaxControlMode.PercentOutput)
+        this.set(this.currentMode, value, 0.0);
+    }
+
+    public void set(double value, double feedForward)
+    {
+        this.set(this.currentMode, value, feedForward);
+    }
+
+    public void set(SparkMaxControlMode controlMode, double value)
+    {
+        this.set(controlMode, value, 0.0);
+    }
+
+    public void set(SparkMaxControlMode controlMode, double value, double feedForward)
+    {
+        if (controlMode == SparkMaxControlMode.PercentOutput)
         {
             this.wrappedObject.set(value);
             return;
@@ -86,32 +102,32 @@ public class SparkMaxWrapper implements ISparkMax
 
         this.ensurePidController();
 
-        CANSparkMax.ControlType controlType;
-        switch (this.currentMode)
+        CANSparkBase.ControlType controlType;
+        switch (controlMode)
         {
             case Position:
-                controlType = CANSparkMax.ControlType.kPosition;
+                controlType = CANSparkBase.ControlType.kPosition;
                 break;
 
             case SmartMotionPosition:
-                controlType = CANSparkMax.ControlType.kSmartMotion;
+                controlType = CANSparkBase.ControlType.kSmartMotion;
                 break;
 
             case Velocity:
-                controlType = CANSparkMax.ControlType.kVelocity;
+                controlType = CANSparkBase.ControlType.kVelocity;
                 break;
 
             case Voltage:
-                controlType = CANSparkMax.ControlType.kVoltage;
+                controlType = CANSparkBase.ControlType.kVoltage;
                 break;
 
             default:
             case PercentOutput:
-                throw new RuntimeException("unexpected control mode " + this.currentMode);
+                throw new RuntimeException("unexpected control mode " + controlMode);
         }
 
         RevErrorCodeHelper.printError(
-            this.pidController.setReference(value, controlType, this.selectedSlot),
+            this.pidController.setReference(value, controlType, selectedSlot, feedForward, ArbFFUnits.kPercentOut),
             "SparkMaxWrapper.set");
     }
 
@@ -124,17 +140,29 @@ public class SparkMaxWrapper implements ISparkMax
 
     public void setFeedbackFramePeriod(SparkMaxPeriodicFrameType frameType, int periodMS)
     {
-        PeriodicFrame type = PeriodicFrame.kStatus0;
+        CANSparkLowLevel.PeriodicFrame type = CANSparkLowLevel.PeriodicFrame.kStatus0;
         switch (frameType)
         {
             case Status0:
-                type = PeriodicFrame.kStatus0;
+                type = CANSparkLowLevel.PeriodicFrame.kStatus0;
                 break;
             case Status1:
-                type = PeriodicFrame.kStatus1;
+                type = CANSparkLowLevel.PeriodicFrame.kStatus1;
                 break;
             case Status2:
-                type = PeriodicFrame.kStatus2;
+                type = CANSparkLowLevel.PeriodicFrame.kStatus2;
+                break;
+            case Status4:
+                type = CANSparkLowLevel.PeriodicFrame.kStatus3;
+                break;
+            case Status3:
+                type = CANSparkLowLevel.PeriodicFrame.kStatus4;
+                break;
+            case Status5:
+                type = CANSparkLowLevel.PeriodicFrame.kStatus5;
+                break;
+            case Status6:
+                type = CANSparkLowLevel.PeriodicFrame.kStatus6;
                 break;
         }
 
@@ -323,10 +351,10 @@ public class SparkMaxWrapper implements ISparkMax
 
     public void setForwardLimitSwitch(boolean enabled, boolean normallyOpen)
     {
-        SparkMaxLimitSwitch.Type polarity = SparkMaxLimitSwitch.Type.kNormallyClosed;
+        SparkLimitSwitch.Type polarity = SparkLimitSwitch.Type.kNormallyClosed;
         if (normallyOpen)
         {
-            polarity = SparkMaxLimitSwitch.Type.kNormallyOpen;
+            polarity = SparkLimitSwitch.Type.kNormallyOpen;
         }
 
         this.wrappedFwdLimitSwitch = this.wrappedObject.getForwardLimitSwitch(polarity);
@@ -337,13 +365,13 @@ public class SparkMaxWrapper implements ISparkMax
 
     public void setReverseLimitSwitch(boolean enabled, boolean normallyOpen)
     {
-        SparkMaxLimitSwitch.Type polarity = SparkMaxLimitSwitch.Type.kNormallyClosed;
+        SparkLimitSwitch.Type polarity = SparkLimitSwitch.Type.kNormallyClosed;
         if (normallyOpen)
         {
-            polarity = SparkMaxLimitSwitch.Type.kNormallyOpen;
+            polarity = SparkLimitSwitch.Type.kNormallyOpen;
         }
 
-        this.wrappedRevLimitSwitch = this.wrappedObject.getForwardLimitSwitch(polarity);
+        this.wrappedRevLimitSwitch = this.wrappedObject.getReverseLimitSwitch(polarity);
         RevErrorCodeHelper.printError(
             this.wrappedRevLimitSwitch.enableLimitSwitch(enabled),
             "SparkMaxWrapper.setReverseLimitSwitch");
@@ -500,6 +528,8 @@ public class SparkMaxWrapper implements ISparkMax
 
     public double getVelocity()
     {
+        // NOTE: SparkMAX Absolute encoder provides velocity in Rotations per Second,
+        // but SparkMAX Relative/Alternative encoder provides velocity in Rotations per Minute.
         if (this.useAbsoluteEncoder)
         {
             return this.wrappedAbsoluteEncoder.getVelocity();

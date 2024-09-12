@@ -10,6 +10,7 @@ import frc.robot.driver.AnalogOperation;
 import frc.robot.driver.DigitalOperation;
 import frc.robot.mechanisms.IDriveTrainMechanism;
 import frc.robot.mechanisms.OffboardVisionManager;
+import frc.robot.mechanisms.SDSDriveTrainMechanism;
 
 @Singleton
 public class VisionAprilTagTranslateTask extends ControlTaskBase
@@ -61,7 +62,7 @@ public class VisionAprilTagTranslateTask extends ControlTaskBase
     @Override
     public void begin()
     {
-        this.driveTrain = this.getInjector().getInstance(IDriveTrainMechanism.class);
+        this.driveTrain = this.getInjector().getInstance(SDSDriveTrainMechanism.class);
         this.vision = this.getInjector().getInstance(OffboardVisionManager.class);
 
         ITimer timer = this.getInjector().getInstance(ITimer.class);
@@ -89,11 +90,12 @@ public class VisionAprilTagTranslateTask extends ControlTaskBase
         this.tagsFound = 0;
         this.tagsMissed = 0;
         this.startingDriveTrainX = this.driveTrain.getPositionX();
-        this.startingDriveTrainY = this.driveTrain.getPositionX();
+        this.startingDriveTrainY = this.driveTrain.getPositionY();
         this.xAprilTagDistanceSamples = new double[TuningConstants.TAGS_FOUND_THRESHOLD];
         this.yAprilTagDistanceSamples = new double[TuningConstants.TAGS_FOUND_THRESHOLD];
 
-        this.setDigitalOperationState(DigitalOperation.VisionEnableAprilTagProcessing, true);
+        this.setDigitalOperationState(DigitalOperation.VisionFindSpecificAprilTag, false);
+        this.setDigitalOperationState(DigitalOperation.VisionFindAnyAprilTag, true);
     }
 
     @Override
@@ -151,7 +153,8 @@ public class VisionAprilTagTranslateTask extends ControlTaskBase
             case FindAprilTags:
                 this.setAnalogOperationState(AnalogOperation.DriveTrainMoveForward, 0.0);
                 this.setAnalogOperationState(AnalogOperation.DriveTrainMoveRight, 0.0);
-                this.setDigitalOperationState(DigitalOperation.VisionEnableAprilTagProcessing, true);
+                this.setDigitalOperationState(DigitalOperation.VisionFindSpecificAprilTag, false);
+                this.setDigitalOperationState(DigitalOperation.VisionFindAnyAprilTag, true);
                 break;
 
             case Translate:
@@ -159,7 +162,8 @@ public class VisionAprilTagTranslateTask extends ControlTaskBase
                 double yDesiredVelocity = -this.yHandler.calculatePosition(desiredYPosition, currYPosition);
                 this.setAnalogOperationState(AnalogOperation.DriveTrainMoveForward, xDesiredVelocity);
                 this.setAnalogOperationState(AnalogOperation.DriveTrainMoveRight, yDesiredVelocity);
-                this.setDigitalOperationState(DigitalOperation.VisionEnableAprilTagProcessing, false);
+                this.setDigitalOperationState(DigitalOperation.VisionFindSpecificAprilTag, false);
+                this.setDigitalOperationState(DigitalOperation.VisionFindAnyAprilTag, false);
                 break;
 
             default:
@@ -167,7 +171,8 @@ public class VisionAprilTagTranslateTask extends ControlTaskBase
             case Stop:
                 this.setAnalogOperationState(AnalogOperation.DriveTrainMoveForward, 0.0);
                 this.setAnalogOperationState(AnalogOperation.DriveTrainMoveRight, 0.0);
-                this.setDigitalOperationState(DigitalOperation.VisionEnableAprilTagProcessing, false);
+                this.setDigitalOperationState(DigitalOperation.VisionFindSpecificAprilTag, false);
+                this.setDigitalOperationState(DigitalOperation.VisionFindAnyAprilTag, false);
                 break;
         }
     }
@@ -177,8 +182,9 @@ public class VisionAprilTagTranslateTask extends ControlTaskBase
     {
         this.setAnalogOperationState(AnalogOperation.DriveTrainMoveForward, 0.0);
         this.setAnalogOperationState(AnalogOperation.DriveTrainMoveRight, 0.0);
-        this.setDigitalOperationState(DigitalOperation.VisionEnableAprilTagProcessing, false);
-    }
+        this.setDigitalOperationState(DigitalOperation.VisionFindSpecificAprilTag, false);
+        this.setDigitalOperationState(DigitalOperation.VisionFindAnyAprilTag, false);
+}
 
     @Override
     public boolean shouldCancel()

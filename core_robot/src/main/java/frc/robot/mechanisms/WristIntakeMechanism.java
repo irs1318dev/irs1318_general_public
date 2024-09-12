@@ -37,6 +37,12 @@ public class WristIntakeMechanism implements IMechanism
     private FloatingAverageCalculator wristPowerAverageCalculator;
     private FloatingAverageCalculator wristVelocityAverageCalculator;
 
+    private double intakePowerAverage;
+    private double intakeVelocityAverage;
+
+    private FloatingAverageCalculator intakePowerAverageCalculator;
+    private FloatingAverageCalculator intakeVelocityAverageCalculator;
+
     private double wristSetpointChangedTime;
     private boolean wristStalled;    
 
@@ -128,32 +134,43 @@ public class WristIntakeMechanism implements IMechanism
         this.wristPowerAverageCalculator = new FloatingAverageCalculator(this.timer, TuningConstants.WRIST_POWER_TRACKING_DURATION, TuningConstants.WRIST_POWER_SAMPLES_PER_SECOND);
         this.wristVelocityAverageCalculator = new FloatingAverageCalculator(this.timer, TuningConstants.WRIST_VELOCITY_TRACKING_DURATION, TuningConstants.WRIST_VELOCITY_SAMPLES_PER_SECOND);
 
+        this.intakePowerAverageCalculator = new FloatingAverageCalculator(this.timer, TuningConstants.INTAKE_POWER_TRACKING_DURATION, TuningConstants.INTAKE_POWER_SAMPLES_PER_SECOND);
+        this.intakeVelocityAverageCalculator = new FloatingAverageCalculator(this.timer, TuningConstants.INTAKE_VELOCITY_TRACKING_DURATION, TuningConstants.INTAKE_VELOCITY_SAMPLES_PER_SECOND);
+
         this.firstRun = true;
     }
 
     @Override
     public void readSensors()
     {
+        double batteryVoltage = this.powerManager.getBatteryVoltage();
+
         this.wristMotorVelocity = this.wristMotor.getVelocity();
         this.wristMotorAngle = this.wristMotor.getPosition();
 
-        this.intakeMotorVelocity = this.intakeMotor.getVelocity();
-
         double wristCurrent = this.powerManager.getCurrent(ElectronicsConstants.WRIST_PDH_CHANNEL);
-        double batteryVoltage = this.powerManager.getBatteryVoltage();
 
         this.wristPowerAverage = this.wristPowerAverageCalculator.update(wristCurrent * batteryVoltage);
         this.wristVelocityAverage = this.wristVelocityAverageCalculator.update(Math.abs(this.wristMotorVelocity));
+
+        this.intakeMotorVelocity = this.intakeMotor.getVelocity();
+
+        double intakeCurrent = this.powerManager.getCurrent(ElectronicsConstants.WRIST_INTAKE_PDH_CHANNEL);
+
+        this.intakePowerAverage = this.intakePowerAverageCalculator.update(intakeCurrent * batteryVoltage);
+        this.intakeVelocityAverage = this.intakeVelocityAverageCalculator.update(Math.abs(this.intakeMotorVelocity));
 
         this.logger.logNumber(LoggingKey.WristVelocityAverage, this.wristVelocityAverage);
         this.logger.logNumber(LoggingKey.WristPower, this.wristPowerAverage);
         this.logger.logNumber(LoggingKey.WristMotorVelocity, this.wristMotorVelocity);
         this.logger.logNumber(LoggingKey.WristMotorAngle, this.wristMotorAngle);
         this.logger.logNumber(LoggingKey.IntakeMotorVelocity, this.intakeMotorVelocity);
+        this.logger.logNumber(LoggingKey.IntakeVelocityAverage, this.intakeVelocityAverage);
+        this.logger.logNumber(LoggingKey.IntakePower, this.intakePowerAverage);
     }
 
     @Override
-    public void update()
+    public void update(RobotMode mode)
     {
         if (this.firstRun)
         {
@@ -198,12 +215,26 @@ public class WristIntakeMechanism implements IMechanism
         double wristIntakePower = TuningConstants.ZERO;
         double inatkeMotorVelocityGoal = this.driver.getAnalog(AnalogOperation.IntakeMotorVelocityGoal);
 
-        if(this.inVelocityMode && inatkeMotorVelocityGoal != TuningConstants.MAGIC_NULL_VALUE)
+        boolean intakeStalled = false;
+        if (TuningConstants.INTAKE_STALL_PROTECTION_ENABLED)
+        {
+            if (this.intakePowerAverage >= TuningConstants.INTAKE_STALLED_POWER_THRESHOLD &&
+                Math.abs(this.intakeVelocityAverage) <= TuningConstants.INTAKE_STALLED_VELOCITY_THRESHOLD)
+            {
+                intakeStalled = true;
+            }
+        }
+
+        if (intakeStalled)
+        {
+            this.intakeMotor.stop();
+        }
+        else if (this.inVelocityMode && inatkeMotorVelocityGoal != TuningConstants.MAGIC_NULL_VALUE)
         {
             this.inatkeMotorDesiredVelocity = inatkeMotorVelocityGoal * HardwareConstants.INTAKE_MOTOR_TICK_DISTANCE;
             this.intakeMotor.set(inatkeMotorDesiredVelocity);
         }
-        else if(!this.inVelocityMode)
+        else if (!this.inVelocityMode)
         {
             if (this.driver.getDigital(DigitalOperation.IntakeIn))
             {
@@ -229,8 +260,9 @@ public class WristIntakeMechanism implements IMechanism
             this.intakeMotor.set(wristIntakePower);
         }
 
-        this.logger.logNumber(LoggingKey.intakeMotorVelocitySetpoint, inatkeMotorDesiredVelocity);
-        this.logger.logNumber(LoggingKey.intakeMotorPercentOutput, wristIntakePower);
+        this.logger.logNumber(LoggingKey.IntakeMotorVelocitySetpoint, inatkeMotorDesiredVelocity);
+        this.logger.logNumber(LoggingKey.IntakeMotorPercentOutput, wristIntakePower);
+        this.logger.logBoolean(LoggingKey.IntakeMotorStalled, intakeStalled);
 
         // -------------------------------------- Main Wrist ----------------------------------------------------
 

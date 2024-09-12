@@ -131,6 +131,14 @@ public class OneMotorFalconMechanism implements IMechanism
     public void update(RobotMode mode)
     {
         double setpoint = this.driver.getAnalog(AnalogOperation.OneMotorPower);
+        if (this.driver.getDigital(DigitalOperation.OneMotorFullForward))
+        {
+            setpoint = 1.0;
+        }
+        else if (this.driver.getDigital(DigitalOperation.OneMotorFullReverse))
+        {
+            setpoint = -1.0;
+        }
 
         double maxSetpointValue = 1.0;
         if (TuningConstants.ONEMOTOR_USE_PID)

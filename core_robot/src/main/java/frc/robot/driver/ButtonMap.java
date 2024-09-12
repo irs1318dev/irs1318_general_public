@@ -146,6 +146,21 @@ public class ButtonMap implements IButtonMap
         //     EnumSet.noneOf(Shift.class),
         //     EnumSet.noneOf(Shift.class),
         //     ButtonType.Simple),
+
+        new DigitalOperationDescription(
+            DigitalOperation.OneMotorFullForward,
+            UserInputDevice.Driver,
+            UserInputDeviceButton.XBONE_A_BUTTON,
+            EnumSet.noneOf(Shift.class),
+            EnumSet.noneOf(Shift.class),
+            ButtonType.Simple),
+        new DigitalOperationDescription(
+            DigitalOperation.OneMotorFullReverse,
+            UserInputDevice.Driver,
+            UserInputDeviceButton.XBONE_B_BUTTON,
+            EnumSet.noneOf(Shift.class),
+            EnumSet.noneOf(Shift.class),
+            ButtonType.Simple),
     };
 
     public static MacroOperationDescription[] MacroSchema = new MacroOperationDescription[]

@@ -70,7 +70,7 @@ public class AKRobot extends LoggedRobot
             {
                 Logger.addDataReceiver(new WPILOGWriter());
             }
-            
+
             Logger.addDataReceiver(new NT4Publisher());
         }
         else if (RobotBase.isSimulation())

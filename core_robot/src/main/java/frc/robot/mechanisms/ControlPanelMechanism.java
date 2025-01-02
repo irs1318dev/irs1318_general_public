@@ -29,7 +29,6 @@ public class ControlPanelMechanism implements IMechanism
 
     private boolean isExtended;
 
-
     @Inject
     public ControlPanelMechanism(IDriver driver, LoggingManager logger, IRobotProvider provider)
     {
@@ -39,9 +38,8 @@ public class ControlPanelMechanism implements IMechanism
         this.extender = provider.getDoubleSolenoid(ElectronicsConstants.PNEUMATICS_MODULE_A, ElectronicsConstants.PNEUMATICS_MODULE_TYPE_A, ElectronicsConstants.CONTROLPANEL_EXTENDER_FORWARD_PCM, ElectronicsConstants.CONTROLPANEL_EXTENDER_REVERSE_PCM);
 
         this.spinnerMotor = provider.getVictorSPX(ElectronicsConstants.CONTROLPANEL_SPINNER_CAN_ID);
-        this.spinnerMotor.setInvertOutput(HardwareConstants.CONTROLPANEL_SPINNER_INVERT_OUTPUT);
+        this.spinnerMotor.setMotorOutputSettings(HardwareConstants.CONTROLPANEL_SPINNER_INVERT_OUTPUT, MotorNeutralMode.Brake);
         this.spinnerMotor.setControlMode(TalonSRXControlMode.PercentOutput);
-        this.spinnerMotor.setNeutralMode(MotorNeutralMode.Brake);
 
         this.isExtended = false;
     }

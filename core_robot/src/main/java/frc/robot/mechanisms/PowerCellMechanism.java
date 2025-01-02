@@ -27,8 +27,6 @@ import com.google.inject.Singleton;
 
 /**
  * Extends/retracts intake and rolls the rollers in and out
- * 
- * @author Will, kwen perper, beezy choofs
  */
 @Singleton
 public class PowerCellMechanism implements IMechanism
@@ -76,9 +74,8 @@ public class PowerCellMechanism implements IMechanism
         // intake components:
         this.intakeSolenoid = provider.getDoubleSolenoid(ElectronicsConstants.PNEUMATICS_MODULE_A, ElectronicsConstants.PNEUMATICS_MODULE_TYPE_A, ElectronicsConstants.POWERCELL_INTAKE_FORWARD_PCM, ElectronicsConstants.POWERCELL_INTAKE_REVERSE_PCM);
         this.rollerMotor = provider.getSparkMax(ElectronicsConstants.POWERCELL_ROLLER_MOTOR_CAN_ID, SparkMaxMotorType.Brushless);
-        this.rollerMotor.setInvertOutput(HardwareConstants.POWERCELL_ROLLER_MOTOR_INVERT_OUTPUT);
+        this.rollerMotor.setMotorOutputSettings(HardwareConstants.POWERCELL_ROLLER_MOTOR_INVERT_OUTPUT, MotorNeutralMode.Brake);
         this.rollerMotor.setControlMode(SparkMaxControlMode.PercentOutput);
-        this.rollerMotor.setNeutralMode(MotorNeutralMode.Brake);
 
         // shooter components:
         this.outerHood = provider.getDoubleSolenoid(ElectronicsConstants.PNEUMATICS_MODULE_A, ElectronicsConstants.PNEUMATICS_MODULE_TYPE_A, ElectronicsConstants.POWERCELL_OUTER_HOOD_FORWARD_PCM, ElectronicsConstants.POWERCELL_OUTER_HOOD_REVERSE_PCM);
@@ -122,9 +119,8 @@ public class PowerCellMechanism implements IMechanism
         // kicker components:
         this.kickerSolenoid = provider.getDoubleSolenoid(ElectronicsConstants.PNEUMATICS_MODULE_A, ElectronicsConstants.PNEUMATICS_MODULE_TYPE_A, ElectronicsConstants.POWERCELL_KICKER_FORWARD_PCM, ElectronicsConstants.POWERCELL_KICKER_REVERSE_PCM);
         this.kickerMotor = provider.getVictorSPX(ElectronicsConstants.POWERCELL_KICKER_MOTOR_CAN_ID);
-        this.kickerMotor.setInvertOutput(HardwareConstants.POWERCELL_KICKER_MOTOR_INVERT_OUTPUT);
+        this.kickerMotor.setMotorOutputSettings(HardwareConstants.POWERCELL_KICKER_MOTOR_INVERT_OUTPUT, MotorNeutralMode.Coast);
         this.kickerMotor.setControlMode(TalonSRXControlMode.PercentOutput);
-        this.kickerMotor.setNeutralMode(MotorNeutralMode.Coast);
 
         this.intakeExtended = false;
         this.flywheelVelocitySetpoint = 0.0;

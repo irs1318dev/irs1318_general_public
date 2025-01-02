@@ -25,7 +25,7 @@ public enum LoggingKey
     OffboardVisionHorizontalAngle("rpi/horizontalAngle", LoggingType.NullableNumber, true, 1),
     OffboardVisionEnableVision("rpi/enableVision", LoggingType.Boolean, false, 1),
     OffboardVisionEnableStream("rpi/enableStream", LoggingType.Boolean, false, 1),
-    OffboardVisionEnableProcessing("rpi/enableProcessing", LoggingType.Boolean, false, 1),
+    OffboardVisionEnableProcessing("rpi/enableProcessing", LoggingType.Number, false, 1),
     OffboardVisionMissedHeartbeats("rpi/missedHeartbeats", LoggingType.Number, true, 1),
     NavxConnected("navx/connected", LoggingType.Boolean, true),
     NavxAngle("navx/angle", LoggingType.Number, true),

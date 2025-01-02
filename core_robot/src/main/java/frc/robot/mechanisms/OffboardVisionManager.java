@@ -18,9 +18,6 @@ import com.google.inject.Singleton;
 
 /**
  * Offboard Vision manager.
- * 
- * @author Will
- *
  */
 @Singleton
 public class OffboardVisionManager implements IMechanism

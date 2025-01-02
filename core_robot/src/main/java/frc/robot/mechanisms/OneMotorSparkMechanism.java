@@ -54,14 +54,13 @@ public class OneMotorSparkMechanism implements IMechanism
 
         this.motor.setPositionConversionFactor(1.0);
         this.motor.setVelocityConversionFactor(1.0);
-        this.motor.setNeutralMode(MotorNeutralMode.Brake);
-        this.motor.setInvertOutput(TuningConstants.ONEMOTOR_INVERT_OUTPUT);
+        this.motor.setMotorOutputSettings(TuningConstants.ONEMOTOR_INVERT_OUTPUT, MotorNeutralMode.Brake);
         this.motor.burnFlash();
 
         if (TuningConstants.ONEMOTOR_HAS_FOLLOWER)
         {
             ISparkMax follower = provider.getSparkMax(ElectronicsConstants.ONEMOTOR_FOLLOWER_MOTOR_CHANNEL, SparkMaxMotorType.Brushless);
-            follower.setNeutralMode(MotorNeutralMode.Brake);
+            follower.setMotorOutputSettings(false, MotorNeutralMode.Brake);
             follower.follow(this.motor);
         }
 

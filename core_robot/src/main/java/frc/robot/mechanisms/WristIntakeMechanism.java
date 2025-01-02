@@ -69,8 +69,7 @@ public class WristIntakeMechanism implements IMechanism
 
         this.intakeMotor = provider.getSparkMax(ElectronicsConstants.INTAKE_MOTOR_CAN_ID, SparkMaxMotorType.Brushless);
         this.intakeMotor.setRelativeEncoder();
-        this.intakeMotor.setInvertOutput(TuningConstants.INTAKE_MOTOR_INVERT_OUTPUT);
-        this.intakeMotor.setNeutralMode(MotorNeutralMode.Brake);
+        this.intakeMotor.setMotorOutputSettings(TuningConstants.INTAKE_MOTOR_INVERT_OUTPUT, MotorNeutralMode.Brake);
         this.intakeMotor.setVelocityConversionFactor(HardwareConstants.INTAKE_MOTOR_TICK_DISTANCE);
 
         this.intakeMotor.setPIDF(
@@ -95,8 +94,7 @@ public class WristIntakeMechanism implements IMechanism
         this.wristMotor.setAbsoluteEncoder();
         this.wristMotor.setInvertSensor(TuningConstants.WRIST_MOTOR_INVERT_SENSOR);
         this.wristMotor.setPositionConversionFactor(HardwareConstants.WRIST_MOTOR_TICK_DISTANCE);
-        this.wristMotor.setInvertOutput(TuningConstants.WRIST_MOTOR_INVERT_OUTPUT);
-        this.wristMotor.setNeutralMode(MotorNeutralMode.Brake);
+        this.wristMotor.setMotorOutputSettings(TuningConstants.WRIST_MOTOR_INVERT_OUTPUT, MotorNeutralMode.Brake);
 
         this.wristMotor.setPIDF(
             TuningConstants.WRIST_MOTOR_POSITION_PID_KP, 

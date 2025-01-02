@@ -95,6 +95,21 @@ public class PathPlannerTrajectoryGenerator
             "goRight22in");
 
         // ------------------------------- Auton Paths --------------------------------------------
+        // addTrajectory(
+        //     trajectoryManager,
+        //     pathPlanner.buildTrajectory(
+        //         TuningConstants.REVDRIVETRAIN_LOW_PATH_TRANSLATIONAL_VELOCITY,
+        //         TuningConstants.REVDRIVETRAIN_LOW_PATH_TRANSLATIONAL_ACCELERATION,
+        //         TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+        //         TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+        //         new PathPlannerWaypoint(0.0, 0.0, 0.0, 0.0),
+        //         new PathPlannerWaypoint(3.0, 0, 0.0, 90.0),
+        //         new PathPlannerWaypoint(3.0, 3.0, 90.0, 180.0),
+        //         new PathPlannerWaypoint(0.0, 3.0, 180.0, 270.0),
+        //         new PathPlannerWaypoint(0.0, 0.0, 0.0, 0.0)
+        //         ),
+        //     "rookieTest");
+
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(
@@ -103,14 +118,31 @@ public class PathPlannerTrajectoryGenerator
                 TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
                 TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
                 new PathPlannerWaypoint(0.0, 0.0, 0.0, 0.0),
-                new PathPlannerWaypoint(0.0, 80.0, 0.0, 180.0),
-                new PathPlannerWaypoint(0.0, -0.0, 0.0, 0.0),
-                new PathPlannerWaypoint(0.0, 0.0, 0.0, 0.0)
+                new PathPlannerWaypoint(0.0, 10, 0.0, 0.0),
+                new PathPlannerWaypoint(-5.0, 15.00, 135.0, 120.0),
+                new PathPlannerWaypoint(-10.0, 10.0, 225.0, 225.0),
+                new PathPlannerWaypoint(-10.0, -8.0, 270.0, 180.0),
+                new PathPlannerWaypoint(-8.0, -5.0, 315.0, 360.0)
+                ),
+            "rookieTest");
+
+        addTrajectory(
+            trajectoryManager,
+            pathPlanner.buildTrajectory(
+                TuningConstants.REVDRIVETRAIN_LOW_PATH_TRANSLATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_LOW_PATH_TRANSLATIONAL_ACCELERATION,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_VELOCITY,
+                TuningConstants.REVDRIVETRAIN_MAX_PATH_ROTATIONAL_ACCELERATION,
+                new PathPlannerWaypoint(0.0, 0.0, 0.0, 0.0),
+                new PathPlannerWaypoint(40, 0.0, 0.0, 0.0),
+                new PathPlannerWaypoint(20, 0, 0.0, 360)
+                //new PathPlannerWaypoint(0, 50, 0.0, 0.0)
                 //new PathPlannerWaypoint(0.0, 0.0, 0.0, 0.0)
                 ),
-            "goJamieTask");
+            "rookieTest2");
             
-        
+ 
+            
         addTrajectory(
             trajectoryManager,
             pathPlanner.buildTrajectory(

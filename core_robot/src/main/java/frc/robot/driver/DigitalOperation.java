@@ -24,15 +24,27 @@ public enum DigitalOperation implements IOperation
 
     // DriveTrain operations:
     DriveTrainSlowMode,
-    DriveTrainPathMode,
-    DriveTrainSteerMode,
-    DriveTrainMaintainPositionMode,
-    DriveTrainReset,
-    DriveTrainEnableFieldOrientation,
-    DriveTrainDisableFieldOrientation,
-    DriveTrainUseRobotOrientation,
-    DriveTrainEnableMaintainDirectionMode,
-    DriveTrainDisableMaintainDirectionMode,
+    DriveTrainEnablePID,
+    DriveTrainDisablePID,
+    DriveTrainSimpleMode,
+    DriveTrainUseBrakeMode,
+    DriveTrainUsePositionalMode,
+    DriveTrainUsePathMode,
+    DriveTrainSwapFrontOrientation,
     DriveTrainResetXYPosition,
-    DriveTrainIgnoreSlewRateLimitingMode,
+
+    // Intake operations:
+    IntakeExtend,
+    IntakeRetract,
+    IntakeRotatingIn,
+    IntakeRotatingOut,
+
+    // Stinger operations:
+    StingerOut,
+    StingerIn,
+
+    // Shooter operations:
+    ShooterSpin,
+    ShooterLowerKicker,
+    ShooterExtendHood,
 }

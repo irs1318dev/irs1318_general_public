@@ -100,6 +100,46 @@ public class MacroOperationDescription extends OperationDescription<MacroOperati
 
     /**
      * Initializes a new MacroOperationDescription based on a user interaction
+     * @param clearInterrupt whether to clear the interruption of the operations when the macro completes
+     * @param operation the macro operation being described
+     * @param userInputDevice which device will perform the macro operation (driver or codriver joystick)
+     * @param userInputDeviceButton the button on the device that performs the macro operation
+     * @param relevantShifts the shifts that should be considered when checking if we should perform the macro
+     * @param requiredShifts the shift button(s) that must be applied to perform macro
+     * @param buttonType the behavior type to use for the macro operation
+     * @param taskSupplier the function that creates the tasks that should be performed by the macro
+     * @param affectedOperations the list of operations that will be utilized by this macro
+     */
+    public MacroOperationDescription(
+        boolean clearInterrupt,
+        MacroOperation operation,
+        UserInputDevice userInputDevice,
+        UserInputDeviceButton userInputDeviceButton,
+        EnumSet<Shift> relevantShifts,
+        EnumSet<Shift> requiredShifts,
+        ButtonType buttonType,
+        Supplier<IControlTask> taskSupplier,
+        IOperation[] affectedOperations)
+    {
+        this(
+            clearInterrupt,
+            operation,
+            userInputDevice,
+            userInputDeviceButton,
+            -1,
+            AnalogAxis.NONE,
+            0.0,
+            0.0,
+            relevantShifts,
+            requiredShifts,
+            buttonType,
+            taskSupplier,
+            affectedOperations,
+            null);
+    }
+
+    /**
+     * Initializes a new MacroOperationDescription based on a user interaction
      * @param operation the macro operation being described
      * @param userInputDevice which device will perform the macro operation (driver or codriver joystick)
      * @param userInputDeviceButton the button on the device that performs the macro operation

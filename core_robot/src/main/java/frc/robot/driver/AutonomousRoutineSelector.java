@@ -14,7 +14,6 @@ import frc.robot.driver.SmartDashboardSelectionManager.AutoRoutine;
 import frc.robot.driver.SmartDashboardSelectionManager.PriorityPickupSide;
 import frc.robot.driver.SmartDashboardSelectionManager.StartPosition;
 import frc.robot.driver.controltasks.*;
-import frc.robot.driver.controltasks.FollowPathTask.Type;
 
 @Singleton
 public class AutonomousRoutineSelector

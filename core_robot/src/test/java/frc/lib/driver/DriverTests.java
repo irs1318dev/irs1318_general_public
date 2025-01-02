@@ -42,7 +42,7 @@ public class DriverTests
                     true,
                     0.1),
                 new AnalogOperationDescription(
-                    AnalogOperation.DriveTrainMoveRight,
+                    AnalogOperation.DriveTrainTurn,
                     UserInputDevice.Driver,
                     AnalogAxis.XBONE_LSX,
                     false,
@@ -58,7 +58,7 @@ public class DriverTests
                     UserInputDeviceButton.XBONE_A_BUTTON,
                     ButtonType.Simple),
                 new DigitalOperationDescription(
-                    DigitalOperation.DriveTrainReset,
+                    DigitalOperation.DriveTrainSimpleMode,
                     UserInputDevice.Driver,
                     UserInputDeviceButton.XBONE_Y_BUTTON,
                     ButtonType.Click),
@@ -79,9 +79,9 @@ public class DriverTests
                     new IOperation[]
                     {
                         AnalogOperation.DriveTrainMoveForward,
-                        AnalogOperation.DriveTrainMoveRight,
+                        AnalogOperation.DriveTrainTurn,
                         DigitalOperation.DriveTrainSlowMode,
-                        DigitalOperation.DriveTrainReset,
+                        DigitalOperation.DriveTrainSimpleMode,
                     }),
                 new MacroOperationDescription(
                     MacroOperation.FollowPathTest2,
@@ -92,9 +92,9 @@ public class DriverTests
                     new IOperation[]
                     {
                         AnalogOperation.DriveTrainMoveForward,
-                        AnalogOperation.DriveTrainMoveRight,
+                        AnalogOperation.DriveTrainTurn,
                         DigitalOperation.DriveTrainSlowMode,
-                        DigitalOperation.DriveTrainReset,
+                        DigitalOperation.DriveTrainSimpleMode,
                     }),
             }
         );
